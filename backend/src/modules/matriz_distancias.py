@@ -9,7 +9,11 @@ API_KEY = os.getenv("API_KEY")
 
 chave = openrouteservice.Client(key=API_KEY)
 
-
+matriz_coords = []
+indice_coord_hospitais = []
+indice_coord_residencias = []
+i = 0
+j = 0
 
 """
 1- Pegar as coordenadas das casas
@@ -35,7 +39,7 @@ coord_hospitais = [
     [-50.09048182392179, -22.15832696162462]
 ]
 
-#De casa N até hospital N
+#De casa N até hospital N - traçar as rotas
 rotas_definidas = {
     1: 1,  
     2: 1,  
@@ -43,13 +47,6 @@ rotas_definidas = {
     4: 1,  
     5: 1  
 }
-
-
-matriz_coords = []
-indice_coord_hospitais = []
-indice_coord_residencias = []
-i = 0
-j = 0
 
 #adiciona as coordenadas na lista
 for coordenadas in coord_hospitais:
@@ -77,7 +74,7 @@ matriz = chave.distance_matrix(
 )
 
 print("Matriz de distancias: ")
-for i, linha in enumerate(matriz['distances']):
+for i, linha in enumerate(matriz['distances']): #itera sobre uma lista e obtem o indice do item
     print(f"Casa {i+1} -> Distâncias para hospitais: {linha}")
     
 #Para adicionar as coordenadas no mapa
@@ -86,8 +83,8 @@ mapa = folium.Map(location=[coord_residencias[0][1], coord_residencias[0][0]], z
 # Adiciona os hospitais no mapa
 for i, coord in enumerate(coord_hospitais):
     folium.Marker(
-        location=[coord[1], coord[0]],  # latitude, longitude
-        popup=f"🏥 Hospital {i+1}",
+        location=[coord[1], coord[0]],  #latitude, longitude
+        popup=f"Hospital {i+1}",
         icon=folium.Icon(color='red', icon='plus-sign')
     ).add_to(mapa)
 
@@ -104,6 +101,7 @@ for i, coord in enumerate(coord_residencias):
 origem = coord_residencias[0]    
 destino = coord_hospitais[0]     
 
+
 for casa, hospital in rotas_definidas.items():
     origem = coord_residencias[casa-1]
     destino = coord_hospitais[hospital-1]
@@ -114,16 +112,22 @@ for casa, hospital in rotas_definidas.items():
         preference='fastest',
         format='geojson'
     )
-    distancia_m = rota['features'][0]['properties']['segments'][0]['distance']
-    distancia_km = round(distancia_m / 1000, 2)
     
+    #Retorno bonitinho do json
+    print(json.dumps(rota, indent=4)) 
+    
+    #Convertendo e arredondando o valor da distancia em km
+    #O OpenRouteService sempre retorna a distância em metros no JSON
+    distancia_m = rota['features'][0]['properties']['segments'][0]['distance']
+    distancia_km = round(distancia_m / 1000, 2) 
+    
+    print(json.dumps(distancia_m, indent=4))
 
 
     # Adiciona a rota ao mapa
     folium.GeoJson(
         rota,
         name=f"Rota Casa {i+1} → Hospital {i+1}",tooltip=f"Distância: {distancia_km} km",
-    #style_function=lambda feature: {'color': 'yellow', 'weight': 4}
     ).add_to(mapa)
 
 mapa.save("mapa_residencias_hospitais.html")
