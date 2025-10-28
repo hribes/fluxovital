@@ -35,14 +35,11 @@ def endereco_para_coordenadas(endereco: str):
 
 # Exemplo de uso
 if __name__ == "__main__":
-    endereco = "Rua Major Eliziario de Camargo, 325, Marília, São Paulo, Brasil"
+    endereco = "Rua Antonia Caravato Fernandes, 20, Garça, São Paulo, Brasil"
     endereco_para_coordenadas(endereco)
 
 
 # [Rua / Avenida], [Número], [Bairro], [Cidade], [Estado], [País]
-
-
-
 
 
 
