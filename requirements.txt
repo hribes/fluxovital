@@ -1,3 +1,5 @@
+# Use o Python=3.10.0
+
 mysql-connector-python==9.4.0
 pandas==2.3.3
 python-dotenv==1.1.1
