@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_4e224f3d8ea29f039f14e67900a61f80 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_4e224f3d8ea29f039f14e67900a61f80" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_4e224f3d8ea29f039f14e67900a61f80 = L.map(
+                "map_4e224f3d8ea29f039f14e67900a61f80",
+                {
+                    center: [-22.159595080264985, -50.09005190528351],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 14,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_bbb5824904dfeb0fc0af1ce56bd763d0 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_bbb5824904dfeb0fc0af1ce56bd763d0.addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var marker_2089f6ec215758635a8e9a4c1b685a8f = L.marker(
+                [-22.153164028151053, -50.09195132993289],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_5797397be21e5f2d03551ad9cd7e9af8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fafd358076e8925dd227c4d3bce1d0c6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c4c64451e13706fc7d4346569034222e = $(`<div id="html_c4c64451e13706fc7d4346569034222e" style="width: 100.0%; height: 100.0%;">Hospital 1</div>`)[0];
+                popup_fafd358076e8925dd227c4d3bce1d0c6.setContent(html_c4c64451e13706fc7d4346569034222e);
+            
+        
+
+        marker_2089f6ec215758635a8e9a4c1b685a8f.bindPopup(popup_fafd358076e8925dd227c4d3bce1d0c6)
+        ;
+
+        
+    
+    
+                marker_2089f6ec215758635a8e9a4c1b685a8f.setIcon(icon_5797397be21e5f2d03551ad9cd7e9af8);
+            
+    
+            var marker_5f580014781b3daf4850e7d876e90ac8 = L.marker(
+                [-22.154531012447393, -50.09680055090296],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_0915fc0efe43b2ea77e9e9cc7d8dd00e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a06da4de9532ec435cf819297e87a998 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ab0b808fc91da3c75550c4b02eee4d2f = $(`<div id="html_ab0b808fc91da3c75550c4b02eee4d2f" style="width: 100.0%; height: 100.0%;">Hospital 2</div>`)[0];
+                popup_a06da4de9532ec435cf819297e87a998.setContent(html_ab0b808fc91da3c75550c4b02eee4d2f);
+            
+        
+
+        marker_5f580014781b3daf4850e7d876e90ac8.bindPopup(popup_a06da4de9532ec435cf819297e87a998)
+        ;
+
+        
+    
+    
+                marker_5f580014781b3daf4850e7d876e90ac8.setIcon(icon_0915fc0efe43b2ea77e9e9cc7d8dd00e);
+            
+    
+            var marker_7c2d9e504d9aca67c0524a6123efd77a = L.marker(
+                [-22.15832696162462, -50.09048182392179],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_62859be6a2cb8cfdb2b237d370db532f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "plus-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f6302a6ec45cc8c779e5824e79f25b53 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_efe842075c6cba39bdfed2bd1f324a78 = $(`<div id="html_efe842075c6cba39bdfed2bd1f324a78" style="width: 100.0%; height: 100.0%;">Hospital 3</div>`)[0];
+                popup_f6302a6ec45cc8c779e5824e79f25b53.setContent(html_efe842075c6cba39bdfed2bd1f324a78);
+            
+        
+
+        marker_7c2d9e504d9aca67c0524a6123efd77a.bindPopup(popup_f6302a6ec45cc8c779e5824e79f25b53)
+        ;
+
+        
+    
+    
+                marker_7c2d9e504d9aca67c0524a6123efd77a.setIcon(icon_62859be6a2cb8cfdb2b237d370db532f);
+            
+    
+            var marker_6390eb5d16d8a2df314dce210fb491cc = L.marker(
+                [-22.159595080264985, -50.09005190528351],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_07b6a79dcd13f3313a856cf51a853eaf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_05f1f08e78cd1c994e49be7550b6b038 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1ed0dbb7bd53e6a75c716452d0e98ebf = $(`<div id="html_1ed0dbb7bd53e6a75c716452d0e98ebf" style="width: 100.0%; height: 100.0%;">Casa 1</div>`)[0];
+                popup_05f1f08e78cd1c994e49be7550b6b038.setContent(html_1ed0dbb7bd53e6a75c716452d0e98ebf);
+            
+        
+
+        marker_6390eb5d16d8a2df314dce210fb491cc.bindPopup(popup_05f1f08e78cd1c994e49be7550b6b038)
+        ;
+
+        
+    
+    
+                marker_6390eb5d16d8a2df314dce210fb491cc.setIcon(icon_07b6a79dcd13f3313a856cf51a853eaf);
+            
+    
+            var marker_3768e8ba1a4665b155ee7c0de894feba = L.marker(
+                [-22.152210923629422, -50.09277300543698],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_c32dfc6aa12b9ee7771c5394b75a3cb7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f310021d626b9ee7b6271900a4707a8c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f873ad81934b1b693430eeb8054a44fb = $(`<div id="html_f873ad81934b1b693430eeb8054a44fb" style="width: 100.0%; height: 100.0%;">Casa 2</div>`)[0];
+                popup_f310021d626b9ee7b6271900a4707a8c.setContent(html_f873ad81934b1b693430eeb8054a44fb);
+            
+        
+
+        marker_3768e8ba1a4665b155ee7c0de894feba.bindPopup(popup_f310021d626b9ee7b6271900a4707a8c)
+        ;
+
+        
+    
+    
+                marker_3768e8ba1a4665b155ee7c0de894feba.setIcon(icon_c32dfc6aa12b9ee7771c5394b75a3cb7);
+            
+    
+            var marker_133549bd797280a329c3fb99ddd3a8ed = L.marker(
+                [-22.148760530381058, -50.09662021646666],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_18b3a8f78a5c92a4f5e226d498a89145 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_45633059ad476213824645ac8b1dc87c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ac4b47be4a3cac4475caade08f1a8ba7 = $(`<div id="html_ac4b47be4a3cac4475caade08f1a8ba7" style="width: 100.0%; height: 100.0%;">Casa 3</div>`)[0];
+                popup_45633059ad476213824645ac8b1dc87c.setContent(html_ac4b47be4a3cac4475caade08f1a8ba7);
+            
+        
+
+        marker_133549bd797280a329c3fb99ddd3a8ed.bindPopup(popup_45633059ad476213824645ac8b1dc87c)
+        ;
+
+        
+    
+    
+                marker_133549bd797280a329c3fb99ddd3a8ed.setIcon(icon_18b3a8f78a5c92a4f5e226d498a89145);
+            
+    
+            var marker_b948dd4624ab97a0c3013bf89b9efa44 = L.marker(
+                [-22.15839956501419, -50.0878595931188],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_e58bf02fda787fb084703a03cf1ea03d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f5c8be115985eb4cdd88d6fb1f066207 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_05e2770df4bfc4be61b399c47a7c3d0a = $(`<div id="html_05e2770df4bfc4be61b399c47a7c3d0a" style="width: 100.0%; height: 100.0%;">Casa 4</div>`)[0];
+                popup_f5c8be115985eb4cdd88d6fb1f066207.setContent(html_05e2770df4bfc4be61b399c47a7c3d0a);
+            
+        
+
+        marker_b948dd4624ab97a0c3013bf89b9efa44.bindPopup(popup_f5c8be115985eb4cdd88d6fb1f066207)
+        ;
+
+        
+    
+    
+                marker_b948dd4624ab97a0c3013bf89b9efa44.setIcon(icon_e58bf02fda787fb084703a03cf1ea03d);
+            
+    
+            var marker_a226a3eab0c6798c710dc91391301c04 = L.marker(
+                [-22.15438780219639, -50.09807707470197],
+                {
+}
+            ).addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+            var icon_1ab4f3e4d5599b134d62ae16b352ff44 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cad02dd303f46f4d33ecf16aa2778593 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1a0178d506c1923648c4414fb78f3e35 = $(`<div id="html_1a0178d506c1923648c4414fb78f3e35" style="width: 100.0%; height: 100.0%;">Casa 5</div>`)[0];
+                popup_cad02dd303f46f4d33ecf16aa2778593.setContent(html_1a0178d506c1923648c4414fb78f3e35);
+            
+        
+
+        marker_a226a3eab0c6798c710dc91391301c04.bindPopup(popup_cad02dd303f46f4d33ecf16aa2778593)
+        ;
+
+        
+    
+    
+                marker_a226a3eab0c6798c710dc91391301c04.setIcon(icon_1ab4f3e4d5599b134d62ae16b352ff44);
+            
+    
+
+        function geo_json_9119624222f8d4017acfc082b20fb51f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_9119624222f8d4017acfc082b20fb51f = L.geoJson(null, {
+                onEachFeature: geo_json_9119624222f8d4017acfc082b20fb51f_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_9119624222f8d4017acfc082b20fb51f_add (data) {
+            geo_json_9119624222f8d4017acfc082b20fb51f
+                .addData(data);
+        }
+            geo_json_9119624222f8d4017acfc082b20fb51f_add({"bbox": [-50.095043, -22.15969, -50.090179, -22.152395], "features": [{"bbox": [-50.095043, -22.15969, -50.090179, -22.152395], "geometry": {"coordinates": [[-50.090179, -22.15969], [-50.090922, -22.158837], [-50.090428, -22.158475], [-50.091015, -22.157783], [-50.091075, -22.157721], [-50.091615, -22.157094], [-50.092272, -22.156334], [-50.092695, -22.15587], [-50.093768, -22.154579], [-50.09407, -22.154324], [-50.09425, -22.154218], [-50.094591, -22.154069], [-50.094784, -22.153871], [-50.094784, -22.153845], [-50.094803, -22.153782], [-50.094908, -22.1537], [-50.095043, -22.153493], [-50.095039, -22.153198], [-50.094831, -22.1531], [-50.094555, -22.152964], [-50.094158, -22.152779], [-50.093289, -22.152395], [-50.092842, -22.153234], [-50.092216, -22.152945], [-50.092067, -22.153218]], "type": "LineString"}, "properties": {"segments": [{"distance": 1367.8, "duration": 153.8, "steps": [{"distance": 121.9, "duration": 14.6, "instruction": "Head northwest on Rua das Ac\u00e1cias", "name": "Rua das Ac\u00e1cias", "type": 11, "way_points": [0, 1]}, {"distance": 64.8, "duration": 15.6, "instruction": "Turn right onto Rua Primavera", "name": "Rua Primavera", "type": 1, "way_points": [1, 2]}, {"distance": 736.9, "duration": 61.8, "instruction": "Turn left onto Avenida Azaleia", "name": "Avenida Azaleia", "type": 0, "way_points": [2, 16]}, {"distance": 32.9, "duration": 7.9, "instruction": "Keep right", "name": "-", "type": 13, "way_points": [16, 17]}, {"distance": 201.2, "duration": 24.2, "instruction": "Turn right onto Rua Max Wirt", "name": "Rua Max Wirt", "type": 1, "way_points": [17, 21]}, {"distance": 104.0, "duration": 8.3, "instruction": "Turn right onto Rua Washington Luiz", "name": "Rua Washington Luiz", "type": 1, "way_points": [21, 22]}, {"distance": 72.0, "duration": 17.3, "instruction": "Turn left onto Rua M\u00e1rio Reis", "name": "Rua M\u00e1rio Reis", "type": 0, "way_points": [22, 23]}, {"distance": 34.2, "duration": 4.1, "instruction": "Turn right onto Rua Albertina Zola", "name": "Rua Albertina Zola", "type": 1, "way_points": [23, 24]}, {"distance": 0.0, "duration": 0.0, "instruction": "Arrive at Rua Albertina Zola, on the left", "name": "-", "type": 10, "way_points": [24, 24]}]}], "summary": {"distance": 1367.8, "duration": 153.8}, "way_points": [0, 24]}, "type": "Feature"}], "metadata": {"attribution": "openrouteservice.org | OpenStreetMap contributors", "engine": {"build_date": "2025-06-06T15:39:25Z", "graph_date": "2025-10-12T11:31:24Z", "osm_date": "2025-10-06T00:00:00Z", "version": "9.3.0"}, "query": {"coordinates": [[-50.09005190528351, -22.159595080264985], [-50.09195132993289, -22.153164028151053]], "format": "geojson", "preference": "fastest", "profile": "driving-car", "profileName": "driving-car"}, "service": "routing", "system_message": "Preference \u0027fastest\u0027 has been deprecated, using \u0027recommended\u0027.", "timestamp": 1760917673664}, "type": "FeatureCollection"});
+        geo_json_9119624222f8d4017acfc082b20fb51f.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_9119624222f8d4017acfc082b20fb51f.bindTooltip(
+                `<div>
+                     Distância: 1.37 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_9119624222f8d4017acfc082b20fb51f.addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+
+        function geo_json_3c13919963c36101be39e84b243b9ff2_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_3c13919963c36101be39e84b243b9ff2 = L.geoJson(null, {
+                onEachFeature: geo_json_3c13919963c36101be39e84b243b9ff2_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_3c13919963c36101be39e84b243b9ff2_add (data) {
+            geo_json_3c13919963c36101be39e84b243b9ff2
+                .addData(data);
+        }
+            geo_json_3c13919963c36101be39e84b243b9ff2_add({"bbox": [-50.092797, -22.153218, -50.091993, -22.151993], "features": [{"bbox": [-50.092797, -22.153218, -50.091993, -22.151993], "geometry": {"coordinates": [[-50.092797, -22.152167], [-50.09242, -22.151993], [-50.091993, -22.15284], [-50.092216, -22.152945], [-50.092067, -22.153218]], "type": "LineString"}, "properties": {"segments": [{"distance": 207.2, "duration": 26.7, "steps": [{"distance": 43.3, "duration": 3.9, "instruction": "Head northeast on Rua Max Wirt", "name": "Rua Max Wirt", "type": 11, "way_points": [0, 1]}, {"distance": 103.9, "duration": 12.5, "instruction": "Turn right onto Rua Duque de Caxias", "name": "Rua Duque de Caxias", "type": 1, "way_points": [1, 2]}, {"distance": 25.8, "duration": 6.2, "instruction": "Turn right onto Rua M\u00e1rio Reis", "name": "Rua M\u00e1rio Reis", "type": 1, "way_points": [2, 3]}, {"distance": 34.2, "duration": 4.1, "instruction": "Turn left onto Rua Albertina Zola", "name": "Rua Albertina Zola", "type": 0, "way_points": [3, 4]}, {"distance": 0.0, "duration": 0.0, "instruction": "Arrive at Rua Albertina Zola, on the left", "name": "-", "type": 10, "way_points": [4, 4]}]}], "summary": {"distance": 207.2, "duration": 26.7}, "way_points": [0, 4]}, "type": "Feature"}], "metadata": {"attribution": "openrouteservice.org | OpenStreetMap contributors", "engine": {"build_date": "2025-06-06T15:39:25Z", "graph_date": "2025-10-12T11:31:24Z", "osm_date": "2025-10-06T00:00:00Z", "version": "9.3.0"}, "query": {"coordinates": [[-50.09277300543698, -22.152210923629422], [-50.09195132993289, -22.153164028151053]], "format": "geojson", "preference": "fastest", "profile": "driving-car", "profileName": "driving-car"}, "service": "routing", "system_message": "Preference \u0027fastest\u0027 has been deprecated, using \u0027recommended\u0027.", "timestamp": 1760917673931}, "type": "FeatureCollection"});
+        geo_json_3c13919963c36101be39e84b243b9ff2.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_3c13919963c36101be39e84b243b9ff2.bindTooltip(
+                `<div>
+                     Distância: 0.21 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_3c13919963c36101be39e84b243b9ff2.addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+
+        function geo_json_5ed5fd25209ff2f5c5c089f31caf955c_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_5ed5fd25209ff2f5c5c089f31caf955c = L.geoJson(null, {
+                onEachFeature: geo_json_5ed5fd25209ff2f5c5c089f31caf955c_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_5ed5fd25209ff2f5c5c089f31caf955c_add (data) {
+            geo_json_5ed5fd25209ff2f5c5c089f31caf955c
+                .addData(data);
+        }
+            geo_json_5ed5fd25209ff2f5c5c089f31caf955c_add({"bbox": [-50.096571, -22.153234, -50.092067, -22.148334], "features": [{"bbox": [-50.096571, -22.153234, -50.092067, -22.148334], "geometry": {"coordinates": [[-50.096571, -22.14885], [-50.096317, -22.148732], [-50.095594, -22.148411], [-50.095425, -22.148334], [-50.095026, -22.149129], [-50.094586, -22.149957], [-50.094162, -22.150761], [-50.093732, -22.151582], [-50.093289, -22.152395], [-50.092842, -22.153234], [-50.092216, -22.152945], [-50.092067, -22.153218]], "type": "LineString"}, "properties": {"segments": [{"distance": 844.4, "duration": 121.6, "steps": [{"distance": 131.8, "duration": 31.6, "instruction": "Head northeast on Rua Carlos Campe\u00e3o", "name": "Rua Carlos Campe\u00e3o", "type": 11, "way_points": [0, 3]}, {"distance": 606.4, "duration": 68.6, "instruction": "Turn right onto Rua Washington Luiz", "name": "Rua Washington Luiz", "type": 1, "way_points": [3, 9]}, {"distance": 72.0, "duration": 17.3, "instruction": "Turn left onto Rua M\u00e1rio Reis", "name": "Rua M\u00e1rio Reis", "type": 0, "way_points": [9, 10]}, {"distance": 34.2, "duration": 4.1, "instruction": "Turn right onto Rua Albertina Zola", "name": "Rua Albertina Zola", "type": 1, "way_points": [10, 11]}, {"distance": 0.0, "duration": 0.0, "instruction": "Arrive at Rua Albertina Zola, on the left", "name": "-", "type": 10, "way_points": [11, 11]}]}], "summary": {"distance": 844.4, "duration": 121.6}, "way_points": [0, 11]}, "type": "Feature"}], "metadata": {"attribution": "openrouteservice.org | OpenStreetMap contributors", "engine": {"build_date": "2025-06-06T15:39:25Z", "graph_date": "2025-10-12T11:31:24Z", "osm_date": "2025-10-06T00:00:00Z", "version": "9.3.0"}, "query": {"coordinates": [[-50.09662021646666, -22.148760530381058], [-50.09195132993289, -22.153164028151053]], "format": "geojson", "preference": "fastest", "profile": "driving-car", "profileName": "driving-car"}, "service": "routing", "system_message": "Preference \u0027fastest\u0027 has been deprecated, using \u0027recommended\u0027.", "timestamp": 1760917674201}, "type": "FeatureCollection"});
+        geo_json_5ed5fd25209ff2f5c5c089f31caf955c.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_5ed5fd25209ff2f5c5c089f31caf955c.bindTooltip(
+                `<div>
+                     Distância: 0.84 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_5ed5fd25209ff2f5c5c089f31caf955c.addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+
+        function geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f = L.geoJson(null, {
+                onEachFeature: geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f_add (data) {
+            geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f
+                .addData(data);
+        }
+            geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f_add({"bbox": [-50.092842, -22.158439, -50.087944, -22.152945], "features": [{"bbox": [-50.092842, -22.158439, -50.087944, -22.152945], "geometry": {"coordinates": [[-50.087944, -22.158439], [-50.088314, -22.157754], [-50.088992, -22.158249], [-50.089366, -22.157813], [-50.08985, -22.158166], [-50.090906, -22.156937], [-50.091098, -22.156571], [-50.091602, -22.155605], [-50.091991, -22.154872], [-50.092418, -22.154044], [-50.092842, -22.153234], [-50.092216, -22.152945], [-50.092067, -22.153218]], "type": "LineString"}, "properties": {"segments": [{"distance": 1037.9, "duration": 124.4, "steps": [{"distance": 85.2, "duration": 10.2, "instruction": "Head northwest on Rua Azevedo Garcia Lopes", "name": "Rua Azevedo Garcia Lopes", "type": 11, "way_points": [0, 1]}, {"distance": 88.9, "duration": 21.3, "instruction": "Turn left onto Rua Joaquim Amaral", "name": "Rua Joaquim Amaral", "type": 0, "way_points": [1, 2]}, {"distance": 61.9, "duration": 7.4, "instruction": "Turn right onto Rua Ant\u00f4nio Monteiro Teixeira", "name": "Rua Ant\u00f4nio Monteiro Teixeira", "type": 1, "way_points": [2, 3]}, {"distance": 63.4, "duration": 15.2, "instruction": "Turn left onto Rua Abelardo Alves do Amaral", "name": "Rua Abelardo Alves do Amaral", "type": 0, "way_points": [3, 4]}, {"distance": 632.2, "duration": 48.8, "instruction": "Turn right onto Rua Ant\u00f4nio Reis", "name": "Rua Ant\u00f4nio Reis", "type": 1, "way_points": [4, 10]}, {"distance": 72.0, "duration": 17.3, "instruction": "Turn right onto Rua M\u00e1rio Reis", "name": "Rua M\u00e1rio Reis", "type": 1, "way_points": [10, 11]}, {"distance": 34.2, "duration": 4.1, "instruction": "Turn right onto Rua Albertina Zola", "name": "Rua Albertina Zola", "type": 1, "way_points": [11, 12]}, {"distance": 0.0, "duration": 0.0, "instruction": "Arrive at Rua Albertina Zola, on the left", "name": "-", "type": 10, "way_points": [12, 12]}]}], "summary": {"distance": 1037.9, "duration": 124.4}, "way_points": [0, 12]}, "type": "Feature"}], "metadata": {"attribution": "openrouteservice.org | OpenStreetMap contributors", "engine": {"build_date": "2025-06-06T15:39:25Z", "graph_date": "2025-10-12T11:31:24Z", "osm_date": "2025-10-06T00:00:00Z", "version": "9.3.0"}, "query": {"coordinates": [[-50.0878595931188, -22.15839956501419], [-50.09195132993289, -22.153164028151053]], "format": "geojson", "preference": "fastest", "profile": "driving-car", "profileName": "driving-car"}, "service": "routing", "system_message": "Preference \u0027fastest\u0027 has been deprecated, using \u0027recommended\u0027.", "timestamp": 1760917674465}, "type": "FeatureCollection"});
+        geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f.bindTooltip(
+                `<div>
+                     Distância: 1.04 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_2c24dcf76aa5e8cba3a1fe5bc08bc08f.addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+    
+
+        function geo_json_0df4d7115b8fe9cab7e6ada295350410_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_0df4d7115b8fe9cab7e6ada295350410 = L.geoJson(null, {
+                onEachFeature: geo_json_0df4d7115b8fe9cab7e6ada295350410_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_0df4d7115b8fe9cab7e6ada295350410_add (data) {
+            geo_json_0df4d7115b8fe9cab7e6ada295350410
+                .addData(data);
+        }
+            geo_json_0df4d7115b8fe9cab7e6ada295350410_add({"bbox": [-50.097973, -22.154578, -50.092067, -22.152395], "features": [{"bbox": [-50.097973, -22.154578, -50.092067, -22.152395], "geometry": {"coordinates": [[-50.097973, -22.154578], [-50.097469, -22.15434], [-50.097133, -22.154191], [-50.09706, -22.154159], [-50.095418, -22.153382], [-50.095223, -22.153286], [-50.095039, -22.153198], [-50.094831, -22.1531], [-50.094555, -22.152964], [-50.094158, -22.152779], [-50.093289, -22.152395], [-50.092842, -22.153234], [-50.092216, -22.152945], [-50.092067, -22.153218]], "type": "LineString"}, "properties": {"segments": [{"distance": 751.6, "duration": 131.3, "steps": [{"distance": 541.3, "duration": 101.6, "instruction": "Head northeast on Rua Max Wirt", "name": "Rua Max Wirt", "type": 11, "way_points": [0, 10]}, {"distance": 104.0, "duration": 8.3, "instruction": "Turn right onto Rua Washington Luiz", "name": "Rua Washington Luiz", "type": 1, "way_points": [10, 11]}, {"distance": 72.0, "duration": 17.3, "instruction": "Turn left onto Rua M\u00e1rio Reis", "name": "Rua M\u00e1rio Reis", "type": 0, "way_points": [11, 12]}, {"distance": 34.2, "duration": 4.1, "instruction": "Turn right onto Rua Albertina Zola", "name": "Rua Albertina Zola", "type": 1, "way_points": [12, 13]}, {"distance": 0.0, "duration": 0.0, "instruction": "Arrive at Rua Albertina Zola, on the left", "name": "-", "type": 10, "way_points": [13, 13]}]}], "summary": {"distance": 751.6, "duration": 131.3}, "way_points": [0, 13]}, "type": "Feature"}], "metadata": {"attribution": "openrouteservice.org | OpenStreetMap contributors", "engine": {"build_date": "2025-06-06T15:39:25Z", "graph_date": "2025-10-12T11:31:24Z", "osm_date": "2025-10-06T00:00:00Z", "version": "9.3.0"}, "query": {"coordinates": [[-50.09807707470197, -22.15438780219639], [-50.09195132993289, -22.153164028151053]], "format": "geojson", "preference": "fastest", "profile": "driving-car", "profileName": "driving-car"}, "service": "routing", "system_message": "Preference \u0027fastest\u0027 has been deprecated, using \u0027recommended\u0027.", "timestamp": 1760917674731}, "type": "FeatureCollection"});
+        geo_json_0df4d7115b8fe9cab7e6ada295350410.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+            geo_json_0df4d7115b8fe9cab7e6ada295350410.bindTooltip(
+                `<div>
+                     Distância: 0.75 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            geo_json_0df4d7115b8fe9cab7e6ada295350410.addTo(map_4e224f3d8ea29f039f14e67900a61f80);
+        
+</script>
+</html>
