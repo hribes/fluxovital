@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Reastreamento do Veículo</title>
+  <link rel="stylesheet" href="../styles/paciente-rastreio.css">
+  <link rel="stylesheet" href="../styles/popup-mb.css">
+  <link rel="stylesheet" href="/frontend/src/styles/message1.css">
+  <link rel="stylesheet" href="../styles/navbar-mb.css">
+
+</head>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <!-- Hamburger à esquerda -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand ms-2" href="#"></a>
+  </div>
+</nav>
+
+<!-- Offcanvas menu -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="ajuda">
+      <img src="../assets/ajuda.png" alt="">
+    <a href="#">Ajuda</a>
+    </div>
+    <div class="sair">
+      <img src="../assets/sair.png" alt="">
+      <a href="#">Sair</a>
+    </div>
+  </div>
+</div>
+
+<body>
+  <div class="mapa">
+    <p>mapinha mapinhaaa</p>
+  </div>
+
+  <!-- Bottom Sheet -->
+  <div class="bottom-sheet" id="bottomSheet">
+    <div class="drag-handle"></div>
+    <div class="conteudo">
+      <div class="moto-tudo">
+        <div class="img-moto">
+          <img src="../assets/user.png" class="avatar" alt="Foto motorista">
+        </div>
+        <div class="info-motorista">
+          <h3>André da Silva</h3>
+          <p>Ambulância de Transporte</p>
+          <p><strong>Placa:</strong> ABC-1234</p>
+        </div>
+      </div>
+      <div class="status">
+        <h4>A caminho</h4>
+        <p>Chega em 15 minutos...</p>
+      </div>
+      <div class="botao-cancelar">
+        <button class="cancelar" data-bs-toggle="modal" data-bs-target="#meuModal">
+          <img src="../assets/cancela.png" class="img-cancelar" alt="Cancelar">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+<div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content popup-centralizado">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="tituloModal">Deseja realmente cancelar?</h5>
+      </div>
+      <div class="modal-body">
+        <p>Se você cancelar a solicitação do transporte, não será possível solicitar novamente hoje. </p>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn-voltar" data-bs-dismiss="modal">Voltar</button>
+        <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              
+              <div class="modal-body d-flex flex-column align-items-center">
+                
+                <h5>Corrida <b>cancelada</b> com sucesso!</h5>
+                <dotlottie-wc 
+                  src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../services/bottom_sheet.js"></script>
+<script src="../services/messagepop-mb.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    height: 100%;
+    overflow: hidden;
+}
+
+.container{
+    margin-top: 50px;
+}
+
+.container h2{
+    margin-bottom: 35px;
+}
+label{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+select.form-select{
+    font-size: 13px;
+}
+
+input[type="text"], input[type="email"], input[type="number"], input[type="file"], input[type="datetime-local"], input[type="time"]{
+    font-size: 13px;
+}
+
+.row{
+    margin-top: 20px;
+}
+
+.formulario-botao{
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.formulario-botao button{
+    width: 250px;
+}
+
+.btn.btn-primary{
+    background-color: #FFE432;
+    border: none;
+    color: black;
+    font-weight: 500;
+}
+
+.btn.btn-primary:hover{
+    background-color: #FFD700;
+    color: black;
+}
+
+.btn.btn-outline-secondary{
+    border: 1px solid #878787;
+    color: black;
+    font-weight: 500;
+}
+
+.btn.btn-outline-secondary:hover{
+    background-color: #f0f0f0;
+    color: black;
+}

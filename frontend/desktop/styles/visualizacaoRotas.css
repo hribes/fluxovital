@@ -1,0 +1,73 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    height: 100%;;
+}
+.container{
+    margin-top: 50px;
+}
+
+.container h2{
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+label{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+input[type="date"]{
+    font-size: 13px;
+}
+
+select.form-select{
+    font-size: 13px;
+}
+
+#map{
+    height: 500px;
+    border: 1px solid black;
+}
+
+.card-paciente {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    margin: 10px;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+.paciente-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.paciente-nome {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+.paciente-info {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    line-height: 15px;
+    margin-top: 10px;
+}
+
+.row{
+    margin-top: 20px;
+}
+
+.textos-card{
+    margin-left: 10px;
+}
+
+.textos-card h3{
+    font-weight: 600;
+    line-height: 10px;
+}

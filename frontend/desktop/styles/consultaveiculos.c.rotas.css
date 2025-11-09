@@ -1,0 +1,154 @@
+.html, .body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    height: 100%;;
+}
+
+.container{
+    margin-top: 120px;
+}
+.formulario-dados{
+    margin-top: 35px;
+}
+
+.label{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="datetime-local"], input[type="time"]{
+    font-size: 13px;
+}
+.form-select, #info_adicionais{
+    font-size: 13px;
+}
+
+.row{
+    margin-top: 20px;
+}
+
+.formulario-endereco h5{
+    margin-top: 35px;
+}
+
+.formulario-botao{
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.formulario-botao .button{
+    width: 250px;
+}
+
+.btn.btn-primary{
+    background-color: #FFE432;
+    border: none;
+    color: black;
+    font-weight: 500;
+}
+
+.btn.btn-primary:hover{
+    background-color: #FFD700;
+    color: black;
+}
+
+.btn.btn-outline-secondary{
+    border: 1px solid #878787;
+    color: black;
+    font-weight: 500;
+}
+
+.btn.btn-outline-secondary:hover{
+    background-color: #f0f0f0;
+    color: black;
+}
+
+.card-paciente {
+  display: flex;
+  flex-direction: column; /* elementos empilhados verticalmente */
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 160px;
+  background: #fff;
+}
+
+.paciente-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.paciente-id {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+
+.paciente-info p {
+  margin: 0;
+  font-size: 16px;
+}
+.text-muted{
+  padding-right:10px;
+}
+
+.paciente-info strong {
+  font-weight: 600;
+}
+
+.conteudo {
+    margin-top: 10px; 
+}
+
+.linha-info {
+  display: flex;
+  justify-content: space-between; /* garante que capacidade fique à esquerda e placa à direita */
+  align-items: center;            /* alinha verticalmente */
+  margin-bottom: 8px;
+  padding-right: 40px;
+}
+
+.linha-info p {
+  margin: 0;
+}
+
+.text-muted {
+    font-size: 14px;
+}
+
+.paciente-nome {
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1; /* remove espaçamento interno */
+  margin: 0;       /* sem margem acima ou abaixo */
+  padding: 0;
+}
+
+.paciente-nome2 {
+  font-size: 16px;
+  color: #333;
+  font-weight: 400;
+  line-height: 1;      /* colado no título */
+  margin: 0 0 12px 0;  /* só espaço abaixo antes das infos */
+  padding: 0;
+}
+
+.visualizar.rota {
+  margin-top: auto;          /* empurra o botão para o fim do card */
+  align-self: center;        /* centraliza horizontalmente */
+  padding: 8px 16px;
+  color: #44A6EB;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100px;
+  text-decoration: underline;
+}

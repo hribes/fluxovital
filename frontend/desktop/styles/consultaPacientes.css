@@ -1,0 +1,160 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    height: 100%;;
+}
+
+.container h2{
+    margin-top: 60px;
+}
+
+label{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+input[type="date"]{
+    font-size: 13px;
+}
+
+select.form-select{
+    font-size: 13px;
+}
+
+.container h2{
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.card-paciente {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);/* só margem vertical */
+    line-height: 20px;
+    font-size: 14px;
+    flex: 0 0 300px;         /* largura fixa (ex: 300px) */
+}
+
+.paciente-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.paciente-nome {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+.paciente-info {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* duas colunas */
+    line-height: 13px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+/* expandido ocupa as 2 colunas */
+.info-expandido {
+    grid-column: 1 / -1;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0;
+}
+
+.info-expandido.ativo {
+    max-height: 500px;
+    
+}
+
+/* só esse par fica lado a lado */
+.linha {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 16px;
+}
+
+
+/* --- Opção 1: Masonry com CSS columns (sem alterar HTML) --- */
+.row.g-2.mb-3 {
+  /* anula o display:flex do Bootstrap apenas nesse container */
+  display: block !important;
+  column-count: 2;           /* 2 colunas (ajusta responsivo abaixo) */
+  column-gap: 16px;
+  margin-left: 0;           /* evita efeitos de margem negativa do .row */
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Cada coluna wrapper vira um bloco dentro das colunas */
+.row.g-2.mb-3 .col-md-6 {
+  display: inline-block;    /* necessário para funcionar dentro das columns */
+  width: 100%;
+  margin: 0 0 16px;         /* espaço entre itens */
+  -webkit-column-break-inside: avoid;
+  -moz-column-break-inside: avoid;
+  break-inside: avoid;
+  padding-left: 0;          /* evita o padding do Bootstrap influenciar */
+  padding-right: 0;
+}
+
+/* garante que o cartão ocupe toda a largura da "coluna" */
+.card-paciente {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  vertical-align: top;
+  margin-bottom: 0; /* já controlado pela .col-md-6 */
+}
+
+/* responsivo: em telas pequenas usa só 1 coluna */
+@media (max-width: 768px) {
+  .row.g-2.mb-3 {
+    column-count: 1;
+  }
+}
+/* --- Opção 1: Masonry com CSS columns (sem alterar HTML) --- */
+.row.g-2.mb-3 {
+  /* anula o display:flex do Bootstrap apenas nesse container */
+  display: block !important;
+  column-count: 2;           /* 2 colunas (ajusta responsivo abaixo) */
+  column-gap: 10px;
+  margin-left: 0;           /* evita efeitos de margem negativa do .row */
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Cada coluna wrapper vira um bloco dentro das colunas */
+.row.g-2.mb-3 .col-md-6 {
+  display: inline-block;    /* necessário para funcionar dentro das columns */
+  width: 100%;
+  margin: 0 0 10px;         /* espaço entre itens */
+  -webkit-column-break-inside: avoid;
+  -moz-column-break-inside: avoid;
+  break-inside: avoid;
+  padding-left: 0;          /* evita o padding do Bootstrap influenciar */
+  padding-right: 0;
+}
+
+/* garante que o cartão ocupe toda a largura da "coluna" */
+.card-paciente {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  vertical-align: top;
+  margin-bottom: 0; /* já controlado pela .col-md-6 */
+}
+
+/* responsivo: em telas pequenas usa só 1 coluna */
+@media (max-width: 768px) {
+  .row.g-2.mb-3 {
+    column-count: 1;
+  }
+}
+
+

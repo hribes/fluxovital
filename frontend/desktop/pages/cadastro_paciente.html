@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../styles/cadConsultaPaciente.css">
+    <link rel="icon" type="image/png" href="../assets/icone.png">
+    <link rel="stylesheet" href="../styles/navebar.css">
+    <link rel="stylesheet" href="../styles/popup1.css">
+
+    <title>Cadastrar Pacientes</title>
+</head>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <!-- Botão hamburger do perfil (só em telas pequenas) -->
+    <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="../pages/home.html">
+      <img src="../assets/logo-branco.png" alt="Logo" class="logo">
+    </a>
+
+     <!-- Links da navbar (visíveis só em telas grandes) -->
+    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <!-- Agendamentos -->
+
+        <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="link-text">Cadastros </span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="../pages/cadastro_consulta.html"><span class="link-text">Cadastrar Consulta</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_funcionarios.html"><span class="link-text">Cadastrar Funcionário</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_paciente.html"><span class="link-text">Cadastrar Paciente</span></a></li>
+             <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
+          </ul>
+        </li>
+
+
+        <!-- Dropdown Veículos -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="link-text">Veículos</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="../pages/cadastro_veiculo.html"><span class="link-text">Cadastrar Veículo</span></a></li>
+            <li><a class="dropdown-item" href="../pages/consulta_veiculos.html"><span class="link-text">Visualizar Veículos</span></a></li>
+           <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="link-text">Motorista</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="../pages/cadastro_motorista.html"><span class="link-text">Cadastrar Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/atribuicao_motoristas.html"><span class="link-text">Atribuir Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
+          </ul>
+        </li>
+
+
+        <!-- Links simples -->
+      <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
+      </ul>
+    </div>
+
+    <!-- Nome do usuário à direita (só em telas grandes) -->
+    <div class="d-flex align-items-center text-light ms-auto d-lg-none">
+  <span class="me-2">Amanda Cristina</span>
+  <i class="bi bi-person-circle fs-4"></i>
+</div>
+
+<!-- Usuário: versão desktop -->
+<div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+  <span>Amanda Cristina</span>
+  <i class="bi bi-person-circle fs-4"></i>
+</div>
+  </div>
+  
+</nav>
+
+<!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
+  <div class="offcanvas-header juslgtify-content-center">
+    <h5 class="offcanvas-title">Amanda Cristina</h5>
+    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column gap-3">
+  <a href="../pages/home.html"><span class="link-text">Home</span></a>
+    <a href="../pages/cadastro_consulta.html"><span class="link-text">Agendamentos</span></a>
+    <a href="../pages/consulta_veiculos.html"><span class="link-text">Veículos</span></a>
+    <a href="../pages/cadastro_motorista.html"><span class="link-text">Motoristas</span></a>
+    <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
+  </div>
+</div>
+<body>
+    <body>
+  <div class="container">
+    <h2 class="text">Cadastro de Paciente</h2>
+    <div class="formulario-dados">
+
+      <!-- Primeira linha -->
+      <div class="row">
+        <div class="col-md-8">
+          <label for="nome_paciente" class="form-label">Nome do Paciente:</label>
+          <input type="text" class="form-control" id="nome_paciente" placeholder="Ex:. João Paulo da Silva">
+        </div>
+        <div class="col-md-4">
+          <label for="cpf_paciente" class="form-label">CPF:</label>
+          <input type="text" class="form-control" id="cpf_paciente" placeholder="Ex:. 123.456.789-10">
+        </div>
+      </div>
+
+      <!-- Segunda linha -->
+      <div class="row mt-3">
+        <div class="col-md-3">
+          <label for="data_nascimento_paciente" class="form-label">Data de Nascimento:</label>
+          <input type="date" class="form-control" id="data_nascimento_paciente">
+        </div>
+
+        <div class="col-md-3">
+          <label for="sexo_paciente" class="form-label">Sexo:</label>
+          <select class="form-select" id="sexo_paciente">
+            <option selected>Masculino</option>
+            <option value="2">Feminino</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="senha_paciente" class="form-label">Senha:</label>
+          <input type="text" class="form-control" id="senha_paciente" placeholder="Ex:. 12345@senha">
+        </div>
+
+        <div class="col-md-3">
+          <label for="telefone_paciente" class="form-label">Telefone:</label>
+          <input type="text" class="form-control" id="telefone_paciente" placeholder="Ex:. (11) 91234-5678">
+        </div>
+      </div>
+    </div>
+
+        <div class="formulario-endereco">
+
+            <h5>Endereço do Paciente:</h5>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="rua_paciente" class="form-label">Rua:</label>
+                    <input type="text" class="form-control" id="rua_paciente" placeholder="Ex:. Rua das Flores">
+                </div>
+                <div class="col-md-5">
+                    <label for="bairro_paciente" class="form-label">Bairro:</label>
+                    <input type="text" class="form-control" id="bairro_paciente" placeholder="Ex:. Centro">
+                </div>
+
+                <div class="col-md-2">
+                    <label for="numero_casa" class="form-label">Número:</label>
+                    <input type="text" class="form-control" id="numero_casa" placeholder="Ex:. 123">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="info_adicionais" class="form-label">Informações Adicionais:</label>
+                    <textarea name="info_adicionais" id="info_adicionais" class="form-control" rows="3" placeholder="Digite aqui as informações adicionais..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="formulario-botao">
+            <button type="reset" class="btn btn-outline-secondary">Limpar Campos</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal">Cadastrar</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal">Deseja cadastrar novo Paciente?</h5>
+                  </div>
+                  <div class="modal-body">
+                    <p>Esse paciente será cadastrado no sistema e poderá ter consultas vinculadas a ele.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+                <!-- Modal de Sucesso -->
+          <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              
+              <div class="modal-body d-flex flex-column align-items-center">
+                
+                <dotlottie-wc 
+                  src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
+
+                <h5>Cadastro realizado com sucesso!</h5>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+
+
+        <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../services/message1.js"></script>
+</body>
+</html>
+

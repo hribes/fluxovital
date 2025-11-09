@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../styles/consultaPacientes.css">
+    <link rel="stylesheet" href="../styles/navebar.css">
+    <title>Consulta Pacientes</title>
+    <link rel="icon" type="image/png" href="../assets/icone.png">
+</head>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <!-- Botão hamburger do perfil (só em telas pequenas) -->
+    <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="../pages/home.html">
+      <img src="../assets/logo-branco.png" alt="Logo" class="logo">
+    </a>
+
+ <!-- Links da navbar (visíveis só em telas grandes) -->
+    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <!-- Agendamentos -->
+
+        <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="link-text">Cadastros </span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="../pages/cadastro_consulta.html"><span class="link-text">Cadastrar Consulta</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_funcionarios.html"><span class="link-text">Cadastrar Funcionário</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_paciente.html"><span class="link-text">Cadastrar Paciente</span></a></li>
+             <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
+          </ul>
+        </li>
+
+
+        <!-- Dropdown Veículos -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="link-text">Veículos</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="../pages/cadastro_veiculo.html"><span class="link-text">Cadastrar Veículo</span></a></li>
+            <li><a class="dropdown-item" href="../pages/consulta_veiculos.html"><span class="link-text">Visualizar Veículos</span></a></li>
+           <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <span class="link-text">Motorista</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="../pages/cadastro_motorista.html"><span class="link-text">Cadastrar Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/atribuicao_motoristas.html"><span class="link-text">Atribuir Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
+          </ul>
+        </li>
+
+
+        <!-- Links simples -->
+      <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
+      </ul>
+    </div>
+
+    <!-- Nome do usuário à direita (só em telas grandes) -->
+    <div class="d-flex align-items-center text-light ms-auto d-lg-none">
+  <span class="me-2">Amanda Cristina</span>
+  <i class="bi bi-person-circle fs-4"></i>
+</div>
+
+<!-- Usuário: versão desktop -->
+<div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+  <span>Amanda Cristina</span>
+  <i class="bi bi-person-circle fs-4"></i>
+</div>
+  </div>
+  
+</nav>
+
+<!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
+  <div class="offcanvas-header justify-content-center">
+    <h5 class="offcanvas-title">Amanda Cristina</h5>
+    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column gap-3">
+    <a href="../pages/home.html"><span class="link-text">Home</span></a>
+    <a href="../pages/cadastro_consulta.html"><span class="link-text">Agendamentos</span></a>
+    <a href="../pages/consulta_veiculos.html"><span class="link-text">Veículos</span></a>
+    <a href="../pages/cadastro_motorista.html"><span class="link-text">Motoristas</span></a>
+    <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
+  </div>
+</div>
+
+<body>
+<div class="container mt-4">
+    <h2 class="mb-4">Agendamento dos Pacientes</h2>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="filtroData" class="form-label">Data:</label>
+            <input type="date" class="form-control" id="filtroData">
+        </div>
+
+        <div class="col-md-2">
+            <label for="filtroStatus" class="form-label">Status:</label>
+            <select class="form-select" id="filtroStatus">
+                <option value="1" selected>Todos</option>
+                <option value="2">Pendente</option>
+                <option value="3">Coisa</option>
+                <option value="4">Aqui</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="filtroLocal" class="form-label">Local:</label>
+            <select class="form-select" id="filtroLocal">
+                <option value="1" selected>Todos</option>
+                <option value="2">Rua A</option>
+                <option value="3">Rua B</option>
+                <option value="4">Rua C</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="filtroVeiculo" class="form-label">Veículo:</label>
+            <select class="form-select" id="filtroVeiculo">
+                <option value="1" selected>Todos</option>
+                <option value="2">Ambulância</option>
+                <option value="3">Trator</option>
+                <option value="4">Bicicleta</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="filtroConsulta" class="form-label">Consulta:</label>
+         <select class="form-select" id="filtroConsulta">
+    <option value="1" selected>Todos</option>
+    <option value="2">Preventiva</option> <!-- corrigido -->
+    <option value="3">Emergência</option>
+    <option value="4">Rotina</option>
+</select>
+        </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="row g-2 mb-3">
+        <div class="col-md-6">
+            <div class="card-paciente">
+                <div class="paciente-header">
+                    <span class="paciente-nome">Maria Josefa da Silva</span>
+                    <span class="text-muted">Pendente</span>
+                </div>
+                <div class="text-muted">568.458.321-54</div>
+                <div class="paciente-info">
+                    <p><strong>Consulta:</strong> Emergência</p>
+                    <p><strong>Veículo:</strong> Ambulância</p>
+                    <p><strong>Data da Consulta:</strong> 01/09/2025</p>
+                    <p><strong>Hora:</strong> 10h30</p>
+
+                    <div class="info-expandido">
+                        <div class="linha">
+                            <p><strong>Horário do Termino:</strong> Não informado</p>
+                            <p><strong>Rota:</strong> Ida-Volta</p>
+                        </div>
+                        <p><strong>Local da Consulta:</strong> Santa Casa Marília, Av. Vicente Ferreira, 828 - Jardim Maria Izabel, Marília</p>
+                        <p><strong>Endereço do Paciente:</strong> R. Rubéns Guardiã, 144 - Antonio Carlos Nascimento da Silva</p>
+                        <p><strong>Acompanhante:</strong> Não</p>
+                        <p><strong>Informações Adicionais:</strong> Não se locomove</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card-paciente">
+                <div class="paciente-header">
+                    <span class="paciente-nome">Maria Josefa da Silva</span>
+                    <span class="text-muted">Coisa</span>
+                </div>
+                <div class="text-muted">568.458.321-54</div>
+                <div class="paciente-info">
+                    <p><strong>Consulta:</strong> Emergência</p>
+                    <p><strong>Veículo:</strong> Ambulância</p>
+                    <p><strong>Data da Consulta:</strong> 01/09/2025</p>
+                    <p><strong>Hora:</strong> 10h30</p>
+
+                    <div class="info-expandido">
+                        <div class="linha">
+                            <p><strong>Horário do Termino:</strong> Não informado</p>
+                            <p><strong>Rota:</strong> Ida-Volta</p>
+                        </div>
+                        <p><strong>Local da Consulta:</strong> Santa Casa Marília, Av. Vicente Ferreira, 828 - Jardim Maria Izabel, Marília</p>
+                        <p><strong>Endereço do Paciente:</strong> R. Rubéns Guardiã, 144 - Antonio Carlos Nascimento da Silva</p>
+                        <p><strong>Acompanhante:</strong> Não</p>
+                        <p><strong>Informações Adicionais:</strong> Não se locomove</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+                <div class="col-md-6">
+            <div class="card-paciente">
+                <div class="paciente-header">
+                    <span class="paciente-nome">Maria Josefa da Silva</span>
+                    <span class="text-muted">Pendente</span>
+                </div>
+                <div class="text-muted">568.458.321-54</div>
+                <div class="paciente-info">
+                    <p><strong>Consulta:</strong> Preventiva</p>
+                    <p><strong>Veículo:</strong> Trator</p>
+                    <p><strong>Data da Consulta:</strong> 01/09/2025</p>
+                    <p><strong>Hora:</strong> 10h30</p>
+
+                    <div class="info-expandido">
+                        <div class="linha">
+                            <p><strong>Horário do Termino:</strong> Não informado</p>
+                            <p><strong>Rota:</strong> Ida-Volta</p>
+                        </div>
+                        <p><strong>Local da Consulta:</strong> Santa Casa Marília, Av. Vicente Ferreira, 828 - Jardim Maria Izabel, Marília</p>
+                        <p><strong>Endereço do Paciente:</strong> R. Rubéns Guardiã, 144 - Antonio Carlos Nascimento da Silva</p>
+                        <p><strong>Acompanhante:</strong> Não</p>
+                        <p><strong>Informações Adicionais:</strong> Não se locomove</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+                        <div class="col-md-6">
+            <div class="card-paciente">
+                <div class="paciente-header">
+                    <span class="paciente-nome">Maria Josefa da Silva</span>
+                    <span class="text-muted">Pendente</span>
+                </div>
+                <div class="text-muted">568.458.321-54</div>
+                <div class="paciente-info">
+                    <p><strong>Consulta:</strong> Preventiva</p>
+                    <p><strong>Veículo:</strong> Bicicleta</p>
+                    <p><strong>Data da Consulta:</strong> 01/09/2025</p>
+                    <p><strong>Hora:</strong> 10h30</p>
+
+                    <div class="info-expandido">
+                        <div class="linha">
+                            <p><strong>Horário do Termino:</strong> Não informado</p>
+                            <p><strong>Rota:</strong> Ida-Volta</p>
+                        </div>
+                        <p><strong>Local da Consulta:</strong> Santa Casa Marília, Av. Vicente Ferreira, 828 - Jardim Maria Izabel, Marília</p>
+                        <p><strong>Endereço do Paciente:</strong> R. Rubéns Guardiã, 144 - Antonio Carlos Nascimento da Silva</p>
+                        <p><strong>Acompanhante:</strong> Não</p>
+                        <p><strong>Informações Adicionais:</strong> Não se locomove</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.querySelectorAll(".card-paciente").forEach(card => {
+    card.addEventListener("click", () => {
+        const info = card.querySelector(".info-expandido");
+        info.classList.toggle("ativo"); 
+    });
+});
+    </script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ===== FILTROS DE PACIENTES (versão robusta, NÃO altera HTML) =====
+  const filtroData = document.getElementById("filtroData");
+  const filtroStatus = document.getElementById("filtroStatus");
+  const filtroLocal = document.getElementById("filtroLocal");
+  const filtroVeiculo = document.getElementById("filtroVeiculo");
+  const filtroConsulta = document.getElementById("filtroConsulta");
+  const cards = document.querySelectorAll(".card-paciente");
+
+  // remove acentos, normaliza
+  function normalize(str = "") {
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // remove acentos
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  // pega o texto do p que contém um label (ex: "Veículo:", "Data da Consulta:", "Consulta:")
+  function getCampoDoCard(card, label) {
+    const ps = card.querySelectorAll(".paciente-info p");
+    const lbl = normalize(label);
+    for (const p of ps) {
+      const text = normalize(p.innerText);
+      if (text.includes(lbl) || text.startsWith(lbl)) {
+        // remove o rótulo antes dos dois pontos (ex: "consulta:" ) se existir
+        return p.innerText.split(":").slice(1).join(":").trim();
+      }
+    }
+    return ""; // não encontrado
+  }
+
+  // pega o status que está no header (span.text-muted)
+  function getStatusDoCard(card) {
+    const span = card.querySelector(".paciente-header .text-muted");
+    return span ? span.innerText.trim() : "";
+  }
+
+  // extrai data dd/mm/yyyy de qualquer texto do card (procura por padrão dd/mm/yyyy)
+  function extrairDataDoCard(card) {
+    const text = card.innerText;
+    const m = text.match(/(\d{2}[/\-]\d{2}[/\-]\d{4})/);
+    return m ? m[1].replace(/-/g, "/") : ""; // devolve com barras
+  }
+
+const consultaFiltroRaw = filtroConsulta.options[filtroConsulta.selectedIndex].text || "";
+const consultaMap = {
+  "preventina": "preventiva",
+  "emergência": "emergência",
+  "rotina": "rotina"
+};
+
+
+const consultaFiltro = consultaMap[normalize(consultaFiltroRaw)] || normalize(consultaFiltroRaw);
+  function aplicarFiltros() {
+    const valDataRaw = (filtroData?.value || "").trim(); // formato yyyy-mm-dd
+    // converte para dd/mm/yyyy se fornecido
+    const valData = valDataRaw ? valDataRaw.split("-").reverse().join("/") : "";
+
+    // usa o texto visível das opções (não altera o HTML)
+    const statusFiltroRaw = filtroStatus.options[filtroStatus.selectedIndex].text || "";
+    const localFiltroRaw = filtroLocal.options[filtroLocal.selectedIndex].text || "";
+    const veiculoFiltroRaw = filtroVeiculo.options[filtroVeiculo.selectedIndex].text || "";
+    const consultaFiltroRaw = filtroConsulta.options[filtroConsulta.selectedIndex].text || "";
+
+    const statusFiltro = normalize(statusFiltroRaw);
+    const localFiltro = normalize(localFiltroRaw);
+    const veiculoFiltro = normalize(veiculoFiltroRaw);
+    const consultaFiltro = normalize(consultaFiltroRaw);
+
+    cards.forEach(card => {
+      // valores extraídos do card
+      const statusCard = normalize(getStatusDoCard(card)); // "pendente" etc
+      const consultaCard = normalize(getCampoDoCard(card, "Consulta")) || normalize(getCampoDoCard(card, "Consulta:"));
+      const veiculoCard = normalize(getCampoDoCard(card, "Veículo")) || "";
+      const localCard = normalize(getCampoDoCard(card, "Local da Consulta")) || normalize(getCampoDoCard(card, "Local")) || "";
+      const dataCard = normalize(extrairDataDoCard(card)); // dd/mm/yyyy normalizado
+      
+      
+      // helpers para wildcard (se selecionar "Todos" ou opção que contenha "todos")
+      const isWildcard = txt => {
+        const n = normalize(txt);
+        return n === "" || n.includes("todos") || n.includes("todas") || n.includes("qualquer");
+      };
+
+      // status: tratar plurais/ex.: "pendentes" ou "pendente" -> comparar pela raiz
+      const statusMatches = isWildcard(statusFiltroRaw) ||
+        statusFiltro === "" ||
+        statusCard.includes(statusFiltro.replace(/s$/,"")) ||
+        statusFiltro.includes(statusCard.replace(/s$/,"")) ||
+        statusCard.includes(statusFiltro);
+
+      const localMatches = isWildcard(localFiltroRaw) || localFiltro === "" || localCard.includes(localFiltro);
+      const veiculoMatches = isWildcard(veiculoFiltroRaw) || veiculoFiltro === "" || veiculoCard.includes(veiculoFiltro);
+      const consultaMatches = isWildcard(consultaFiltroRaw) || consultaFiltro === "" || consultaCard.includes(consultaFiltro);
+
+      const dataMatches = !valData || valData === "" || normalize(valData) === dataCard;
+
+      const passa = statusMatches && localMatches && veiculoMatches && consultaMatches && dataMatches;
+
+      // mostra/oculta a coluna (.col-md-6)
+      const wrapper = card.parentElement;
+      if (wrapper) wrapper.style.display = passa ? "" : "none";
+    });
+  }
+
+  // adiciona listeners com debouce leve pra evitar muitos disparos
+  let timeout;
+  function scheduleAplicar() {
+    clearTimeout(timeout);
+    timeout = setTimeout(aplicarFiltros, 80);
+  }
+
+  [filtroData, filtroStatus, filtroLocal, filtroVeiculo, filtroConsulta].forEach(el => {
+    if (!el) return;
+    el.addEventListener("input", scheduleAplicar);
+    el.addEventListener("change", scheduleAplicar);
+  });
+
+  // aplica uma vez na carga
+  window.addEventListener("load", aplicarFiltros);
+  // também aplica após DOM ready caso já esteja antes
+  if (document.readyState === "complete" || document.readyState === "interactive") aplicarFiltros();
+</script>
+</body>
+</html>

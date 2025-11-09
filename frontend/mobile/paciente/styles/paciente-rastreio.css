@@ -1,0 +1,117 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.mapa {
+  height: 100vh;
+  background: #e054ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+  height: 40vh; /* 👉 altura maior quando aberto */
+  transform: translateY(calc(100% - 40px)); /* 👉 apenas o risquinho visível quando fechado */
+  touch-action: none;
+  overflow: hidden;
+}
+
+.bottom-sheet.active {
+  transform: translateY(0); /* 👉 sobe completamente quando aberto */
+}
+
+
+.drag-handle {
+  width: 40px;
+  height: 5px;
+  background: #ccc;
+  border-radius: 3px;
+  margin: 10px auto;
+}
+
+/* Esconde o conteúdo quando fechado */
+.bottom-sheet:not(.active) .conteudo {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bottom-sheet.active .conteudo {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.conteudo {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar {
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.cancelar {
+  background: none;
+  border: none;
+  color: red;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  margin-right: -10px;
+}
+
+.status{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.status h4 {
+  margin: 10px 0 0;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.moto-tudo{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.info-motorista {
+  margin-top: 10px;
+  line-height: 10px;
+  margin-left: 15px;
+}
+
+.info-motorista h3{
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.img-moto img{
+  width: 85px;
+  margin-top: 20px;
+}
+
+.img-cancelar{
+  width: 30px;
+}

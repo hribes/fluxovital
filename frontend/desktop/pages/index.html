@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/login.css">
+    <title>Fluxo Vital</title>
+</head>
+<body>
+    
+        <div class="container-fluid vh-100">
+    <div class="row h-100">
+        <!-- Coluna branca -->
+        <div class="col-md-6 col-white d-flex align-items-center justify-content-center">
+        <div class="forms">
+
+            <div class="logo">
+            <img src="../assets/logo-preto.png"  alt="Logo">
+            </div>
+            
+            <h1>Bem-vindo(a)!</h1>
+            <h2>Realize sua busca</h2>
+
+            <select class="form-select select-usuario" aria-label="Default select example">
+            <option value="1" selected>Atendente</option>
+            <option value="2">Paciente</option>
+            <option value="3">Motorista</option>
+            </select>
+
+            <input class="form-control cpf-paciente" type="text" placeholder="CPF" style="display:none;">
+            <input class="form-control email-usuario" type="email" placeholder="Email" style="display:none">
+            <input class="form-control senha-usuario" type="password" placeholder="Senha" style="display:none">
+            <button class="btn btn-entrar" type="button"  onclick="window.location.href='../pages/home.html'">Entrar</button>
+        </div>
+        </div>
+
+        <!-- Coluna amarela -->
+        <div class="col-md-6 bg-yellow d-flex align-items-center justify-content-center">
+            <div class="img-texto">
+                <h3 class="slogan"><b>Conectando trajetos,</b></h3>
+                <h2 class="slogan2"><b><i>transformando vidas.</i></b></h2>
+                <img src="../assets/img-login.svg" alt="" class="img-login">
+            </div>
+            
+        </div>
+    </div>
+    </div>
+
+
+    <script src="../services/campos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

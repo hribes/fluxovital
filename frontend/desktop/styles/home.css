@@ -1,0 +1,118 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    height: 100%;
+    background-color: #202020;
+}
+
+
+.tudo-conteudo {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+     align-items: center;      /* centraliza horizontalmente */
+     justify-content: center; /* centraliza verticalmente */
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 10px; /* espaço entre os botões e imagem */
+}
+
+.logo button {
+    margin: 12px 0; /* 5px de espaço entre os botões verticalmente */
+}
+
+.logo img{
+    width: 350px; 
+    margin-bottom: 10px;/* ajuste o tamanho conforme necessário */
+    height: auto;
+}
+
+.link-text{
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;  
+}
+
+span{
+    text-decoration: none !important;
+}
+
+.link-text,
+.link-text:hover,
+.link-text:focus,
+.link-text:active {
+    color: white !important;         
+    text-decoration: none !important; /* ⚙️ remove o underline padrão */
+    background-color: transparent !important; 
+    box-shadow: none !important;     
+}
+
+/* ⚙️ remove a linha padrão no hover */
+.link-text:hover {
+    text-decoration: none !important; 
+}
+
+.dropdown-menu-center {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  right: auto !important;
+}
+
+/* Mostra o dropdown ao passar o mouse */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+/* ===== Dropdown Item com linha animada ===== */
+.dropdown-item {
+  position: relative;
+  color: white !important;
+  background-color: transparent !important;
+  transition: color 0.3s ease;
+  text-align: center;
+}
+
+/* Força o texto a ser inline para medir o tamanho corretamente */
+.dropdown-item span {
+  position: relative;
+  display: inline-block;
+}
+
+/* Linha dourada começa no meio */
+.dropdown-item span::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #FFD700;
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+
+/* Anima do centro para os lados */
+.dropdown-item:hover span::after {
+  width: 100%;
+  left: 50%;
+}
+
+/* Efeito de cor no texto */
+.dropdown-item:hover {
+  color: #FFD700 !important;
+}
+
+li{
+  list-style: none;
+}
+
+.nav-link.dropdown-toggle{
+  color: white !important;
+}

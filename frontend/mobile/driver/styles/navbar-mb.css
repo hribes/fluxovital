@@ -1,0 +1,86 @@
+
+
+    /* Navbar transparente flutuante */
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0); /* totalmente transparente */
+      z-index: 10;
+      padding: 0.5rem 1rem;
+    }
+
+    .navbar-toggler {
+      border: none;
+      padding: 0.25rem 0.5rem;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("../assets/menu.png");
+      width: 70px;
+      height: 70px;
+    }
+
+    /* Offcanvas menu */
+    .offcanvas {
+      background-color: #fff;
+      color: black;
+    }
+
+    .offcanvas-body a {
+      display: block;
+      color: #000000;
+      text-decoration: none;
+      font-size: 14pt;
+      font-weight: 700;
+    }
+
+    .offcanvas-body{
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 200px;
+    }
+
+    .offcanvas-body a:hover {
+      color: #ffd700;
+    }
+
+    .offcanvas-title {
+      color: #fff;
+    }
+
+    .ajuda, .sair{
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .ajuda img{
+        width: 160px;
+        height: 160px;
+    }
+
+    .sair img{
+        width: 120px;
+        height: 120px;
+        margin-bottom: 15px;
+    }
+
+    /* Área de conteúdo abaixo da navbar */
+    .mapinha {
+ /* laranja como no print */
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      font-size: 1.5rem;
+    }

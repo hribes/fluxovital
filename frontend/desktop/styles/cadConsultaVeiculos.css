@@ -1,0 +1,129 @@
+.html, .body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    height: 100%;;
+}
+
+.container{
+    margin-top: 120px;
+}
+.formulario-dados{
+    margin-top: 35px;
+}
+
+.label{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 10px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="datetime-local"], input[type="time"]{
+    font-size: 13px;
+}
+.form-select, #info_adicionais{
+    font-size: 13px;
+}
+
+.row{
+    margin-top: 20px;
+}
+
+.formulario-endereco h5{
+    margin-top: 35px;
+}
+
+.formulario-botao{
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.formulario-botao .button{
+    width: 250px;
+}
+
+.btn.btn-primary{
+    background-color: #FFE432;
+    border: none;
+    color: black;
+    font-weight: 500;
+}
+
+.btn.btn-primary:hover{
+    background-color: #FFD700;
+    color: black;
+}
+
+.btn.btn-outline-secondary{
+    border: 1px solid #878787;
+    color: black;
+    font-weight: 500;
+}
+
+.btn.btn-outline-secondary:hover{
+    background-color: #f0f0f0;
+    color: black;
+}
+
+.card-paciente {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: #fff;
+  width: 100%;
+  min-height: 160px;
+  margin-bottom: 40px;   /* 👉 mais espaço na vertical */
+}
+
+.paciente-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.paciente-id {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.paciente-nome {
+  font-weight: 600;
+  font-size: 25px;
+  margin-bottom: 12px;   /* 👉 mais espaço entre o nome e as infos */
+}
+
+.paciente-info p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.paciente-info strong {
+  font-weight: 600;
+}
+
+.conteudo {
+    margin-top: 10px; 
+}
+
+.linha-info {
+  display: flex;
+  /* 👉 joga capacidade à esquerda e placa à direita */
+  gap: 110px; 
+  margin-bottom:8px/* 👉 espaço entre os itens */
+}
+
+.linha-info p {
+  margin: 0;
+}
+
+.text-muted {
+    font-size: 14px;
+}
+
+    

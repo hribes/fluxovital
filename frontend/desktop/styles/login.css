@@ -1,0 +1,148 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.row{
+    height: 100vh; /* altura total da viewport */
+}
+
+.bg-yellow {
+    background-color: #ffffff;
+}
+
+.col-white {
+    background-color: #ffffff;
+}
+
+.forms {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+    gap: 10px;
+    width: 75%;
+}
+
+.forms .select-usuario {
+    width: 300px;
+    border: 1px solid #000000;
+
+}
+.forms h1 {
+    font-size: 45px;
+    margin-bottom: -10px;
+    font-weight: 900;
+}
+
+.forms .cpf-paciente,
+.forms .email-usuario,
+.forms .senha-usuario {
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #000000;
+}
+
+.forms .select-usuario {
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #000000;
+}
+.btn-entrar{
+    width: 100%;
+    max-width: 500px;
+    background-color: #FFE432;
+    color: #000000;
+    font-size: 14px;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-entrar:hover {
+    background-color: #d2bc19;
+}
+
+.logo{
+    visibility: hidden;
+    height: 0;
+    width: 0;
+}
+
+.img-login{
+    width: 450px;
+}
+.slogan{
+    width: 400px;
+    font-size: 35px;
+}
+
+.img-texto h3{
+    line-height: 7px;
+    font-weight: 700;
+}
+.img-texto h2{
+    color: #ffc812;
+    font-size: 40px;
+    font-weight: 900;
+}
+
+/* Media query para telas menores que 768px */
+@media (max-width: 768px) {
+
+     html, body {
+        overflow: hidden;
+        height: 100%; /* Garante que o body ocupe a tela toda */
+    }
+    /* Esconde a coluna amarela */
+    .bg-yellow {
+        display: none !important;
+        visibility: hidden;
+    }
+
+    .forms {
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        flex-direction: column;
+        gap: 15px;
+        padding-bottom: 100px;
+        height: auto;
+        text-align: center;
+        width: 100% !important;
+    }
+
+    .forms select,
+    .forms input {
+        width: 100% !important; /* Agora ocupará 100% da largura disponível */
+        max-width: 350px !important; /* Este limite funcionará como esperado */
+        font-size: 18px;
+        padding: 12px;
+        border: 1px solid #000;
+        border-radius: 5px;
+    }
+    .btn-entrar {
+        width: 100% !important; /* Agora ocupará 100% da largura disponível */
+        max-width: 350px !important; /* Este limite funcionará como esperado */
+        font-size: 18px;
+        padding: 12px;
+        background-color: #FFE432;
+    }
+
+    .logo{
+        visibility: visible;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .logo img{
+        width: 150px;
+        height: auto;
+        margin-bottom: 100px;
+    }
+}
