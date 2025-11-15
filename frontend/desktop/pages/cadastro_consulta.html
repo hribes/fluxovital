@@ -12,29 +12,20 @@
     <link rel="icon" type="image/png" href="../assets/icone.png">
     <link rel="stylesheet" href="../styles/navebar.css">
     <link rel="stylesheet" href="../styles/popup1.css">
-    <link rel="stylesheet" href="../styles/message1.css">
+    <link rel="stylesheet" href="../styles/message1.css"> 
     <title>Cadastro Consultas</title>
 </head>
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <!-- Botão hamburger do perfil (só em telas pequenas) -->
     <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!-- Logo -->
     <a class="navbar-brand" href="../pages/home.html">
       <img src="../assets/logo-branco.png" alt="Logo" class="logo">
     </a>
-
-    <!-- Links da navbar (visíveis só em telas grandes) -->
     <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <!-- Agendamentos -->
-
         <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Cadastros </span>
@@ -46,9 +37,6 @@
              <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Dropdown Veículos -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Veículos</span>
@@ -59,7 +47,6 @@
            <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
           </ul>
         </li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Motorista</span>
@@ -70,30 +57,19 @@
               <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Links simples -->
       <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
       </ul>
     </div>
-
-
-    <!-- Nome do usuário à direita (só em telas grandes) -->
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
   <span class="me-2">Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
-
-<!-- Usuário: versão desktop -->
 <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
   <span>Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
   </div>
-  
 </nav>
-
-<!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
   <div class="offcanvas-header juslgtify-content-center">
     <h5 class="offcanvas-title">Amanda Cristina</h5>
@@ -107,94 +83,77 @@
     <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
   </div>
 </div>
+
 <body>
     <div class="container">
     <h2 class="text">Cadastro de Consulta</h2>
-    <div class="formulario-dados">
-        <div class="row">
-            <div class="col-md-7">
-                <label for="nome_paciente" class="form-label">Nome do Paciente:</label>
-                <input type="text" class="form-control" id="nome_paciente" placeholder="Ex:. João Paulo da Silva">
-            </div>
-            <div class="col-md-3">
-                <label for="cpf_paciente" class="form-label">CPF:</label>
-                <input type="text" class="form-control" id="cpf_paciente" placeholder="Ex:. 123.456.789-10">
-            </div>
-            <div class="col-md-2">
-                <label for="data_nascimento_paciente" class="form-label">Data de Nascimento:</label>
-                <input type="date" class="form-control" id="data_nascimento_paciente">
-            </div>
+    
+    <div id="avisoErro" class="alert alert-danger d-none" role="alert">
+        Por favor, preencha todos os campos obrigatórios.
+    </div>
+
+    <form id="formCadastroConsulta">
+        <div class="formulario-dados">
+            <div class="row">
+                <div class="col-md-8">
+                    <label for="id_paciente" class="form-label">Nome do Paciente: <span class="text-danger">*</span></label>
+                    <select class="form-select" id="id_paciente" required>
+                        <option value="" selected disabled>Selecione um paciente...</option>
+                        </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="id_tipo_consulta" class="form-label">Tipo de Consulta: <span class="text-danger">*</span></label>
+                    <select class="form-select" id="id_tipo_consulta" required>
+                        <option value="" selected disabled>Selecione um tipo...</option>
+                        </select>
+                </div>
             </div>
 
             <div class="row">
-                <div class="col-md-3">
-                    <label for="tipo_consulta" class="form-label">Tipo de Consulta:</label>
-                    <select class="form-select" id="tipo_consulta">
-                        <option selected>Nenhuma</option>
-                        <option value="1">Consulta de Retorno</option>
-                        <option value="2">Consulta de Emergência</option>
-                        <option value="3">Consulta de Rotina</option>
-                    </select>
-                </div>
                 <div class="col-md-6">
-                    <label for="local_consulta" class="form-label">Local da Consulta:</label>
-                    <input type="text" class="form-control" id="local_consulta" placeholder="Ex:. Hospital das Clínicas">
+                    <label for="id_local_atendimento" class="form-label">Local da Consulta: <span class="text-danger">*</span></label>
+                    <select class="form-select" id="id_local_atendimento" required>
+                         <option value="" selected disabled>Selecione um local...</option>
+                         </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="acompanhante" class="form-label">Acompanhante:</label>
-                    <select class="form-select" id="acompanhante">
-                        <option value="1" selected>Não</option>
-                        <option value="2">Sim</option>
+                    <label for="acompanhante" class="form-label">Acompanhante: <span class="text-danger">*</span></label>
+                    <select class="form-select" id="acompanhante" required>
+                        <option value="false" selected>Não</option>
+                        <option value="true">Sim</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="maca" class="form-label">Necessita Maca: <span class="text-danger">*</span></label>
+                    <select class="form-select" id="maca" required>
+                        <option value="false" selected>Não</option>
+                        <option value="true">Sim</option>
                     </select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-4">
-                <label for="data_consulta" class="form-label">Data da Consulta:</label>
-                <input type="date" class="form-control" id="data_consulta">
+                    <label for="data_hora_consulta" class="form-label">Data e Hora da Consulta: <span class="text-danger">*</span></label>
+                    <input type="datetime-local" class="form-control" id="data_hora_consulta" required>
                 </div>
-
                 <div class="col-md-4">
-                <label for="hora_consulta" class="form-label">Hora da Consulta:</label>
-                <input type="time" class="form-control" id="hora_consulta" >
+                    <label for="data_hora_ida" class="form-label">Data e Hora de Ida: <span class="text-danger">*</span></label>
+                    <input type="datetime-local" class="form-control" id="data_hora_ida" required>
                 </div>
-
                 <div class="col-md-4">
-                    <label for="tipo_viagem" class="form-label">Viagem:</label>
-                    <select class="form-select" id="tipo_viagem">
-                        <option value="1" selected>Ida - Volta</option>
-                        <option value="2">Só Ida</option>
-                        <option value="3">Só Volta</option>
-                    </select>
+                    <label for="data_hora_retorno" class="form-label">Data e Hora do Retorno:</label>
+                    <input type="datetime-local" class="form-control" id="data_hora_retorno">
+                    <small class="form-text text-muted">Deixe em branco se for só ida.</small>
                 </div>
             </div>
         </div>
 
         <div class="formulario-endereco">
-
-            <h5>Endereço do Paciente:</h5>
-
-            <div class="row">
-                <div class="col-md-5">
-                    <label for="rua_paciente" class="form-label">Rua:</label>
-                    <input type="text" class="form-control" id="rua_paciente" placeholder="Ex:. Rua das Flores">
-                </div>
-                <div class="col-md-5">
-                    <label for="bairro_paciente" class="form-label">Bairro:</label>
-                    <input type="text" class="form-control" id="bairro_paciente" placeholder="Ex:. Centro">
-                </div>
-
-                <div class="col-md-2">
-                    <label for="numero_casa" class="form-label">Número:</label>
-                    <input type="text" class="form-control" id="numero_casa" placeholder="Ex:. 123">
-                </div>
-            </div>
-
             <div class="row">
                 <div class="col-md-12">
                     <label for="info_adicionais" class="form-label">Informações Adicionais:</label>
-                    <textarea name="info_adicionais" id="info_adicionais" class="form-control" rows="3" placeholder="Digite aqui as informações adicionais..."></textarea>
+                    <textarea name="info_adicionais" id="info_adicionais" class="form-control" rows="3" placeholder="Ex: Paciente usa cadeira de rodas, oxigênio..."></textarea>
                 </div>
             </div>
         </div>
@@ -204,7 +163,6 @@
             <button type="reset" class="btn btn-outline-secondary">Limpar Campos</button>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal">Cadastrar</button>
 
-            <!-- Modal -->
             <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -222,32 +180,203 @@
               </div>
             </div>
           </div>
-
-
-                <!-- Modal de Sucesso -->
-          <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              
-              <div class="modal-body d-flex flex-column align-items-center">
-                
-                <dotlottie-wc 
-                  src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
-
-                <h5>Cadastro realizado com sucesso!</h5>
-
-              </div>
-            </div>
-          </div>
         </div>
+    </form> <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body d-flex flex-column align-items-center">
+          <dotlottie-wc 
+            src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
+          <h5>Cadastro realizado com sucesso!</h5>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-        <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
-
-
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../services/message1.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. Seleção dos Elementos ---
+        const apiUrlBase = 'http://127.0.0.1:5000';
+        
+        // Selects
+        const selectPaciente = document.getElementById('id_paciente');
+        const selectTipoConsulta = document.getElementById('id_tipo_consulta');
+        const selectLocalAtendimento = document.getElementById('id_local_atendimento');
+        
+        // --- ⚡ NOVA SELEÇÃO DE INPUTS ⚡ ---
+        const inputDataConsulta = document.getElementById('data_hora_consulta');
+        const inputDataIda = document.getElementById('data_hora_ida');
+        
+        // Form
+        const form = document.getElementById('formCadastroConsulta');
+        const btnCadastrar = document.getElementById('btnCadastrar');
+        const avisoErro = document.getElementById('avisoErro');
+        
+        // Modais (do Bootstrap)
+        const modalConfirmacao = new bootstrap.Modal(document.getElementById('meuModal'));
+        const modalSucesso = new bootstrap.Modal(document.getElementById('modalSucesso'));
+
+        // Guarda os dados dos pacientes (para pegar o ID_ENDERECO)
+        let dadosPacientes = [];
+
+        // --- 2. Função para Popular Menus <select> ---
+        async function popularSelect(selectElement, url, valorKey, textoKey, callbackDados = null) {
+            try {
+                const response = await fetch(`${apiUrlBase}${url}`);
+                if (!response.ok) throw new Error(`Erro ao buscar ${url}`);
+                const dados = await response.json();
+
+                // Guarda os dados se um callback for fornecido (para pacientes)
+                if (callbackDados) {
+                    callbackDados(dados);
+                }
+
+                dados.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item[valorKey];
+                    option.textContent = item[textoKey];
+                    
+                    // Adiciona o ID_ENDERECO como um 'data-attribute' no <option> do paciente
+                    if (item.ID_ENDERECO) {
+                        option.dataset.idEndereco = item.ID_ENDERECO;
+                    }
+                    
+                    selectElement.appendChild(option);
+                });
+            } catch (error) {
+                console.error(`Falha ao popular ${selectElement.id}:`, error);
+                avisoErro.textContent = `Erro ao carregar dados dos ${selectElement.id}. Tente recarregar.`;
+                avisoErro.classList.remove('d-none');
+            }
+        }
+
+        // --- 3. Popula todos os menus ao carregar a página ---
+        function carregarDadosFormulario() {
+            // Pacientes
+            popularSelect(selectPaciente, '/api/pacientes', 'ID_PACIENTE', 'NOME_PACIENTE', (dados) => {
+                dadosPacientes = dados; // Guarda os dados dos pacientes
+            });
+            // Locais (Reusando rota da página anterior)
+            popularSelect(selectLocalAtendimento, '/api/filtros/locais', 'ID_LOCAL_ATENDIMENTO', 'NOME_LOCAL_ATENDIMENTO');
+            // Tipos de Consulta (Reusando rota da página anterior)
+            popularSelect(selectTipoConsulta, '/api/filtros/tiposconsulta', 'ID_TIPO_CONSULTA', 'DESCRICO_CONSULTA');
+        }
+
+        // --- 4. Função para Enviar o Formulário (POST) ---
+        async function handleCadastro() {
+            
+            // Validação simples (o 'required' do HTML já ajuda)
+            if (!form.checkValidity()) {
+                avisoErro.textContent = 'Por favor, preencha todos os campos obrigatórios (*).';
+                avisoErro.classList.remove('d-none');
+                modalConfirmacao.hide(); // Esconde o modal de confirmação
+                return;
+            }
+            avisoErro.classList.add('d-none'); // Esconde o erro
+
+            // Pega o ID_ENDERECO do paciente selecionado
+            const pacienteOption = selectPaciente.options[selectPaciente.selectedIndex];
+            const idEnderecoPaciente = pacienteOption.dataset.idEndereco;
+
+            // Monta o objeto de dados (JSON) para enviar
+            const dadosParaEnviar = {
+                id_paciente: document.getElementById('id_paciente').value,
+                id_tipo_consulta: document.getElementById('id_tipo_consulta').value,
+                id_local_atendimento: document.getElementById('id_local_atendimento').value,
+                id_endereco_paciente: idEnderecoPaciente,
+                
+                // Datas
+                data_hora_consulta: inputDataConsulta.value,
+                data_hora_ida: inputDataIda.value,
+                data_hora_retorno: document.getElementById('data_hora_retorno').value, // Envia vazio se não preenchido
+                
+                // Booleanos
+                acompanhante: document.getElementById('acompanhante').value,
+                maca: document.getElementById('maca').value,
+                
+                info_adicionais: document.getElementById('info_adicionais').value
+            };
+
+            try {
+                const response = await fetch(`${apiUrlBase}/api/consultas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosParaEnviar)
+                });
+
+                if (!response.ok) {
+                    const erro = await response.json();
+                    throw new Error(erro.erro || `Erro ${response.status} ao cadastrar`);
+                }
+
+                // Sucesso!
+                modalConfirmacao.hide();
+                modalSucesso.show();
+
+                // Limpa o formulário e recarrega a página após 3s
+                form.reset();
+                setTimeout(() => {
+                    window.location.reload(); // Recarrega a página
+                }, 3000); 
+
+            } catch (error) {
+                console.error('Erro ao cadastrar:', error);
+                avisoErro.textContent = `Erro ao cadastrar: ${error.message}`;
+                avisoErro.classList.remove('d-none');
+                modalConfirmacao.hide();
+            }
+        }
+
+        // --- 5. Adiciona o Listener ao botão ---
+        btnCadastrar.addEventListener('click', handleCadastro);
+        
+        // --- 6. Inicia o carregamento dos menus ---
+        carregarDadosFormulario();
+
+        // --- 7. ⚡ NOVA LÓGICA: Calcular Data de Saída (Ida) ⚡ ---
+        if (inputDataConsulta && inputDataIda) {
+            inputDataConsulta.addEventListener('change', function() {
+                // 'this.value' é a string de data, ex: "2025-11-15T10:30"
+                if (this.value) {
+                    try {
+                        // 1. Cria um objeto Date com a data da consulta
+                        const dataConsulta = new Date(this.value);
+                        
+                        // 2. Subtrai 2 horas
+                        dataConsulta.setHours(dataConsulta.getHours() - 2);
+                        
+                        // 3. Formata de volta para o padrão YYYY-MM-DDTHH:MM
+                        // (Este método evita problemas de fuso horário (Timezone)
+                        //  que o '.toISOString()' pode causar)
+                        const ano = dataConsulta.getFullYear();
+                        const mes = (dataConsulta.getMonth() + 1).toString().padStart(2, '0'); // Mês é 0-indexado
+                        const dia = dataConsulta.getDate().toString().padStart(2, '0');
+                        const hora = dataConsulta.getHours().toString().padStart(2, '0');
+                        const minuto = dataConsulta.getMinutes().toString().padStart(2, '0');
+                        
+                        const stringFormatada = `${ano}-${mes}-${dia}T${hora}:${minuto}`;
+                        
+                        // 4. Define o valor no campo "Data e Hora de Ida"
+                        inputDataIda.value = stringFormatada;
+                        
+                    } catch (e) {
+                        console.error("Erro ao calcular data de ida:", e);
+                        inputDataIda.value = ''; // Limpa se houver erro
+                    }
+                } else {
+                    inputDataIda.value = ''; 
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
-
