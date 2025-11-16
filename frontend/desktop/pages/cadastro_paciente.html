@@ -12,29 +12,19 @@
     <link rel="icon" type="image/png" href="../assets/icone.png">
     <link rel="stylesheet" href="../styles/navebar.css">
     <link rel="stylesheet" href="../styles/popup1.css">
-
     <title>Cadastrar Pacientes</title>
 </head>
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <!-- Botão hamburger do perfil (só em telas pequenas) -->
     <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!-- Logo -->
     <a class="navbar-brand" href="../pages/home.html">
       <img src="../assets/logo-branco.png" alt="Logo" class="logo">
     </a>
-
-     <!-- Links da navbar (visíveis só em telas grandes) -->
-    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+     <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <!-- Agendamentos -->
-
         <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Cadastros </span>
@@ -46,9 +36,6 @@
              <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Dropdown Veículos -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Veículos</span>
@@ -59,7 +46,6 @@
            <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
           </ul>
         </li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Motorista</span>
@@ -70,29 +56,19 @@
             <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Links simples -->
       <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
       </ul>
     </div>
-
-    <!-- Nome do usuário à direita (só em telas grandes) -->
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
   <span class="me-2">Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
-
-<!-- Usuário: versão desktop -->
 <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
   <span>Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
   </div>
-  
 </nav>
-
-<!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
   <div class="offcanvas-header juslgtify-content-center">
     <h5 class="offcanvas-title">Amanda Cristina</h5>
@@ -106,126 +82,284 @@
     <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
   </div>
 </div>
+
 <body>
-    <body>
   <div class="container">
     <h2 class="text">Cadastro de Paciente</h2>
-    <div class="formulario-dados">
-
-      <!-- Primeira linha -->
-      <div class="row">
-        <div class="col-md-8">
-          <label for="nome_paciente" class="form-label">Nome do Paciente:</label>
-          <input type="text" class="form-control" id="nome_paciente" placeholder="Ex:. João Paulo da Silva">
-        </div>
-        <div class="col-md-4">
-          <label for="cpf_paciente" class="form-label">CPF:</label>
-          <input type="text" class="form-control" id="cpf_paciente" placeholder="Ex:. 123.456.789-10">
-        </div>
-      </div>
-
-      <!-- Segunda linha -->
-      <div class="row mt-3">
-        <div class="col-md-3">
-          <label for="data_nascimento_paciente" class="form-label">Data de Nascimento:</label>
-          <input type="date" class="form-control" id="data_nascimento_paciente">
-        </div>
-
-        <div class="col-md-3">
-          <label for="sexo_paciente" class="form-label">Sexo:</label>
-          <select class="form-select" id="sexo_paciente">
-            <option selected>Masculino</option>
-            <option value="2">Feminino</option>
-          </select>
-        </div>
-
-        <div class="col-md-3">
-          <label for="senha_paciente" class="form-label">Senha:</label>
-          <input type="text" class="form-control" id="senha_paciente" placeholder="Ex:. 12345@senha">
-        </div>
-
-        <div class="col-md-3">
-          <label for="telefone_paciente" class="form-label">Telefone:</label>
-          <input type="text" class="form-control" id="telefone_paciente" placeholder="Ex:. (11) 91234-5678">
-        </div>
-      </div>
+    
+    <div id="avisoErro" class="alert alert-danger d-none" role="alert">
+        Por favor, preencha todos os campos obrigatórios.
     </div>
 
-        <div class="formulario-endereco">
+    <form id="formCadastroPaciente">
+        <div class="formulario-dados">
 
+        <div class="row">
+            <div class="col-md-8">
+            <label for="nome_paciente" class="form-label">Nome do Paciente: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="nome_paciente" placeholder="Ex:. João Paulo da Silva" required>
+            </div>
+            <div class="col-md-4">
+            <label for="cpf_paciente" class="form-label">CPF: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="cpf_paciente" placeholder="Ex:. 123.456.789-10" required>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-3">
+            <label for="data_nascimento_paciente" class="form-label">Data de Nascimento: <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="data_nascimento_paciente" required>
+            </div>
+
+            <div class="col-md-3">
+            <label for="sexo_paciente" class="form-label">Sexo: <span class="text-danger">*</span></label>
+            <select class="form-select" id="sexo_paciente" required>
+                <option value="M" selected>Masculino</option>
+                <option value="F">Feminino</option>
+            </select>
+            </div>
+
+            <div class="col-md-3">
+            <label for="senha_paciente" class="form-label">Senha: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="senha_paciente" placeholder="Ex:. 12345@senha" required>
+            </div>
+
+            <div class="col-md-3">
+            <label for="telefone_paciente" class="form-label">Telefone:</label>
+            <input type="text" class="form-control" id="telefone_paciente" placeholder="Ex:. (11) 91234-5678">
+            </div>
+        </div>
+        </div>
+
+        <div class="formulario-endereco">
             <h5>Endereço do Paciente:</h5>
 
             <div class="row">
-                <div class="col-md-5">
-                    <label for="rua_paciente" class="form-label">Rua:</label>
-                    <input type="text" class="form-control" id="rua_paciente" placeholder="Ex:. Rua das Flores">
+                <div class="col-md-3">
+                    <label for="cep_paciente" class="form-label">CEP: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="cep_paciente" placeholder="Ex:. 17500-021" required>
                 </div>
-                <div class="col-md-5">
-                    <label for="bairro_paciente" class="form-label">Bairro:</label>
-                    <input type="text" class="form-control" id="bairro_paciente" placeholder="Ex:. Centro">
+                <div class="col-md-6">
+                    <label for="cidade_paciente" class="form-label">Cidade: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="cidade_paciente" placeholder="Ex:. Marília" required>
                 </div>
-
-                <div class="col-md-2">
-                    <label for="numero_casa" class="form-label">Número:</label>
-                    <input type="text" class="form-control" id="numero_casa" placeholder="Ex:. 123">
+                <div class="col-md-3">
+                    <label for="estado_paciente" class="form-label">Estado (UF): <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="estado_paciente" placeholder="Ex:. SP" required maxlength="2">
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
+                <div class="col-md-5">
+                    <label for="rua_paciente" class="form-label">Rua: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="rua_paciente" placeholder="Ex:. Rua das Flores" required>
+                </div>
+                <div class="col-md-5">
+                    <label for="bairro_paciente" class="form-label">Bairro: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="bairro_paciente" placeholder="Ex:. Centro" required>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="numero_casa" class="form-label">Número: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="numero_casa" placeholder="Ex:. 123" required>
+                </div>
+            </div>
+
+            <div class="row mt-3">
                 <div class="col-md-12">
-                    <label for="info_adicionais" class="form-label">Informações Adicionais:</label>
-                    <textarea name="info_adicionais" id="info_adicionais" class="form-control" rows="3" placeholder="Digite aqui as informações adicionais..."></textarea>
+                    <label for="complemento_paciente" class="form-label">Complemento:</label>
+                    <textarea name="complemento_paciente" id="complemento_paciente" class="form-control" rows="3" placeholder="Ex: Apto 101, Fundos, etc..."></textarea>
                 </div>
             </div>
         </div>
 
         <div class="row">
-          <div class="formulario-botao">
-            <button type="reset" class="btn btn-outline-secondary">Limpar Campos</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal">Cadastrar</button>
+            <div class="formulario-botao">
+                <button type="reset" class="btn btn-outline-secondary">Limpar Campos</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal">Cadastrar</button>
 
-            <!-- Modal -->
-            <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="tituloModal">Deseja cadastrar novo Paciente?</h5>
-                  </div>
-                  <div class="modal-body">
-                    <p>Esse paciente será cadastrado no sistema e poderá ter consultas vinculadas a ele.</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar</button>
-                  </div>
+                <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tituloModal">Deseja cadastrar novo Paciente?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Esse paciente será cadastrado no sistema e poderá ter consultas vinculadas a ele.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar</button>
+                    </div>
+                    </div>
                 </div>
-              </div>
+                </div>
             </div>
-          </div>
 
-          <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              
-              <div class="modal-body d-flex flex-column align-items-center">
+
+            <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
                 
-                <dotlottie-wc 
-                  src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
+                <div class="modal-body d-flex flex-column align-items-center">
+                    
+                    <dotlottie-wc 
+                    src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
 
-                <h5>Cadastro realizado com sucesso!</h5>
+                    <h5>Cadastro realizado com sucesso!</h5>
 
-              </div>
+                </div>
+                </div>
             </div>
-          </div>
+            </div>
         </div>
-        </div>
+    </form> </div>
 
 
-        <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. Seleção dos Elementos ---
+            const apiUrlBase = 'http://127.0.0.1:5000';
+            
+            // Formulário
+            const form = document.getElementById('formCadastroPaciente');
+            const btnCadastrar = document.getElementById('btnCadastrar');
+            const avisoErro = document.getElementById('avisoErro');
+
+            // Modais (do Bootstrap)
+            const modalConfirmacao = new bootstrap.Modal(document.getElementById('meuModal'));
+            const modalSucesso = new bootstrap.Modal(document.getElementById('modalSucesso'));
+
+            // --- 2. Função para Enviar o Formulário (POST) ---
+            async function handleCadastro() {
+
+                // Validação simples
+                if (!form.checkValidity()) {
+                    avisoErro.textContent = 'Por favor, preencha todos os campos obrigatórios (*).';
+                    avisoErro.classList.remove('d-none');
+                    modalConfirmacao.hide(); 
+                    return;
+                }
+                avisoErro.classList.add('d-none'); // Esconde o erro
+
+                // Monta o objeto de dados (JSON) para enviar
+                const dadosParaEnviar = {
+                    nome: document.getElementById('nome_paciente').value,
+                    cpf: document.getElementById('cpf_paciente').value,
+                    data_nascimento: document.getElementById('data_nascimento_paciente').value,
+                    sexo: document.getElementById('sexo_paciente').value, // 'M' ou 'F'
+                    senha: document.getElementById('senha_paciente').value,
+                    telefone: document.getElementById('telefone_paciente').value,
+                    
+                    // --- NOVOS CAMPOS DE ENDEREÇO ---
+                    cep: document.getElementById('cep_paciente').value,
+                    cidade: document.getElementById('cidade_paciente').value,
+                    estado: document.getElementById('estado_paciente').value,
+                    rua: document.getElementById('rua_paciente').value,
+                    bairro: document.getElementById('bairro_paciente').value,
+                    numero: document.getElementById('numero_casa').value,
+                    complemento: document.getElementById('complemento_paciente').value
+                };
+                
+                // console.log("Enviando dados:", dadosParaEnviar); // Para debug
+
+                try {
+                    const response = await fetch(`${apiUrlBase}/api/pacientes`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dadosParaEnviar)
+                    });
+
+                    const resultado = await response.json(); // Tenta ler a resposta
+
+                    if (!response.ok) {
+                        // Se a resposta não for OK, lança um erro com a msg do backend
+                        throw new Error(resultado.erro || `Erro ${response.status} ao cadastrar`);
+                    }
+
+                    // Sucesso!
+                    modalConfirmacao.hide();
+                    modalSucesso.show();
+
+                    // Limpa o formulário e recarrega a página após 3s
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.reload(); 
+                    }, 3000); 
+
+                } catch (error) {
+                    console.error('Erro ao cadastrar paciente:', error);
+                    avisoErro.textContent = `Erro ao cadastrar: ${error.message}.`;
+                    avisoErro.classList.remove('d-none');
+                    modalConfirmacao.hide();
+                }
+            }
+
+            // --- 3. Adiciona o Listener ao botão ---
+            btnCadastrar.addEventListener('click', handleCadastro);
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../services/message1.js"></script>
+            // --- 4. ⚡ NOVA LÓGICA: Busca de CEP ⚡ ---
+            
+            // Seleciona os campos de endereço
+            const inputCep = document.getElementById('cep_paciente');
+            const inputRua = document.getElementById('rua_paciente');
+            const inputBairro = document.getElementById('bairro_paciente');
+            const inputCidade = document.getElementById('cidade_paciente');
+            const inputEstado = document.getElementById('estado_paciente');
+            const inputNumero = document.getElementById('numero_casa');
+
+            // "Escuta" quando o usuário sai do campo CEP
+            inputCep.addEventListener('blur', async function() {
+                const cep = this.value.replace(/\D/g, ''); // Limpa o CEP (tira '-', '.')
+                
+                if (cep.length === 8) { // Validação básica de CEP
+                    avisoErro.classList.add('d-none');
+                    // Mostra um "carregando"
+                    inputRua.value = "Buscando...";
+                    inputBairro.value = "Buscando...";
+                    inputCidade.value = "Buscando...";
+                    inputEstado.value = "...";
+
+                    try {
+                        // Chama a nova API no nosso backend
+                        const response = await fetch(`${apiUrlBase}/api/cep/${cep}`);
+                        
+                        if (!response.ok) {
+                            throw new Error('CEP não encontrado');
+                        }
+                        
+                        const data = await response.json();
+                        
+                        // Preenche os campos
+                        inputRua.value = data.rua || '';
+                        inputBairro.value = data.bairro || '';
+                        inputCidade.value = data.cidade || '';
+                        inputEstado.value = data.estado || '';
+                        
+                        // Foca no campo "Número", que é o próximo a ser preenchido
+                        inputNumero.focus();
+
+                    } catch (error) {
+                        console.error("Erro ao buscar CEP:", error);
+                        avisoErro.textContent = "CEP não encontrado. Por favor, preencha o endereço manualmente.";
+                        avisoErro.classList.remove('d-none');
+                        // Limpa os campos se der erro
+                        inputRua.value = "";
+                        inputBairro.value = "";
+                        inputCidade.value = "";
+                        inputEstado.value = "";
+                    }
+                }
+            });
+
+        });
+    </script>
 </body>
 </html>
-

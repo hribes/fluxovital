@@ -15,26 +15,17 @@
     <link rel="stylesheet" href="../styles/message1.css">
     <title>Cadastro Funcionários</title>
 </head>
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <!-- Botão hamburger do perfil (só em telas pequenas) -->
     <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!-- Logo -->
     <a class="navbar-brand" href="../pages/home.html">
       <img src="../assets/logo-branco.png" alt="Logo" class="logo">
     </a>
-
-     <!-- Links da navbar (visíveis só em telas grandes) -->
-    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+     <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <!-- Agendamentos -->
-
         <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Cadastros </span>
@@ -46,9 +37,6 @@
              <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Dropdown Veículos -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Veículos</span>
@@ -59,7 +47,6 @@
            <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
           </ul>
         </li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Motorista</span>
@@ -70,29 +57,19 @@
             <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Links simples -->
       <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
       </ul>
     </div>
-
-    <!-- Nome do usuário à direita (só em telas grandes) -->
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
   <span class="me-2">Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
-
-<!-- Usuário: versão desktop -->
 <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
   <span>Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
   </div>
-  
 </nav>
-
-<!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
   <div class="offcanvas-header juslgtify-content-center">
     <h5 class="offcanvas-title">Amanda Cristina</h5>
@@ -104,8 +81,6 @@
     <a href="../pages/consulta_veiculos.html"><span class="link-text">Veículos</span></a>
     <a href="../pages/cadastro_motorista.html"><span class="link-text">Motoristas</span></a>
     <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
-    <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
-    
   </div>
 </div>
 
@@ -113,126 +88,192 @@
 <body>
     <div class="container">
     <h2 class="text">Cadastro de Funcionários</h2>
-    <div class="formulario-dados">
 
-        <!-- Nome do Funcionário (linha inteira) -->
-        <div class="row mb-3">
-            <div class="col-12">
-                <label for="nome_funcionario" class="form-label">Nome do Funcionário:</label>
-                <input type="text" class="form-control" id="nome_funcionario" placeholder="Ex:. João Paulo da Silva">
+    <div id="avisoErro" class="alert alert-danger d-none" role="alert">
+        Por favor, preencha todos os campos obrigatórios.
+    </div>
+    
+    <form id="formCadastroFuncionario">
+        <div class="formulario-dados">
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label for="nome_funcionario" class="form-label">Nome do Funcionário: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="nome_funcionario" placeholder="Ex:. João Paulo da Silva" required>
+                </div>
             </div>
-        </div>
 
-        <!-- CPF e Data de Nascimento (mesma linha) -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="cpf_funcionario" class="form-label">CPF:</label>
-                <input type="text" class="form-control" id="cpf_funcionario" placeholder="Ex:. 123.456.789-10">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="cpf_funcionario" class="form-label">CPF: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="cpf_funcionario" placeholder="Ex:. 123.456.789-10" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="data_nascimento_funcionario" class="form-label">Data de Nascimento: <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" id="data_nascimento_funcionario" required>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label for="data_nascimento_funcionario" class="form-label">Data de Nascimento:</label>
-                <input type="date" class="form-control" id="data_nascimento_funcionario">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="acesso_funcionario" class="form-label">Acesso: <span class="text-danger">*</span></label>
+                    <select class="form-select" id="acesso_funcionario" required>
+                        <option value="" selected disabled>Selecione um nível de acesso...</option>
+                        </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="telefone_funcionario" class="form-label">Telefone: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="telefone_funcionario" placeholder="Ex:.(11)99786-2524" required>
+                </div>
             </div>
-        </div>
-
-        <!-- Acesso e Telefone (mesma linha) -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="acesso_funcionario" class="form-label">Acesso:</label>
-                <select class="form-select" id="acesso_funcionario">
-                    <option selected>Nenhuma</option>
-                    <option value="1">Atendente</option>
-                    <option value="2">Gerente</option>
-                    <option value="3">Gestor</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label for="telefone_funcionario" class="form-label">Telefone:</label>
-                <input type="text" class="form-control" id="telefone_funcionario" placeholder="Ex:.(11)99786-2524">
-            </div>
-        </div>
-
-
-
-        <div class="formulario-endereco">
-
-            <h5>Endereço do Funcionário:</h5>
-
+            
             <div class="row">
-                <div class="col-md-5">
-                    <label for="rua_paciente" class="form-label">Rua:</label>
-                    <input type="text" class="form-control" id="rua_paciente" placeholder="Ex:. Rua das Flores">
-                </div>
-                <div class="col-md-5">
-                    <label for="bairro_paciente" class="form-label">Bairro:</label>
-                    <input type="text" class="form-control" id="bairro_paciente" placeholder="Ex:. Centro">
-                </div>
+            <div class="formulario-botao">
+                <button type="reset" class="btn btn-outline-secondary">Limpar Campos</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal">Cadastrar</button>
 
-                <div class="col-md-2">
-                    <label for="numero_casa" class="form-label">Número:</label>
-                    <input type="text" class="form-control" id="numero_casa" placeholder="Ex:. 123">
+                <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tituloModal">Deseja cadastrar novo Funcionário?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Você poderá atribuir funções ao novo funcionário.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar</button>
+                    </div>
+                    </div>
+                </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <label for="info_adicionais" class="form-label">Informações Adicionais:</label>
-                    <textarea name="info_adicionais" id="info_adicionais" class="form-control" rows="3" placeholder="Digite aqui as informações adicionais..."></textarea>
-                </div>
             </div>
         </div>
+    </form> <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        
+        <div class="modal-body d-flex flex-column align-items-center">
+            
+            <dotlottie-wc 
+            src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
 
-        <div class="row">
-          <div class="formulario-botao">
-            <button type="reset" class="btn btn-outline-secondary">Limpar Campos</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal">Cadastrar</button>
+            <h5>Cadastro realizado com sucesso!</h5>
 
-            <!-- Modal -->
-            <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="tituloModal">Deseja cadastrar novo Funcionário?</h5>
-                  </div>
-                  <div class="modal-body">
-                    <p>Você poderá atribuir funções ao novo funcionário.</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
         </div>
     </div>
+    </div>
+    </div>
 
-                <!-- Modal de Sucesso -->
-          <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              
-              <div class="modal-body d-flex flex-column align-items-center">
+
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. Seleção dos Elementos ---
+            const apiUrlBase = 'http://127.0.0.1:5000';
+            
+            // Formulário
+            const form = document.getElementById('formCadastroFuncionario');
+            const btnCadastrar = document.getElementById('btnCadastrar');
+            const avisoErro = document.getElementById('avisoErro');
+            
+            // Select (Apenas o de Acesso)
+            const selectAcesso = document.getElementById('acesso_funcionario');
+
+            // Modais (do Bootstrap)
+            const modalConfirmacao = new bootstrap.Modal(document.getElementById('meuModal'));
+            const modalSucesso = new bootstrap.Modal(document.getElementById('modalSucesso'));
+
+            // --- 2. Função para Popular o Nível de Acesso ---
+            async function popularFiltros() {
+                try {
+                    const response = await fetch(`${apiUrlBase}/api/filtros/niveisacesso`);
+                    if (!response.ok) throw new Error(`Erro ao buscar níveis`);
+                    const dados = await response.json();
+
+                    dados.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item['ID_NIVEL_ACESSO']; // Salva o ID
+                        option.textContent = item['NIVEL_ACESSO']; // Mostra o Nome
+                        selectAcesso.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error(`Falha ao popular Níveis de Acesso:`, error);
+                    avisoErro.textContent = `Erro ao carregar Níveis de Acesso. Tente recarregar.`;
+                    avisoErro.classList.remove('d-none');
+                }
+            }
+
+
+            // --- 3. Função para Enviar o Formulário (POST) ---
+            async function handleCadastro() {
+
+                // Validação simples
+                if (!form.checkValidity()) {
+                    avisoErro.textContent = 'Por favor, preencha todos os campos obrigatórios (*).';
+                    avisoErro.classList.remove('d-none');
+                    modalConfirmacao.hide(); 
+                    return;
+                }
+                avisoErro.classList.add('d-none'); // Esconde o erro
+
+                // Monta o objeto de dados (JSON) para enviar
+                const dadosParaEnviar = {
+                    nome: document.getElementById('nome_funcionario').value,
+                    cpf: document.getElementById('cpf_funcionario').value,
+                    data_nascimento: document.getElementById('data_nascimento_funcionario').value,
+                    id_nivel_acesso: document.getElementById('acesso_funcionario').value,
+                    telefone: document.getElementById('telefone_funcionario').value,
+                };
                 
-                <dotlottie-wc 
-                  src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop></dotlottie-wc>
+                // console.log("Enviando dados:", dadosParaEnviar); // Para debug
 
-                <h5>Cadastro realizado com sucesso!</h5>
+                try {
+                    const response = await fetch(`${apiUrlBase}/api/funcionarios`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dadosParaEnviar)
+                    });
 
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
+                    const resultado = await response.json(); // Tenta ler a resposta
 
+                    if (!response.ok) {
+                        // Se a resposta não for OK, lança um erro com a msg do backend
+                        throw new Error(resultado.erro || `Erro ${response.status} ao cadastrar`);
+                    }
 
-        <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+                    // Sucesso!
+                    modalConfirmacao.hide();
+                    modalSucesso.show();
 
+                    // Limpa o formulário e recarrega a página após 3s
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.reload(); 
+                    }, 3000); 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../services/message1.js"></script>
+                } catch (error) {
+                    console.error('Erro ao cadastrar funcionário:', error);
+                    avisoErro.textContent = `Erro ao cadastrar: ${error.message}.`;
+                    avisoErro.classList.remove('d-none');
+                    modalConfirmacao.hide();
+                }
+            }
+
+            // --- 4. Adiciona o Listener ao botão ---
+            btnCadastrar.addEventListener('click', handleCadastro);
+
+            // --- 5. Popula o filtro de Nível de Acesso ---
+            popularFiltros();
+        });
+    </script>
 </body>
 </html>
-
-

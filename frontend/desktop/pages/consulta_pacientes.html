@@ -19,15 +19,12 @@
     <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <a class="navbar-brand" href="../pages/home.html">
       <img src="../assets/logo-branco.png" alt="Logo" class="logo">
     </a>
-
- <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Cadastros </span>
@@ -39,8 +36,6 @@
              <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
           </ul>
         </li>
-
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Veículos</span>
@@ -51,7 +46,6 @@
            <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
           </ul>
         </li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Motorista</span>
@@ -62,25 +56,19 @@
             <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
           </ul>
         </li>
-
-
-        <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
       </ul>
     </div>
-
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
   <span class="me-2">Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
-
 <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
   <span>Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
   </div>
-  
 </nav>
-
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
   <div class="offcanvas-header justify-content-center">
     <h5 class="offcanvas-title">Amanda Cristina</h5>
@@ -98,41 +86,30 @@
 <body>
 <div class="container mt-4">
     <h2 class="mb-4">Agendamento dos Pacientes</h2>
+    
     <div class="row mb-3">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label for="filtroData" class="form-label">Data:</label>
             <input type="date" class="form-control" id="filtroData">
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
             <label for="filtroStatus" class="form-label">Status:</label>
             <select class="form-select" id="filtroStatus">
                 <option value="1" selected>Todos</option>
-                <option value="Pendente">Pendente</option>
-                <option value="Concluido">Concluído</option> </select>
+                <option value="5">Pendente</option>
+                <option value="6">Concluído</option>
+            </select>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
             <label for="filtroLocal" class="form-label">Local:</label>
             <select class="form-select" id="filtroLocal">
                 <option value="1" selected>Todos</option>
             </select>
         </div>
-
-        <div class="col-md-2">
-            <label for="filtroVeiculo" class="form-label">Veículo:</label>
-            <select class="form-select" id="filtroVeiculo">
-                <option value="1" selected>Todos</option>
-            </select>
+        
         </div>
-
-        <div class="col-md-3">
-            <label for="filtroConsulta" class="form-label">Consulta:</label>
-         <select class="form-select" id="filtroConsulta">
-            <option value="1" selected>Todos</option>
-        </select>
-        </div>
-    </div>
 
     <div class="row g-2 mb-3">
         </div>
@@ -152,16 +129,16 @@
         const filtroData = document.getElementById("filtroData");
         const filtroStatus = document.getElementById("filtroStatus");
         const filtroLocal = document.getElementById("filtroLocal");
-        const filtroVeiculo = document.getElementById("filtroVeiculo");
-        const filtroConsulta = document.getElementById("filtroConsulta");
+        // filtroVeiculo e filtroConsulta removidos
+        
         const apiUrlBase = 'http://127.0.0.1:5000'; // URL Base da API
 
-        // --- MUDANÇA PAGINAÇÃO: 1. Elementos de Paginação ---
+        // --- PAGINAÇÃO ---
         let paginaAtual = 1;
         const btnAnterior = document.getElementById('btnAnterior');
         const btnProximo = document.getElementById('btnProximo');
         const spanPaginaAtual = document.getElementById('paginaAtual');
-        const limitePorPagina = 30; // Para sabermos quando desabilitar o 'próximo'
+        const limitePorPagina = 30; 
 
         // 2. Função para adicionar o 'clique' de expandir
         function adicionarListenersAosCards() {
@@ -189,14 +166,12 @@
         // 4. Função principal para buscar e renderizar os CARDS
         async function buscarErenderizarAgendamentos() {
             
-            // --- MUDANÇA PAGINAÇÃO: 2. Adiciona 'pagina' aos parâmetros ---
+            // --- PARÂMETROS SIMPLIFICADOS ---
             const params = new URLSearchParams({
                 data: filtroData.value,
                 status: filtroStatus.value,
                 local: filtroLocal.value,
-                veiculo: filtroVeiculo.value,
-                consulta: filtroConsulta.value,
-                pagina: paginaAtual // Envia a página atual para a API
+                pagina: paginaAtual 
             });
             
             const apiUrl = `${apiUrlBase}/api/agendamentos?${params.toString()}`;
@@ -210,15 +185,12 @@
                 const agendamentos = await response.json();
                 cardsContainer.innerHTML = ''; // Limpa os cards antigos
 
-                // --- MUDANÇA PAGINAÇÃO: 3. Atualiza botões e contador ---
+                // --- PAGINAÇÃO ---
                 spanPaginaAtual.textContent = paginaAtual;
                 btnAnterior.disabled = (paginaAtual === 1);
-                
-                // Se vier menos de 30, ou 0, desabilita o "Próximo"
                 btnProximo.disabled = (agendamentos.length < limitePorPagina);
 
                 if (agendamentos.length === 0) {
-                    // Se a página 1 estiver vazia, mostra msg
                     if (paginaAtual === 1) { 
                         cardsContainer.innerHTML = '<p class="col-12 text-center text-muted">Nenhum agendamento encontrado para os filtros selecionados.</p>';
                     }
@@ -279,7 +251,7 @@
             }
         }
 
-        // 5. Função para popular os filtros (MODIFICADA)
+        // 5. Função para popular os filtros (SIMPLIFICADA)
         async function popularFiltros() {
             
             const preencherSelect = (selectElement, dados, valorKey, textoKey) => {
@@ -293,24 +265,12 @@
             };
 
             try {
-                // --- MUDANÇA FILTRO STATUS: Fetch removido ---
-                // let resStatus = await fetch(`${apiUrlBase}/api/filtros/status`);
-                // ... (código removido) ...
-
                 // Busca Locais
                 let resLocais = await fetch(`${apiUrlBase}/api/filtros/locais`);
                 let dadosLocais = await resLocais.json();
                 preencherSelect(filtroLocal, dadosLocais, 'ID_LOCAL_ATENDIMENTO', 'NOME_LOCAL_ATENDIMENTO');
 
-                // Busca Tipos de Veículo
-                let resVeiculos = await fetch(`${apiUrlBase}/api/filtros/tiposveiculo`);
-                let dadosVeiculos = await resVeiculos.json();
-                preencherSelect(filtroVeiculo, dadosVeiculos, 'ID_TIPO_VEICULO', 'NOME_TIPO_VEICULO');
-
-                // Busca Tipos de Consulta
-                let resConsultas = await fetch(`${apiUrlBase}/api/filtros/tiposconsulta`);
-                let dadosConsultas = await resConsultas.json();
-                preencherSelect(filtroConsulta, dadosConsultas, 'ID_TIPO_CONSULTA', 'DESCRICO_CONSULTA');
+                // Fetches de Veículo e Consulta Removidos
 
             } catch (error) {
                 console.error("Erro ao popular filtros:", error);
@@ -318,17 +278,16 @@
         }
 
 
-        // 6. Adicionar os 'escutadores' de eventos
-        const todosOsFiltros = [filtroData, filtroStatus, filtroLocal, filtroVeiculo, filtroConsulta];
+        // 6. Adicionar os 'escutadores' de eventos (SIMPLIFICADO)
+        const todosOsFiltros = [filtroData, filtroStatus, filtroLocal];
         todosOsFiltros.forEach(filtro => {
             filtro.addEventListener('change', () => {
-                // --- MUDANÇA PAGINAÇÃO: 4. Reseta a página ao filtrar ---
                 paginaAtual = 1; 
                 buscarErenderizarAgendamentos();
             });
         });
 
-        // --- MUDANÇA PAGINAÇÃO: 5. Listeners dos botões ---
+        // --- PAGINAÇÃO ---
         btnAnterior.addEventListener('click', () => {
             if (paginaAtual > 1) {
                 paginaAtual--;
