@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from mysql.connector import Error
 import json
+import base64 
 
 # Importa as funções do 'conexao_db.py'
 try:
@@ -14,10 +15,10 @@ except ImportError as e:
     print("Verifique se 'conexao_db.py' e 'conversao_coordenadas.py' estão na mesma pasta do 'app.py'")
     exit()
 
-# --- IMPORTAÇÕES PARA A ROTA DE CEP ---
+# --- IMPORTAÇÕES PARA A ROTA DE CEP E PLACA ---
 import requests
-import re # ⚡ NOVA IMPORTAÇÃO para limpar o CEP ⚡
-API_KEY = os.getenv("GOOGLE_API_KEY") # Pega a chave para a nova rota de CEP
+import re # Para limpar o CEP e a Placa
+API_KEY = os.getenv("GOOGLE_API_KEY") 
 # --- FIM DAS IMPORTAÇÕES ---
 
 app = Flask(__name__)
@@ -237,11 +238,8 @@ def criar_paciente():
 
         estado_uf_limpo = (dados.get('estado') or 'ER').upper()[:2]
         
-        # --- ⚡ CORREÇÃO DO CEP ⚡ ---
-        # Limpa o CEP de hífens (ex: 17500-021 -> 17500021)
         cep_bruto = dados.get('cep')
         cep_limpo = re.sub(r'\D', '', cep_bruto or '')
-        # Garante que tenha 8 dígitos, se não, preenche com 0 (necessário para CHAR(8))
         cep_final = cep_limpo.ljust(8, '0')[:8] 
         
         
@@ -448,7 +446,6 @@ def criar_local_atendimento():
 
         estado_uf_limpo = (dados.get('estado') or 'ER').upper()[:2]
         
-        # --- ⚡ CORREÇÃO DO CEP ⚡ ---
         cep_bruto = dados.get('cep')
         cep_limpo = re.sub(r'\D', '', cep_bruto or '')
         cep_final = cep_limpo.ljust(8, '0')[:8]
@@ -468,7 +465,7 @@ def criar_local_atendimento():
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_bairro = cursor.fetchone()[0]
 
-        # 2d. Rua (Usa o cep_final limpo)
+        # 2d. Rua
         cursor.execute("INSERT INTO Rua (ID_BAIRRO, NOME_RUA, CEP) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE ID_RUA=LAST_INSERT_ID(ID_RUA)", 
                        (id_bairro, dados.get('rua'), cep_final))
         cursor.execute("SELECT LAST_INSERT_ID()")
@@ -507,7 +504,254 @@ def criar_local_atendimento():
             conexao.close()
 
 
-# --- Bloco de Execução ---
+# --- ROTA 10: Cadastro de Veículo (POST) ---
+@app.route('/api/veiculos', methods=['POST'])
+def criar_veiculo():
+    """ Cria um novo Veiculo """
+    dados = request.get_json()
+    
+    try:
+        # 1. Verificação de Duplicidade (Placa)
+        placa_bruta = dados.get('placa') or ''
+        # Remove hífen e força maiúsculas
+        placa_limpa = re.sub(r'[^A-Z0-9]', '', placa_bruta.upper())
+
+        if not placa_limpa:
+             return jsonify({"erro": "Placa é obrigatória."}), 400
+
+        # Verifica se a PLACA já existe
+        placa_check_query = "SELECT 1 FROM Veiculo WHERE PLACA = %s"
+        placa_result = executar_query(placa_check_query, (placa_limpa,))
+        if placa_result:
+            return jsonify({"erro": f"Erro: A placa '{placa_bruta}' já está cadastrada."}), 409 
+
+        # 2. Inserção no banco
+        query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'insert_veiculo.sql'))
+        if not query:
+             return jsonify({"erro": "Falha interna: Arquivo SQL 'insert_veiculo.sql' não encontrado."}), 500
+
+        params = (
+            dados.get('id_tipo_veiculo'),
+            dados.get('id_status'),
+            dados.get('capacidade'),
+            placa_limpa # Salva a placa limpa
+        )
+        
+        sucesso = executar_query_escrita(query, params)
+        
+        if not sucesso:
+            return jsonify({"erro": "Falha ao inserir dados no banco"}), 500
+
+        return jsonify({"sucesso": True, "mensagem": "Veículo cadastrado!"}), 201
+
+    except Error as e:
+        print(f"Erro no cadastro de veículo (Erro DB): {e}")
+        return jsonify({"erro": f"Erro de banco de dados: {e.msg}"}), 500
+    except Exception as e:
+        print(f"Erro no endpoint /api/veiculos: {e}")
+        return jsonify({"erro": str(e)}), 500
+        
+
+# --- ROTA 11: Buscar Veículo por Placa (GET) ---
+@app.route('/api/veiculos/<string:placa>', methods=['GET'])
+def get_veiculo_by_placa(placa):
+    """ Busca um veículo específico pela placa """
+    
+    # Limpa a placa (ex: 'ABC-1234' -> 'ABC1234')
+    placa_limpa = re.sub(r'[^A-Z0-9]', '', placa.upper())
+    if not placa_limpa:
+         return jsonify({"erro": "Placa inválida."}), 400
+
+    query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'get_veiculo_by_placa.sql'))
+    if not query:
+        return jsonify({"erro": "Falha interna: Arquivo SQL 'get_veiculo_by_placa.sql' não encontrado."}), 500
+
+    resultado = executar_query(query, (placa_limpa,))
+    
+    if resultado:
+        # Encontrou o veículo, retorna o primeiro (e único)
+        return jsonify(resultado[0]), 200
+    else:
+        # Não encontrou
+        return jsonify({"erro": "Veículo não encontrado"}), 404
+
+# --- ROTA 12: Atualizar Status do Veículo (PUT) ---
+@app.route('/api/veiculos/<string:placa>', methods=['PUT'])
+def update_veiculo_status(placa):
+    """ Atualiza o status de um veículo existente """
+    
+    dados = request.get_json()
+    novo_status_id = dados.get('id_status')
+    
+    if not novo_status_id:
+        return jsonify({"erro": "ID do status é obrigatório."}), 400
+        
+    placa_limpa = re.sub(r'[^A-Z0-9]', '', placa.upper())
+    if not placa_limpa:
+         return jsonify({"erro": "Placa inválida."}), 400
+
+    try:
+        query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'update_veiculo_status.sql'))
+        if not query:
+             return jsonify({"erro": "Falha interna: Arquivo SQL 'update_veiculo_status.sql' não encontrado."}), 500
+        
+        params = (novo_status_id, placa_limpa)
+        sucesso = executar_query_escrita(query, params)
+        
+        if not sucesso:
+            return jsonify({"erro": "Falha ao atualizar dados no banco"}), 500
+
+        return jsonify({"sucesso": True, "mensagem": "Status do veículo atualizado!"}), 200
+
+    except Error as e:
+        print(f"Erro na atualização de veículo (Erro DB): {e}")
+        return jsonify({"erro": f"Erro de banco de dados: {e.msg}"}), 500
+    except Exception as e:
+        print(f"Erro no endpoint PUT /api/veiculos: {e}")
+        return jsonify({"erro": str(e)}), 500
+
+# --- ⚡ NOVA ROTA 13: Listar Veículos (GET) ⚡ ---
+# (Adicione esta rota no final do seu app.py, antes do 'if __name__ ...')
+
+@app.route('/api/veiculos', methods=['GET'])
+def get_veiculos():
+    """ Lista todos os veículos com filtros """
+    
+    # Pega o ID do status do filtro (ex: 1, 2, 3...)
+    status_id = request.args.get('status')
+    
+    query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'get_veiculos.sql'))
+    if not query:
+        return jsonify({"erro": "Falha interna: Arquivo SQL 'get_veiculos.sql' não encontrado."}), 500
+
+    params = []
+    
+    # Adiciona filtro de status SE for_fornecido e não for 'all'
+    if status_id and status_id != 'all':
+        # Adiciona a cláusula WHERE
+        query += " WHERE v.ID_STATUS = %s"
+        params.append(status_id)
+        
+    query += " ORDER BY v.ID_VEICULO;"
+
+    try:
+        resultados = executar_query(query, tuple(params))
+        if resultados is None:
+            return jsonify({"erro": "Falha ao conectar ou buscar dados"}), 500
+        return jsonify(resultados)
+        
+    except Exception as e:
+        print(f"Erro no endpoint GET /api/veiculos: {e}")
+        return jsonify({"erro": str(e)}), 500
+    
+# --- ⚡ NOVA ROTA 14: Cadastro de Motorista (POST) ⚡ ---
+# (Adicione esta rota no final do seu app.py, antes do 'if __name__ ...')
+
+@app.route('/api/motoristas', methods=['POST'])
+def criar_motorista():
+    """ Cria um novo motorista (com upload de foto) """
+    
+    try:
+        # 1. Pega os dados do formulário (não é JSON!)
+        dados_form = request.form
+        nome = dados_form.get('nome')
+        cpf = dados_form.get('cpf')
+        categoria_cnh = dados_form.get('categoria_cnh')
+        
+        # 2. Pega o arquivo de foto
+        arquivo_foto = request.files.get('foto')
+        foto_bytes = None
+        if arquivo_foto:
+            # Lê o arquivo em bytes para salvar no LONGBLOB
+            foto_bytes = arquivo_foto.read()
+            
+        # 3. Verificação de Duplicidade (CPF)
+        if not cpf:
+             return jsonify({"erro": "CPF é obrigatório."}), 400
+
+        cpf_check_query = "SELECT 1 FROM Motorista WHERE CPF_MOTORISTA = %s"
+        cpf_result = executar_query(cpf_check_query, (cpf,))
+        if cpf_result:
+            return jsonify({"erro": f"Erro: O CPF '{cpf}' já está cadastrado."}), 409 
+
+        # 4. Inserção no banco
+        query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'insert_motorista.sql'))
+        if not query:
+             return jsonify({"erro": "Falha interna: Arquivo SQL 'insert_motorista.sql' não encontrado."}), 500
+
+        params = (
+            nome,
+            cpf,
+            categoria_cnh,
+            foto_bytes # Envia os bytes da foto (ou None)
+        )
+        
+        sucesso = executar_query_escrita(query, params)
+        
+        if not sucesso:
+            return jsonify({"erro": "Falha ao inserir dados no banco"}), 500
+
+        return jsonify({"sucesso": True, "mensagem": "Motorista cadastrado!"}), 201
+
+    except Error as e:
+        print(f"Erro no cadastro de motorista (Erro DB): {e}")
+        return jsonify({"erro": f"Erro de banco de dados: {e.msg}"}), 500
+    except Exception as e:
+        print(f"Erro no endpoint /api/motoristas: {e}")
+        return jsonify({"erro": str(e)}), 500
+
+# --- ⚡ NOVA ROTA 15: Filtro de Categorias CNH (GET) ⚡ ---
+@app.route('/api/filtros/categoriascnh', methods=['GET'])
+def get_filtros_cnh():
+    """ Busca todas as categorias de CNH distintas já cadastradas """
+    query = "SELECT DISTINCT CATEGORIA_CNH FROM Motorista WHERE CATEGORIA_CNH IS NOT NULL ORDER BY CATEGORIA_CNH;"
+    resultados = executar_query(query)
+    if resultados is None:
+        return jsonify({"erro": "Falha ao buscar categorias de CNH"}), 500
+    return jsonify(resultados)
+
+
+# --- ⚡ NOVA ROTA 16: Listar Motoristas (GET) ⚡ ---
+@app.route('/api/motoristas', methods=['GET'])
+def get_motoristas():
+    """ Lista todos os motoristas com filtros e processa as fotos """
+    
+    categoria = request.args.get('categoria')
+    
+    query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'get_motoristas.sql'))
+    if not query:
+        return jsonify({"erro": "Falha interna: Arquivo SQL 'get_motoristas.sql' não encontrado."}), 500
+
+    params = []
+    
+    # Adiciona filtro de categoria SE for_fornecido e não for 'all'
+    if categoria and categoria != 'all':
+        query += " WHERE CATEGORIA_CNH = %s"
+        params.append(categoria)
+        
+    query += " ORDER BY NOME_MOTORISTA;"
+
+    try:
+        resultados = executar_query(query, tuple(params))
+        if resultados is None:
+            return jsonify({"erro": "Falha ao conectar ou buscar dados"}), 500
+        
+        # Processar fotos (BLOB -> Base64)
+        for motorista in resultados:
+            if motorista['FOTO_PERFIL']:
+                # Converte os bytes (BLOB) para uma string Base64
+                foto_base64 = base64.b64encode(motorista['FOTO_PERFIL']).decode('utf-8')
+                # Cria um Data URL (que o <img> entende)
+                motorista['FOTO_PERFIL'] = f'data:image/jpeg;base64,{foto_base64}'
+            else:
+                motorista['FOTO_PERFIL'] = None # Ou um placeholder
+
+        return jsonify(resultados)
+        
+    except Exception as e:
+        print(f"Erro no endpoint GET /api/motoristas: {e}")
+        return jsonify({"erro": str(e)}), 500
+
 if __name__ == '__main__':
-    print("Iniciando servidor Flask (com correção de CEP)...")
+    print("Iniciando servidor Flask (v12 - com update de veículo)...")
     app.run(debug=True, port=5000)

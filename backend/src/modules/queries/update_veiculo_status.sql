@@ -1,0 +1,3 @@
+UPDATE Veiculo
+SET ID_STATUS = %s
+WHERE PLACA = %s;

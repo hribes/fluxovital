@@ -1,0 +1,10 @@
+SELECT
+    v.ID_VEICULO,
+    v.PLACA,
+    v.CAPACIDADE,
+    tv.NOME_TIPO_VEICULO,
+    tv.MACA,
+    sg.NOME_STATUS
+FROM Veiculo v
+JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO
+JOIN StatusGeral sg ON v.ID_STATUS = sg.ID_STATUS

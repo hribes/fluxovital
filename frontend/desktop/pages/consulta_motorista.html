@@ -12,28 +12,31 @@
     <link rel="icon" type="image/png" href="../assets/icone.png">
     <link rel="stylesheet" href="../styles/navebar.css">
     <title>Consulta Motoristas</title>
+
+    <style>
+        .motorista-foto {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 2px solid #eee;
+            background-color: #f8f9fa; /* Cor de fundo caso não haja foto */
+        }
+    </style>
 </head>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <!-- Botão hamburger do perfil (só em telas pequenas) -->
     <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!-- Logo -->
     <a class="navbar-brand" href="../pages/home.html">
       <img src="../assets/logo-branco.png" alt="Logo" class="logo">
     </a>
-
-  <!-- Links da navbar (visíveis só em telas grandes) -->
-    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+  <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <!-- Agendamentos -->
-
         <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Cadastros </span>
@@ -45,9 +48,6 @@
              <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Dropdown Veículos -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Veículos</span>
@@ -58,7 +58,6 @@
            <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
           </ul>
         </li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Motorista</span>
@@ -69,29 +68,19 @@
             <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
           </ul>
         </li>
-
-
-        <!-- Links simples -->
       <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
       </ul>
     </div>
-
-    <!-- Nome do usuário à direita (só em telas grandes) -->
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
   <span class="me-2">Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
-
-<!-- Usuário: versão desktop -->
 <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
   <span>Amanda Cristina</span>
   <i class="bi bi-person-circle fs-4"></i>
 </div>
   </div>
-  
 </nav>
-
-<!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
   <div class="offcanvas-header justify-content-center">
     <h5 class="offcanvas-title">Amanda Cristina</h5>
@@ -108,7 +97,6 @@
 <body>
  
 
-  <!-- Conteúdo -->
   <div class="container conteudo">
     <div class="row">
       <div class="col-auto">
@@ -117,49 +105,135 @@
     </div>
 
     <div class="row mb-3">
-        <div class="col-md-2">
-            <label for="filtroData" class="form-label"><strong>Categoria:</label></strong>
-            <select class="form-select" id="filtroStatus">
-                <option value="1" selected>Nenhuma</option>
-                <option value="2">Alguma</option>
-                <option value="3">Coisa</option>
-                <option value="4">Aqui</option>
-            </select>
-        </div>
-
-    
-
-
-
-
-    <!-- Cards -->
-   <div class="row justify-content-center g-4 mb-3">
-    <div class="col-md-6">
-        <div class="card-paciente">
-            <div class="paciente-header">
-                <span class="paciente-id">00123</span>
-            </div>
-            <div class="paciente-nome">Carlos Antonio da Silva Toledo</div>
-            <div class="paciente-info">
-  <div class="linha-info">
-    <p><strong>Categoria CNH:</strong> D</p>
-  </div>
-
-</div>
+        <div class="col-md-4"> <label for="filtroCategoria" class="form-label"><strong>Categoria:</label></strong>
+            <select class="form-select" id="filtroCategoria">
+                <option value="all" selected>Todas</option>
+                </select>
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="card-paciente">
-            <div class="paciente-header">
-                <span class="paciente-id">00123</span>
-            </div>
-            <div class="paciente-nome">Carlos Antonio da Silva Toledo</div>
-            <div class="paciente-info">
-  <div class="linha-info">
-    <p><strong>Categoria CNH:</strong> D</p>
-  </div>
+    <div class="row justify-content-center g-4 mb-3" id="cardsContainer">
+        </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- 1. Seleção dos Elementos ---
+    const apiUrlBase = 'http://127.0.0.1:5000';
+    const cardsContainer = document.getElementById('cardsContainer');
+    const filtroCategoria = document.getElementById('filtroCategoria'); // ID Corrigido
+    // Ícone placeholder de pessoa
+    const iconePessoa = `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#adb5bd" class="bi bi-person-circle motorista-foto" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg>`;
+
+    // --- 2. Funções Helper ---
+    
+    /**
+     * Formata o CPF (11122233344) para exibição (111.222.333-44)
+     */
+    function formatarCPF(cpf) {
+        if (!cpf || cpf.length !== 11) return cpf || 'CPF não informado';
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+
+    // --- 3. Função para Popular o Filtro ---
+    async function popularFiltros() {
+        try {
+            const response = await fetch(`${apiUrlBase}/api/filtros/categoriascnh`);
+            if (!response.ok) throw new Error(`Erro ao buscar categorias`);
+            const dados = await response.json();
+
+            dados.forEach(item => {
+                const categoria = item['CATEGORIA_CNH'];
+                const option = document.createElement('option');
+                option.value = categoria;
+                option.textContent = categoria;
+                filtroCategoria.appendChild(option);
+            });
+        } catch (error) {
+            console.error(`Falha ao popular Filtro de CNH:`, error);
+        }
+    }
+
+    // --- 4. Função Principal: Buscar e Renderizar ---
+    async function buscarErenderizarMotoristas() {
+        const categoria = filtroCategoria.value;
+        
+        const params = new URLSearchParams();
+        if (categoria !== 'all') {
+            params.append('categoria', categoria);
+        }
+
+        const apiUrl = `${apiUrlBase}/api/motoristas?${params.toString()}`;
+        
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Erro ${response.status} ao buscar motoristas.`);
+            }
+            
+            const motoristas = await response.json();
+            
+            // Limpa os cards antigos
+            cardsContainer.innerHTML = '';
+            
+            if (motoristas.length === 0) {
+                cardsContainer.innerHTML = '<p class="col-12 text-center text-muted">Nenhum motorista encontrado para esta categoria.</p>';
+                return;
+            }
+
+            motoristas.forEach(m => {
+                const idFormatado = m.ID_MOTORISTA.toString().padStart(5, '0');
+                const cpfFormatado = formatarCPF(m.CPF_MOTORISTA);
+                
+                // Decide se usa a foto do banco (Base64) ou o ícone placeholder
+                const fotoElemento = m.FOTO_PERFIL 
+                    ? `<img src="${m.FOTO_PERFIL}" alt="Foto de ${m.NOME_MOTORISTA}" class="motorista-foto">`
+                    : iconePessoa;
+
+                const cardHtml = `
+                <div class="col-md-6">
+                    <div class="card-paciente">
+                        <div class="paciente-header">
+                            <span class="paciente-id">ID: ${idFormatado}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            ${fotoElemento}
+                            <div>
+                                <div class="paciente-nome">${m.NOME_MOTORISTA}</div>
+                                <div class="text-muted small">${cpfFormatado}</div>
+                            </div>
+                        </div>
+                        <div class="paciente-info">
+                            <div class="linha-info">
+                                <p><strong>Categoria CNH:</strong> ${m.CATEGORIA_CNH}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                
+                cardsContainer.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+        } catch (error) {
+            console.error("Falha ao buscar motoristas:", error);
+            cardsContainer.innerHTML = `
+                <p class="col-12 text-center text-danger">
+                    <strong>Erro ao carregar motoristas.</strong>
+                    <br>
+                    <small>Verifique se o servidor backend (python app.py) está rodando.</small>
+                </p>`;
+        }
+    }
+
+    // --- 5. Adiciona Listeners ---
+    filtroCategoria.addEventListener('change', buscarErenderizarMotoristas);
+    
+    // Busca inicial ao carregar a página
+    popularFiltros(); // Popula o <select>
+    buscarErenderizarMotoristas(); // Busca os cards
+});
+</script>
+
+</body> </html> ```

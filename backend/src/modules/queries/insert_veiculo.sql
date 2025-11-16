@@ -1,0 +1,4 @@
+INSERT INTO Veiculo (
+    ID_TIPO_VEICULO, ID_STATUS, CAPACIDADE, PLACA
+) VALUES (%s, %s, %s, %s);
+

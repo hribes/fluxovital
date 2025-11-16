@@ -1,0 +1,8 @@
+SELECT
+    v.ID_TIPO_VEICULO,
+    v.ID_STATUS,
+    v.CAPACIDADE,
+    tv.NOME_TIPO_VEICULO
+FROM Veiculo v
+JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO
+WHERE v.PLACA = %s;
