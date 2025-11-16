@@ -22,7 +22,7 @@
     }
 
     .navbar-toggler-icon {
-      background-image: url("../assets/menu.png");
+      background-image: url("/frontend/mobile/paciente/assets/menu.png");
       width: 70px;
       height: 70px;
     }

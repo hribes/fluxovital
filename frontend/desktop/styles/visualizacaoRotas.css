@@ -60,7 +60,7 @@ select.form-select{
 }
 
 .row{
-    margin-top: 20px;
+    margin-top: 60px;
 }
 
 .textos-card{
@@ -70,4 +70,18 @@ select.form-select{
 .textos-card h3{
     font-weight: 600;
     line-height: 10px;
+}
+
+.botao-rotas{
+    width: 100%;
+}
+
+button.btn.btn-primary{
+    background-color: #FFE432;
+    border: none;
+    color: black;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    width: 355px;
 }
