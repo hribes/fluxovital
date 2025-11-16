@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../styles/visualizacaoRotas.css">
-    <link rel="stylesheet" href="../styles/navebar.css">
-    <title>Visualização Rotas</title>
-      <link rel="icon" type="image/png" href="../assets/icone.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../styles/visualizacaoRotas.css">
+  <link rel="stylesheet" href="../styles/navebar.css">
+  <title>Visualização Rotas</title>
+  <link rel="icon" type="image/png" href="/assets/icone.png">
 </head>
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <!-- Botão hamburger do perfil (só em telas pequenas) -->
-    <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
+    <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas"
+      data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -25,22 +29,27 @@
     <a class="navbar-brand" href="../pages/home.html">
       <img src="../assets/logo-branco.png" alt="Logo" class="logo">
     </a>
-   <!-- Links da navbar (visíveis só em telas grandes) -->
+    <!-- Links da navbar (visíveis só em telas grandes) -->
     <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <!-- Agendamentos -->
 
-        <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span
+              class="link-text">Agendamentos</span></a></li>
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Cadastros </span>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="../pages/cadastro_consulta.html"><span class="link-text">Cadastrar Consulta</span></a></li>
-            <li><a class="dropdown-item" href="../pages/cadastro_funcionarios.html"><span class="link-text">Cadastrar Funcionário</span></a></li>
-            <li><a class="dropdown-item" href="../pages/cadastro_paciente.html"><span class="link-text">Cadastrar Paciente</span></a></li>
-             <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_consulta.html"><span class="link-text">Cadastrar
+                  Consulta</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_funcionarios.html"><span class="link-text">Cadastrar
+                  Funcionário</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_paciente.html"><span class="link-text">Cadastrar
+                  Paciente</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar
+                  Hospital</span></a></li>
           </ul>
         </li>
 
@@ -51,9 +60,12 @@
             <span class="link-text">Veículos</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="../pages/cadastro_veiculo.html"><span class="link-text">Cadastrar Veículo</span></a></li>
-            <li><a class="dropdown-item" href="../pages/consulta_veiculos.html"><span class="link-text">Visualizar Veículos</span></a></li>
-           <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_veiculo.html"><span class="link-text">Cadastrar
+                  Veículo</span></a></li>
+            <li><a class="dropdown-item" href="../pages/consulta_veiculos.html"><span class="link-text">Visualizar
+                  Veículos</span></a></li>
+            <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos
+                  com Rotas</span></a></li>
           </ul>
         </li>
 
@@ -62,38 +74,43 @@
             <span class="link-text">Motorista</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="../pages/cadastro_motorista.html"><span class="link-text">Cadastrar Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="../pages/atribuicao_motoristas.html"><span class="link-text">Atribuir Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/cadastro_motorista.html"><span class="link-text">Cadastrar
+                  Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/atribuicao_motoristas.html"><span class="link-text">Atribuir
+                  Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar
+                  Motoristas</span></a></li>
           </ul>
         </li>
 
 
         <!-- Links simples -->
-      <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas
+              de Transporte</span></a></li>
       </ul>
     </div>
 
     <!-- Nome do usuário à direita (só em telas grandes) -->
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
-  <span class="me-2">Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
+      <span class="me-2">Amanda Cristina</span>
+      <i class="bi bi-person-circle fs-4"></i>
+    </div>
 
-<!-- Usuário: versão desktop -->
-<div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
-  <span>Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
+    <!-- Usuário: versão desktop -->
+    <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+      <span>Amanda Cristina</span>
+      <i class="bi bi-person-circle fs-4"></i>
+    </div>
   </div>
-  
+
 </nav>
 
 <!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
   <div class="offcanvas-header justify-content-center">
     <h5 class="offcanvas-title">Amanda Cristina</h5>
-    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
+    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2"
+      data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body d-flex flex-column gap-3">
     <a href="../pages/home.html"><span class="link-text">Home</span></a>
@@ -103,113 +120,119 @@
     <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
   </div>
 </div>
+
 <body>
-    <div class="container">
-        <h2>Rotas de Transporte</h2>
-        <div class="row">
-            <div class="col-md-2">
-                <label for="filtroData" class="form-label">Data:</label>
-            <input type="date" class="form-control" id="filtroData">
-            </div>
-            <div class="col-md-2">
-                <label for="veiculos" class="form-label">Veículos:</label>
-            <select class="form-select" id="veiculos">
-                <option value="1" selected>Todos</option>
-                <option value="2">Ambulância</option>
-                <option value="3">Coisa</option>
-                <option value="4">Aqui</option>
-            </select>
-            </div>
-            <div class="col-md-10">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div id="map"></div>
-            </div>
-            <div class="col-md-6">
-                <div class="textos-card">
-                <h3>Pacientes Agendados - 01/09/2025</h3>
-                <p>Total: 5 pacientes</p>
-                </div>
-                <div class="card-paciente">
-                <div class="paciente-header">
-                    <span class="paciente-nome">Maria Josefa da Silva</span>
-                    <span class="text-muted">Pendente</span>
-                </div>
-                <div class="text-muted">568.458.321-54</div>
-                <div class="paciente-info">
-                    <p><strong>Consulta:</strong> Preventiva</p>
-                    <p><strong>Veículo:</strong> Ambulância</p>
-                    <p><strong>Data da Consulta:</strong> 01/09/2025</p>
-                    <p><strong>Hora:</strong> 10h30</p>
-                </div>
-            </div>
-
-            <div class="card-paciente">
-                <div class="paciente-header">
-                    <span class="paciente-nome">Maria Josefa da Silva</span>
-                    <span class="text-muted">Pendente</span>
-                </div>
-                <div class="text-muted">568.458.321-54</div>
-                <div class="paciente-info">
-                    <p><strong>Consulta:</strong> Preventiva</p>
-                    <p><strong>Veículo:</strong> Coisa</p>
-                    <p><strong>Data da Consulta:</strong> 01/09/2025</p>
-                    <p><strong>Hora:</strong> 10h30</p>
-                </div>
-            </div>
-
-            <div class="card-paciente">
-                <div class="paciente-header">
-                    <span class="paciente-nome">José Roberto Santos</span>
-                    <span class="text-muted">Pendente</span>
-                </div>
-                <div class="text-muted">568.458.321-54</div>
-                <div class="paciente-info">
-                    <p><strong>Consulta:</strong> Preventiva</p>
-                    <p><strong>Veículo:</strong> Coisa</p>
-                    <p><strong>Data da Consulta:</strong> 27/09/2025</p>
-                    <p><strong>Hora:</strong> 10h30</p>
-                </div>
-            </div>
-            </div>
-        </div>
+  <div class="container">
+    <h2>Rotas de Transporte</h2>
+    <div class="row">
+      <div class="col-md-2">
+        <label for="filtroData" class="form-label">Data:</label>
+        <input type="date" class="form-control" id="filtroData">
+      </div>
+      <div class="col-md-2">
+        <label for="veiculos" class="form-label">Veículos:</label>
+        <select class="form-select" id="veiculos">
+          <option value="1" selected>Todos</option>
+          <option value="2">Ambulância</option>
+          <option value="3">Coisa</option>
+          <option value="4">Aqui</option>
+        </select>
+      </div>
+      <div class="col-md-10">
+      </div>
     </div>
-        <script>
-        const filtroData = document.getElementById("filtroData");
-        const veiculos = document.getElementById("veiculos");
-        const cards = document.querySelectorAll(".card-paciente");
 
-        function filtrarCards() {
-            const dataSelecionada = filtroData.value; // yyyy-mm-dd
-            const veiculoSelecionado = veiculos.value; // 1 = todos, 2 = Ambulância, etc.
+    <div class="row">
+      <div class="col-md-6">
+        <!--Colocar o mapa do FOLIUM-->
+        <div id="map">
+          {{ map | safe }}
 
-            cards.forEach(card => {
-                const info = card.querySelectorAll("p");
-                let veiculoCard = '';
-                let dataCard = '';
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="textos-card">
+          <h3>Pacientes Agendados - 01/09/2025</h3>
+          <p>Total: 5 pacientes</p>
+        </div>
+        <div class="card-paciente">
+          <div class="paciente-header">
+            <span class="paciente-nome">Maria Josefa da Silva</span>
+            <span class="text-muted">Pendente</span>
+          </div>
+          <div class="text-muted">568.458.321-54</div>
+          <div class="paciente-info">
+            <p><strong>Consulta:</strong> Preventiva</p>
+            <p><strong>Veículo:</strong> Ambulância</p>
+            <p><strong>Data da Consulta:</strong> 01/09/2025</p>
+            <p><strong>Hora:</strong> 10h30</p>
+          </div>
+        </div>
 
-                info.forEach(p => {
-                    if (p.textContent.includes("Veículo:")) {
-                        veiculoCard = p.textContent.replace('Veículo:', '').trim();
-                    }
-                    if (p.textContent.includes("Data da Consulta:")) {
-                        dataCard = p.textContent.replace('Data da Consulta:', '').trim();
-                    }
-                });
+        <div class="card-paciente">
+          <div class="paciente-header">
+            <span class="paciente-nome">Maria Josefa da Silva</span>
+            <span class="text-muted">Pendente</span>
+          </div>
+          <div class="text-muted">568.458.321-54</div>
+          <div class="paciente-info">
+            <p><strong>Consulta:</strong> Preventiva</p>
+            <p><strong>Veículo:</strong> Coisa</p>
+            <p><strong>Data da Consulta:</strong> 01/09/2025</p>
+            <p><strong>Hora:</strong> 10h30</p>
+          </div>
+        </div>
 
-                const filtroVeiculo = veiculoSelecionado === "1" || veiculoCard.toLowerCase() === veiculos.options[veiculos.selectedIndex].text.toLowerCase();
-                const filtroDataVal = !dataSelecionada || dataCard === dataSelecionada.split('-').reverse().join('/');
+        <div class="card-paciente">
+          <div class="paciente-header">
+            <span class="paciente-nome">José Roberto Santos</span>
+            <span class="text-muted">Pendente</span>
+          </div>
+          <div class="text-muted">568.458.321-54</div>
+          <div class="paciente-info">
+            <p><strong>Consulta:</strong> Preventiva</p>
+            <p><strong>Veículo:</strong> Coisa</p>
+            <p><strong>Data da Consulta:</strong> 27/09/2025</p>
+            <p><strong>Hora:</strong> 10h30</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const filtroData = document.getElementById("filtroData");
+    const veiculos = document.getElementById("veiculos");
+    const cards = document.querySelectorAll(".card-paciente");
 
-                card.style.display = filtroVeiculo && filtroDataVal ? "block" : "none";
-            });
-        }
+    function filtrarCards() {
+      const dataSelecionada = filtroData.value; // yyyy-mm-dd
+      const veiculoSelecionado = veiculos.value; // 1 = todos, 2 = Ambulância, etc.
 
-        filtroData.addEventListener("change", filtrarCards);
-        veiculos.addEventListener("change", filtrarCards);
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+      cards.forEach(card => {
+        const info = card.querySelectorAll("p");
+        let veiculoCard = '';
+        let dataCard = '';
+
+        info.forEach(p => {
+          if (p.textContent.includes("Veículo:")) {
+            veiculoCard = p.textContent.replace('Veículo:', '').trim();
+          }
+          if (p.textContent.includes("Data da Consulta:")) {
+            dataCard = p.textContent.replace('Data da Consulta:', '').trim();
+          }
+        });
+
+        const filtroVeiculo = veiculoSelecionado === "1" || veiculoCard.toLowerCase() === veiculos.options[veiculos.selectedIndex].text.toLowerCase();
+        const filtroDataVal = !dataSelecionada || dataCard === dataSelecionada.split('-').reverse().join('/');
+
+        card.style.display = filtroVeiculo && filtroDataVal ? "block" : "none";
+      });
+    }
+
+    filtroData.addEventListener("change", filtrarCards);
+    veiculos.addEventListener("change", filtrarCards);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
