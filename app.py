@@ -8,23 +8,23 @@ from ortools.constraint_solver import pywrapcp
 import os
 
 # 1. INICIALIZAÇÃO DO FLASK
-# Define onde o Flask deve procurar seus templates.
 app = Flask(__name__, template_folder="frontend/desktop/pages")
 
 
 # 2. ROTAS ESTÁTICAS CUSTOMIZADAS
-# O Flask precisa de funções para servir arquivos fora da pasta 'static/' padrão.
-
 @app.route('/styles/<path:filename>')
 def custom_styles_static(filename):
-    """Serve arquivos da pasta 'frontend/desktop/styles' via URL /styles/"""
     directory = os.path.join(os.getcwd(), 'frontend', 'desktop', 'styles')
     return send_from_directory(directory, filename)
 
 @app.route('/assets/<path:filename>')
 def custom_assets_static(filename):
-    """Serve arquivos da pasta 'frontend/desktop/assets' via URL /assets/"""
     directory = os.path.join(os.getcwd(), 'frontend', 'desktop', 'assets')
+    return send_from_directory(directory, filename)
+
+@app.route('/services/<path:filename>')
+def custom_services_static(filename):
+    directory = os.path.join(os.getcwd(), 'frontend', 'desktop', 'services')
     return send_from_directory(directory, filename)
 
 
@@ -46,7 +46,6 @@ pontos = pacientes + hospitais
 
 
 # FUNÇÕES DE LÓGICA (ORTOOLS, OSRM)
-# Estas funções permanecem inalteradas, pois são lógica Python pura.
 
 def matriz_distancias_duracoes():
     coords = ";".join([f"{lon},{lat}" for lat, lon in pontos])
@@ -73,6 +72,7 @@ def resolver_rota():
         } 
     
 
+    #Define a qnt de veiculos na rota
     manager = pywrapcp.RoutingIndexManager(len(dist), 1, 0)
     routing = pywrapcp.RoutingModel(manager)
 
@@ -118,8 +118,7 @@ def rota_real_osrm(lista_coordenadas):
     return data["routes"][0]["geometry"]["coordinates"]
 
 
-# 3. ROTAS HTML (usando @app.route e render_template)
-
+#Rotas
 @app.route("/")
 def index_page():
     return render_template("index.html")
@@ -194,7 +193,7 @@ def rotas_page():
     )
 
 
-
+#Função para gerar o mapa
 def gerar_mapa():
     resultado = resolver_rota()
     if resultado is None:
@@ -261,8 +260,5 @@ def gerar_mapa():
 
 
 
-
-# 4. EXECUÇÃO
 if __name__ == "__main__":
-    # Roda o servidor de desenvolvimento do Flask na porta padrão (5000)
     app.run(debug=True)
