@@ -34,6 +34,7 @@ pacientes = [
     (-22.225829, -49.932824), 
     (-22.186588, -49.949813), 
     (-22.203619, -49.972021), 
+    (-22.202060097362207, -49.939072758426455),
 ]
 
 hospitais = [
@@ -63,7 +64,13 @@ def resolver_rota():
     if dist is None or dur is None:
         return None
 
-    entregas = {0: 4, 1: 5, 2: 4, 3: 5} 
+    entregas = {
+        0: 5, 
+        1: 6, 
+        2: 5, 
+        3: 6,
+        4: 6
+        } 
     
 
     manager = pywrapcp.RoutingIndexManager(len(dist), 1, 0)
@@ -121,8 +128,74 @@ def index_page():
 def home_page():
     return render_template("home.html")
 
+@app.route("/cadastrar/consulta")
+def cadastrar_consulta():
+    return render_template("cadastro_consulta.html")
+
+@app.route("/cadastrar/paciente")
+def cadastrar_paciente():
+    return render_template("cadastro_paciente.html")
+
+@app.route("/cadastrar/hospital")
+def cadastrar_hospital():
+    return render_template("cadastro_hospital.html")
+
+@app.route("/cadastrar/funcionario")
+def cadastrar_funcionario():
+    return render_template("cadastro_funcionarios.html")
+
+@app.route("/cadastrar/motorista")
+def cadastrar_motorista():
+    return render_template("cadastro_motorista.html")
+
+@app.route("/cadastrar/veiculo")
+def cadastrar_veiculo():
+    return render_template("cadastro_veiculo.html")
+
+@app.route("/agendamentos")
+def consultar_paciente():
+    return render_template("consulta_pacientes.html")
+
+@app.route("/atribuir/motorista")
+def atribuir_motorista():
+    map_html, tempo_total_min = gerar_mapa()
+    if map_html is None:
+        return "<h1>Sem solução</h1>"
+
+    return render_template(
+        "atribuicao_motoristas.html",
+        map=map_html,
+        tempo_total_min=tempo_total_min
+    )
+
+@app.route("/visualizar/motorista")
+def consultar_motoristas():
+    return render_template("consulta_motorista.html")
+
+@app.route("/visualizar/veiculo")
+def consultar_veiculos():
+    return render_template("consulta_veiculos.html")
+
+@app.route("/veiculo/rotas")
+def consultar_veiculos_rotas():
+    return render_template("consulta_veiculos.c.rotas.html")
+
+
 @app.route("/rotas")
 def rotas_page():
+    map_html, tempo_total_min = gerar_mapa()
+    if map_html is None:
+        return "<h1>Sem solução</h1>"
+
+    return render_template(
+        "visualizacao_rotas.html",
+        map=map_html,
+        tempo_total_min=tempo_total_min
+    )
+
+
+
+def gerar_mapa():
     resultado = resolver_rota()
     if resultado is None:
         return "<h1>Sem solução</h1>"
@@ -138,16 +211,14 @@ def rotas_page():
 
     m = folium.Map(location=(-22.2177, -49.9450), zoom_start=13)
 
-    # 1️⃣ Colocar marcador de todos os pontos
     for i, (lat, lon) in enumerate(pontos):
-        if i < 4:
+        if i < 5:
             folium.Marker([lat, lon], icon=folium.Icon(
                 color="green"), tooltip=f"P{i+1}").add_to(m)
         else:
             folium.Marker([lat, lon], icon=folium.Icon(
                 color="red"), tooltip=f"H{i-3}").add_to(m)
-
-    # 2️⃣ Adicionar legendas da ordem da rota + tempo aproximado
+            
     for ordem, ponto_index in enumerate(rota):
         lat, lon = pontos[ponto_index]
         tempo_seg = 0
@@ -186,14 +257,10 @@ def rotas_page():
     tempo_total_min = int(tempo_total_segundos / 60)
     print(f"Tempo total estimado do percurso: {tempo_total_min} min")
 
-    map_html = m._repr_html_()
+    return m._repr_html_(), tempo_total_min
 
-    # Retorna o template visualizacao_rotas.html com as variáveis
-    return render_template(
-        "visualizacao_rotas.html",
-        map=map_html, 
-        tempo_total_min=tempo_total_min
-    )
+
+
 
 # 4. EXECUÇÃO
 if __name__ == "__main__":

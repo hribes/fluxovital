@@ -17,79 +17,84 @@
 </head>
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <!-- Botão hamburger do perfil (só em telas pequenas) -->
-    <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Logo -->
-    <a class="navbar-brand" href="../pages/home.html">
-      <img src="../assets/logo-branco.png" alt="Logo" class="logo">
-    </a>
-
-     <!-- Links da navbar (visíveis só em telas grandes) -->
-    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <!-- Agendamentos -->
-
-        <li class="nav-item"><a class="nav-link" href="../pages/consulta_pacientes.html"><span class="link-text">Agendamentos</span></a></li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Cadastros </span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="../pages/cadastro_consulta.html"><span class="link-text">Cadastrar Consulta</span></a></li>
-            <li><a class="dropdown-item" href="../pages/cadastro_funcionarios.html"><span class="link-text">Cadastrar Funcionário</span></a></li>
-            <li><a class="dropdown-item" href="../pages/cadastro_paciente.html"><span class="link-text">Cadastrar Paciente</span></a></li>
-             <li><a class="dropdown-item" href="../pages/cadastro_hospital.html"><span class="link-text">Cadastrar Hospital</span></a></li>
-          </ul>
-        </li>
-
-
-        <!-- Dropdown Veículos -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Veículos</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="../pages/cadastro_veiculo.html"><span class="link-text">Cadastrar Veículo</span></a></li>
-            <li><a class="dropdown-item" href="../pages/consulta_veiculos.html"><span class="link-text">Visualizar Veículos</span></a></li>
-           <li><a class="dropdown-item" href="../pages/consulta_veiculos.c.rotas.html"><span class="link-text">Veículos com Rotas</span></a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Motorista</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="../pages/cadastro_motorista.html"><span class="link-text">Cadastrar Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="../pages/atribuicao_motoristas.html"><span class="link-text">Atribuir Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="../pages/consulta_motorista.html"><span class="link-text">Visualizar Motoristas</span></a></li>
-          </ul>
-        </li>
-
-
-        <!-- Links simples -->
-      <li class="nav-item"><a class="nav-link" href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a></li>
-      </ul>
-    </div>
-    <!-- Nome do usuário à direita (só em telas grandes) -->
-    <div class="d-flex align-items-center text-light ms-auto d-lg-none">
-  <span class="me-2">Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
-
-<!-- Usuário: versão desktop -->
-<div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
-  <span>Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
-  </div>
+    <div class="container-fluid">
+      <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#perfilMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
   
-</nav>
+      <a class="navbar-brand" href="/home">
+        <img src="../assets/logo-branco.png" alt="Logo" class="logo">
+      </a>
+  
+      <!-- Links da navbar (visíveis só em telas grandes) -->
+      <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <!-- Agendamentos -->
+  
+          <li class="nav-item"><a class="nav-link" href="/agendamentos"><span
+                class="link-text">Agendamentos</span></a></li>
+  
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/index" role="button" data-bs-toggle="dropdown">
+              <span class="link-text">Cadastros </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/consulta"><span class="link-text">Cadastrar
+                    Consulta</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/funcionario"><span class="link-text">Cadastrar
+                    Funcionário</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/paciente"><span class="link-text">Cadastrar
+                    Paciente</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar
+                    Hospital</span></a></li>
+            </ul>
+          </li>
+  
+  
+          <!-- Dropdown Veículos -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <span class="link-text">Veículos</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/veiculo"><span class="link-text">Cadastrar
+                    Veículo</span></a></li>
+              <li><a class="dropdown-item" href="/visualizar/veiculo"><span class="link-text">Visualizar
+                    Veículos</span></a></li>
+              <li><a class="dropdown-item" href="/rotas"><span class="link-text">Veículos
+                    com Rotas</span></a></li>
+            </ul>
+          </li>
+  
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <span class="link-text">Motorista</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/motorista"><span class="link-text">Cadastrar
+                    Motoristas</span></a></li>
+              <li><a class="dropdown-item" href="/atribuir/motorista"><span class="link-text">Atribuir
+                    Motoristas</span></a></li>
+              <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar
+                    Motoristas</span></a></li>
+            </ul>
+          </li>
+  
+  
+          <!-- Links simples -->
+          <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas
+                de Transporte</span></a></li>
+        </ul>
+      </div>
+  
+      <!-- Usuário desktop -->
+      <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+        <span>Amanda Cristina</span>
+        <i class="bi bi-person-circle fs-4"></i>
+      </div>
+    </div>
+  </nav>
 
 <!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
