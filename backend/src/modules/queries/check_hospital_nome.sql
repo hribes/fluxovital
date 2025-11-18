@@ -1,0 +1,3 @@
+SELECT 1 
+FROM LocalAtendimento 
+WHERE NOME_LOCAL_ATENDIMENTO = %s;

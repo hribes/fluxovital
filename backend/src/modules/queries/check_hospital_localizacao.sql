@@ -1,0 +1,7 @@
+SELECT la.NOME_LOCAL_ATENDIMENTO 
+FROM LocalAtendimento la
+JOIN Endereco e ON la.ID_ENDERECO = e.ID_ENDERECO
+WHERE 
+    ABS(e.LATITUDE - %s) < 0.0001 
+    AND 
+    ABS(e.LONGITUDE - %s) < 0.0001;

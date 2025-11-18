@@ -4,7 +4,6 @@ from flask_cors import CORS
 from mysql.connector import Error
 import json
 
-# --- Importações da Parte 1 (API) ---
 try:
     from conexao_db import criar_conexao, ler_query_de_arquivo, executar_query_escrita
     from conversao_coordenadas import endereco_para_coordenadas
@@ -18,20 +17,15 @@ import re
 import base64
 API_KEY = os.getenv("GOOGLE_API_KEY") 
 
-# --- Importações da Parte 2 (Mapa) ---
 import folium
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
 
-# --- 1. DEFINIÇÃO ÚNICA DO APP ---
-# Combinamos as duas definições em uma
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "frontend/desktop/pages"))
 
-# --- 2. CONFIGURAÇÃO ÚNICA DO CORS ---
 cors = CORS(app, origins="http://127.0.0.1:5500")
 
-# --- 3. FUNÇÕES HELPER DA API ---
 def executar_query(query, params=None):
     conexao = None
     cursor = None
@@ -399,6 +393,7 @@ def criar_funcionario():
         return jsonify({"erro": str(e)}), 500
 
 
+# --- ROTA 9: Cadastro de Hospital (POST) - VERIFICAÇÃO POR CEP/NÚMERO ---
 @app.route('/api/locaisatendimento', methods=['POST'])
 def criar_local_atendimento():
     dados = request.get_json()
@@ -406,15 +401,41 @@ def criar_local_atendimento():
     cursor = None
     
     try:
-        nome_local = dados.get('nome')
+        # --- 1. VALIDAÇÃO E LIMPEZA ---
+        nome_local = dados.get('nome', '').strip()
         if not nome_local:
             return jsonify({"erro": "Nome do hospital é obrigatório."}), 400
-            
-        local_check_query = "SELECT 1 FROM LocalAtendimento WHERE NOME_LOCAL_ATENDIMENTO = %s"
-        local_result = executar_query(local_check_query, (nome_local,))
-        if local_result:
-            return jsonify({"erro": f"Erro: O local '{nome_local}' já está cadastrado."}), 409
 
+        # Limpa o CEP para comparação (apenas números)
+        cep_bruto = dados.get('cep')
+        cep_limpo = re.sub(r'\D', '', cep_bruto or '')
+        cep_final = cep_limpo.ljust(8, '0')[:8] # Garante 8 digitos
+        
+        numero = dados.get('numero')
+
+        # --- 2. VERIFICAÇÃO DE DUPLICIDADE (CEP + NÚMERO) ---
+        # Esta é a nova lógica que você pediu
+        query_dup = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'check_hospital_cep_num.sql'))
+        if not query_dup:
+            return jsonify({"erro": "Falha interna: SQL 'check_hospital_cep_num.sql' não encontrado."}), 500
+
+        dup_result = executar_query(query_dup, (cep_final, numero))
+        
+        if dup_result:
+            nome_existente = dup_result[0]['NOME_LOCAL_ATENDIMENTO']
+            return jsonify({"erro": f"Já existe um hospital neste endereço (CEP {cep_bruto}, Nº {numero}) cadastrado como '{nome_existente}'."}), 409
+
+        # --- 3. VERIFICAÇÃO DE DUPLICIDADE (NOME) ---
+        # Mantemos a verificação por nome também, por segurança
+        query_nome = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'check_hospital_nome.sql'))
+        if query_nome:
+             nome_result = executar_query(query_nome, (nome_local,))
+             if nome_result:
+                 return jsonify({"erro": f"Já existe um hospital cadastrado com o nome '{nome_local}'."}), 409
+
+        # --- 4. INÍCIO DA TRANSAÇÃO (CADASTRO) ---
+        # O resto do código de inserção continua igual...
+        
         conexao = criar_conexao()
         if not conexao:
             raise Exception("Falha ao conectar no banco de dados")
@@ -429,31 +450,33 @@ def criar_local_atendimento():
 
         estado_uf_limpo = (dados.get('estado') or 'ER').upper()[:2]
         
-        cep_bruto = dados.get('cep')
-        cep_limpo = re.sub(r'\D', '', cep_bruto or '')
-        cep_final = cep_limpo.ljust(8, '0')[:8]
-        
+        # 4a. Estado
         cursor.execute("INSERT INTO Estado (NOME_ESTADO) VALUES (%s) ON DUPLICATE KEY UPDATE ID_ESTADO=LAST_INSERT_ID(ID_ESTADO)", (estado_uf_limpo,))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_estado = cursor.fetchone()[0]
 
+        # 4b. Cidade
         cursor.execute("INSERT INTO Cidade (ID_ESTADO, NOME_CIDADE) VALUES (%s, %s) ON DUPLICATE KEY UPDATE ID_CIDADE=LAST_INSERT_ID(ID_CIDADE)", (id_estado, dados.get('cidade')))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_cidade = cursor.fetchone()[0]
 
+        # 4c. Bairro
         cursor.execute("INSERT INTO Bairro (ID_CIDADE, NOME_BAIRRO) VALUES (%s, %s) ON DUPLICATE KEY UPDATE ID_BAIRRO=LAST_INSERT_ID(ID_BAIRRO)", (id_cidade, dados.get('bairro')))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_bairro = cursor.fetchone()[0]
 
+        # 4d. Rua (Usa o cep_final limpo que já preparamos lá em cima)
         cursor.execute("INSERT INTO Rua (ID_BAIRRO, NOME_RUA, CEP) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE ID_RUA=LAST_INSERT_ID(ID_RUA)", 
                        (id_bairro, dados.get('rua'), cep_final))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_rua = cursor.fetchone()[0]
         
+        # 4e. Endereco
         cursor.execute("INSERT INTO Endereco (ID_RUA, NUMERO_ENDERECO, LATITUDE, LONGITUDE, COMPLEMENTO) VALUES (%s, %s, %s, %s, %s)",
                        (id_rua, dados.get('numero'), lat, lon, dados.get('complemento')))
         id_endereco = cursor.lastrowid
         
+        # 4f. Criar o LocalAtendimento
         query_local = "INSERT INTO LocalAtendimento (ID_ENDERECO, NOME_LOCAL_ATENDIMENTO) VALUES (%s, %s)"
         params_local = (id_endereco, nome_local)
         
@@ -478,8 +501,7 @@ def criar_local_atendimento():
             cursor.close()
         if conexao:
             conexao.close()
-
-
+            
 @app.route('/api/veiculos', methods=['GET', 'POST'])
 def handle_veiculos():
     
