@@ -35,6 +35,7 @@ pacientes = [
     (-22.186588, -49.949813), 
     (-22.203619, -49.972021), 
     (-22.202060097362207, -49.939072758426455),
+    (-22.164939380761968, -49.96938552881704)
 ]
 
 hospitais = [
@@ -64,11 +65,13 @@ def resolver_rota():
         return None
 
     entregas = {
-        0: 5, 
-        1: 6, 
-        2: 5, 
-        3: 6,
-        4: 6
+        0: 6, 
+        1: 7, 
+        2: 6, 
+        3: 7,
+        4: 6,
+        5: 7
+        
         } 
     
 
@@ -211,7 +214,7 @@ def gerar_mapa():
     m = folium.Map(location=(-22.2177, -49.9450), zoom_start=13)
 
     for i, (lat, lon) in enumerate(pontos):
-        if i < 5:
+        if i < 6:
             folium.Marker([lat, lon], icon=folium.Icon(
                 color="green"), tooltip=f"P{i+1}").add_to(m)
         else:
