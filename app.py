@@ -1,8 +1,13 @@
 import os
-from flask import Flask, jsonify, request, render_template, send_from_directory
+from flask import Flask, jsonify, request, render_template, send_from_directory, redirect, url_for
 from flask_cors import CORS
 from mysql.connector import Error
 import json
+
+# --- ⚡ NOVAS IMPORTAÇÕES DE SEGURANÇA ⚡ ---
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_bcrypt import Bcrypt
+# --------------------------------------------
 
 try:
     from conexao_db import criar_conexao, ler_query_de_arquivo, executar_query_escrita
@@ -24,7 +29,32 @@ from ortools.constraint_solver import pywrapcp
 
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "frontend/desktop/pages"))
 
-cors = CORS(app, origins="http://127.0.0.1:5500")
+# --- ⚡ CONFIGURAÇÃO DE LOGIN E SESSÃO ⚡ ---
+app.config['SECRET_KEY'] = 'chave_secreta_fluxovital_123' # Necessário para criar o cookie
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'index_page' # Se tentar acessar sem logar, manda para o index
+
+# Permite cookies no CORS (importante para o login funcionar)
+cors = CORS(app, origins="http://127.0.0.1:5500", supports_credentials=True)
+
+# --- CLASSE DE USUÁRIO (Para o Flask-Login) ---
+class Usuario(UserMixin):
+    def __init__(self, id, nome, nivel):
+        self.id = id
+        self.nome = nome
+        self.nivel = nivel
+
+@login_manager.user_loader
+def load_user(user_id):
+    # Recarrega o usuário do banco a cada requisição usando o ID do cookie
+    query = "SELECT ID_FUNCIONARIO, NOME_FUNCIONARIO, ID_NIVEL_ACESSO FROM Funcionario WHERE ID_FUNCIONARIO = %s"
+    resultado = executar_query(query, (user_id,))
+    if resultado:
+        d = resultado[0]
+        return Usuario(d['ID_FUNCIONARIO'], d['NOME_FUNCIONARIO'], d['ID_NIVEL_ACESSO'])
+    return None
+# ---------------------------------------------
 
 def executar_query(query, params=None):
     conexao = None
@@ -54,6 +84,7 @@ def executar_query(query, params=None):
 # --- 4. TODAS AS ROTAS DA API (/api/...) ---
 
 @app.route('/api/agendamentos', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_agendamentos():
     try:
         pagina = int(request.args.get('pagina', 1))
@@ -107,6 +138,7 @@ def get_agendamentos():
         return jsonify({"erro": str(e)}), 500
 
 @app.route('/api/filtros/locais', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_filtros_locais():
     query = "SELECT ID_LOCAL_ATENDIMENTO, NOME_LOCAL_ATENDIMENTO FROM LocalAtendimento ORDER BY NOME_LOCAL_ATENDIMENTO;"
     resultados = executar_query(query)
@@ -115,6 +147,7 @@ def get_filtros_locais():
     return jsonify(resultados)
 
 @app.route('/api/filtros/tiposveiculo', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_filtros_tipos_veiculo():
     query = "SELECT ID_TIPO_VEICULO, NOME_TIPO_VEICULO FROM TipoVeiculo ORDER BY NOME_TIPO_VEICULO;"
     resultados = executar_query(query)
@@ -123,6 +156,7 @@ def get_filtros_tipos_veiculo():
     return jsonify(resultados)
 
 @app.route('/api/filtros/tiposconsulta', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_filtros_tipos_consulta():
     query = "SELECT ID_TIPO_CONSULTA, DESCRICO_CONSULTA FROM TipoConsulta ORDER BY DESCRICO_CONSULTA;"
     resultados = executar_query(query)
@@ -131,6 +165,7 @@ def get_filtros_tipos_consulta():
     return jsonify(resultados)
 
 @app.route('/api/pacientes', methods=['GET', 'POST'])
+@login_required # 🔒 Protegido
 def handle_pacientes():
     if request.method == 'GET':
         query = "SELECT ID_PACIENTE, NOME_PACIENTE, ID_ENDERECO FROM Paciente ORDER BY NOME_PACIENTE;"
@@ -249,6 +284,7 @@ def handle_pacientes():
                 conexao.close()
 
 @app.route('/api/consultas', methods=['POST'])
+@login_required # 🔒 Protegido
 def criar_consulta():
     dados = request.get_json()
     try:
@@ -286,6 +322,7 @@ def criar_consulta():
         return jsonify({"erro": str(e)}), 500
 
 @app.route('/api/cep/<string:cep_number>', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_cep_data(cep_number):
     base_url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {"address": cep_number, "key": API_KEY, "region": "BR"}
@@ -328,6 +365,7 @@ def get_cep_data(cep_number):
 
 
 @app.route('/api/filtros/niveisacesso', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_niveis_acesso():
     query = "SELECT ID_NIVEL_ACESSO, NIVEL_ACESSO FROM NivelAcesso ORDER BY NIVEL_ACESSO;"
     resultados = executar_query(query)
@@ -337,6 +375,7 @@ def get_niveis_acesso():
 
 
 @app.route('/api/funcionarios', methods=['POST'])
+@login_required # 🔒 Protegido
 def criar_funcionario():
     dados = request.get_json()
     
@@ -393,49 +432,23 @@ def criar_funcionario():
         return jsonify({"erro": str(e)}), 500
 
 
-# --- ROTA 9: Cadastro de Hospital (POST) - VERIFICAÇÃO POR CEP/NÚMERO ---
 @app.route('/api/locaisatendimento', methods=['POST'])
+@login_required # 🔒 Protegido
 def criar_local_atendimento():
     dados = request.get_json()
     conexao = None
     cursor = None
     
     try:
-        # --- 1. VALIDAÇÃO E LIMPEZA ---
-        nome_local = dados.get('nome', '').strip()
+        nome_local = dados.get('nome')
         if not nome_local:
             return jsonify({"erro": "Nome do hospital é obrigatório."}), 400
+            
+        local_check_query = "SELECT 1 FROM LocalAtendimento WHERE NOME_LOCAL_ATENDIMENTO = %s"
+        local_result = executar_query(local_check_query, (nome_local,))
+        if local_result:
+            return jsonify({"erro": f"Erro: O local '{nome_local}' já está cadastrado."}), 409
 
-        # Limpa o CEP para comparação (apenas números)
-        cep_bruto = dados.get('cep')
-        cep_limpo = re.sub(r'\D', '', cep_bruto or '')
-        cep_final = cep_limpo.ljust(8, '0')[:8] # Garante 8 digitos
-        
-        numero = dados.get('numero')
-
-        # --- 2. VERIFICAÇÃO DE DUPLICIDADE (CEP + NÚMERO) ---
-        # Esta é a nova lógica que você pediu
-        query_dup = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'check_hospital_cep_num.sql'))
-        if not query_dup:
-            return jsonify({"erro": "Falha interna: SQL 'check_hospital_cep_num.sql' não encontrado."}), 500
-
-        dup_result = executar_query(query_dup, (cep_final, numero))
-        
-        if dup_result:
-            nome_existente = dup_result[0]['NOME_LOCAL_ATENDIMENTO']
-            return jsonify({"erro": f"Já existe um hospital neste endereço (CEP {cep_bruto}, Nº {numero}) cadastrado como '{nome_existente}'."}), 409
-
-        # --- 3. VERIFICAÇÃO DE DUPLICIDADE (NOME) ---
-        # Mantemos a verificação por nome também, por segurança
-        query_nome = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'check_hospital_nome.sql'))
-        if query_nome:
-             nome_result = executar_query(query_nome, (nome_local,))
-             if nome_result:
-                 return jsonify({"erro": f"Já existe um hospital cadastrado com o nome '{nome_local}'."}), 409
-
-        # --- 4. INÍCIO DA TRANSAÇÃO (CADASTRO) ---
-        # O resto do código de inserção continua igual...
-        
         conexao = criar_conexao()
         if not conexao:
             raise Exception("Falha ao conectar no banco de dados")
@@ -450,33 +463,31 @@ def criar_local_atendimento():
 
         estado_uf_limpo = (dados.get('estado') or 'ER').upper()[:2]
         
-        # 4a. Estado
+        cep_bruto = dados.get('cep')
+        cep_limpo = re.sub(r'\D', '', cep_bruto or '')
+        cep_final = cep_limpo.ljust(8, '0')[:8]
+        
         cursor.execute("INSERT INTO Estado (NOME_ESTADO) VALUES (%s) ON DUPLICATE KEY UPDATE ID_ESTADO=LAST_INSERT_ID(ID_ESTADO)", (estado_uf_limpo,))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_estado = cursor.fetchone()[0]
 
-        # 4b. Cidade
         cursor.execute("INSERT INTO Cidade (ID_ESTADO, NOME_CIDADE) VALUES (%s, %s) ON DUPLICATE KEY UPDATE ID_CIDADE=LAST_INSERT_ID(ID_CIDADE)", (id_estado, dados.get('cidade')))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_cidade = cursor.fetchone()[0]
 
-        # 4c. Bairro
         cursor.execute("INSERT INTO Bairro (ID_CIDADE, NOME_BAIRRO) VALUES (%s, %s) ON DUPLICATE KEY UPDATE ID_BAIRRO=LAST_INSERT_ID(ID_BAIRRO)", (id_cidade, dados.get('bairro')))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_bairro = cursor.fetchone()[0]
 
-        # 4d. Rua (Usa o cep_final limpo que já preparamos lá em cima)
         cursor.execute("INSERT INTO Rua (ID_BAIRRO, NOME_RUA, CEP) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE ID_RUA=LAST_INSERT_ID(ID_RUA)", 
                        (id_bairro, dados.get('rua'), cep_final))
         cursor.execute("SELECT LAST_INSERT_ID()")
         id_rua = cursor.fetchone()[0]
         
-        # 4e. Endereco
         cursor.execute("INSERT INTO Endereco (ID_RUA, NUMERO_ENDERECO, LATITUDE, LONGITUDE, COMPLEMENTO) VALUES (%s, %s, %s, %s, %s)",
                        (id_rua, dados.get('numero'), lat, lon, dados.get('complemento')))
         id_endereco = cursor.lastrowid
         
-        # 4f. Criar o LocalAtendimento
         query_local = "INSERT INTO LocalAtendimento (ID_ENDERECO, NOME_LOCAL_ATENDIMENTO) VALUES (%s, %s)"
         params_local = (id_endereco, nome_local)
         
@@ -501,8 +512,10 @@ def criar_local_atendimento():
             cursor.close()
         if conexao:
             conexao.close()
-            
+
+
 @app.route('/api/veiculos', methods=['GET', 'POST'])
+@login_required # 🔒 Protegido
 def handle_veiculos():
     
     if request.method == 'GET':
@@ -572,6 +585,7 @@ def handle_veiculos():
         
 
 @app.route('/api/veiculos/<string:placa>', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_veiculo_by_placa(placa):
     placa_limpa = re.sub(r'[^A-Z0-9]', '', placa.upper())
     if not placa_limpa:
@@ -589,6 +603,7 @@ def get_veiculo_by_placa(placa):
         return jsonify({"erro": "Veículo não encontrado"}), 404
 
 @app.route('/api/veiculos/<string:placa>', methods=['PUT'])
+@login_required # 🔒 Protegido
 def update_veiculo_status(placa):
     dados = request.get_json()
     novo_status_id = dados.get('id_status')
@@ -621,6 +636,7 @@ def update_veiculo_status(placa):
         return jsonify({"erro": str(e)}), 500
 
 @app.route('/api/motoristas', methods=['GET', 'POST'])
+@login_required # 🔒 Protegido
 def handle_motoristas():
     if request.method == 'GET':
         categoria = request.args.get('categoria')
@@ -701,6 +717,7 @@ def handle_motoristas():
             return jsonify({"erro": str(e)}), 500
         
 @app.route('/api/filtros/categoriascnh', methods=['GET'])
+@login_required # 🔒 Protegido
 def get_filtros_cnh():
     query = "SELECT DISTINCT CATEGORIA_CNH FROM Motorista WHERE CATEGORIA_CNH IS NOT NULL ORDER BY CATEGORIA_CNH;"
     resultados = executar_query(query)
@@ -709,39 +726,65 @@ def get_filtros_cnh():
     return jsonify(resultados)
 
 
-@app.route('/api/login/funcionario', methods=['POST'])
-def login_funcionario():
+# --- ⚡ ROTA DE LOGIN MODIFICADA (Cria a Sessão) ⚡ ---
+@app.route('/api/login', methods=['POST'])
+def realizar_login():
     dados = request.get_json()
+    tipo_usuario = dados.get('tipo')
     cpf = dados.get('cpf')
-    senha = dados.get('senha')
+    senha_texto = dados.get('senha') # Senha que veio do formulário
 
-    if not cpf or not senha:
-        return jsonify({"erro": "CPF e Senha são obrigatórios."}), 400
-
+    if not cpf or not senha_texto:
+        return jsonify({"erro": "Preencha CPF e Senha."}), 400
+    
     cpf_limpo = re.sub(r'\D', '', cpf)
 
-    try:
-        query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'get_funcionario_login.sql'))
-        if not query:
-            return jsonify({"erro": "Falha interna: Arquivo SQL 'get_funcionario_login.sql' não encontrado."}), 500
-
-        params = (cpf_limpo, senha)
-        resultado = executar_query(query, params)
+    if tipo_usuario == '1': 
+        query = "SELECT ID_FUNCIONARIO, NOME_FUNCIONARIO, ID_NIVEL_ACESSO, SENHA FROM Funcionario WHERE CPF_FUNCIONARIO = %s"
+        resultado = executar_query(query, (cpf_limpo,))
         
         if resultado:
-            return jsonify(resultado[0]), 200
-        else:
-            return jsonify({"erro": "CPF ou Senha inválidos."}), 401
+            user_db = resultado[0]
+            senha_banco = user_db['SENHA'] # Pode ser hash ou texto puro
 
-    except Error as e:
-        print(f"Erro no login de funcionário (Erro DB): {e}")
-        return jsonify({"erro": f"Erro de banco de dados: {e.msg}"}), 500
-    except Exception as e:
-        print(f"Erro no endpoint /api/login/funcionario: {e}")
-        return jsonify({"erro": str(e)}), 500
+            # Lógica Híbrida: Tenta Hash, se falhar, tenta Texto Puro
+            senha_valida = False
+            try:
+                # Tenta checar se é um hash válido do Bcrypt
+                if bcrypt.check_password_hash(senha_banco, senha_texto):
+                    senha_valida = True
+            except:
+                # Se der erro (porque não é hash), compara como texto puro
+                if senha_banco == senha_texto:
+                    senha_valida = True
+            
+            if senha_valida:
+                # Cria o objeto e Loga
+                user_obj = Usuario(user_db['ID_FUNCIONARIO'], user_db['NOME_FUNCIONARIO'], user_db['ID_NIVEL_ACESSO'])
+                login_user(user_obj, remember=True)
+                
+                return jsonify({
+                    "sucesso": True, 
+                    "mensagem": "Login realizado!", 
+                    "usuario": {"NOME_FUNCIONARIO": user_obj.nome}
+                }), 200
+            else:
+                return jsonify({"erro": "Senha incorreta."}), 401
+        else:
+            return jsonify({"erro": "CPF não encontrado."}), 401
+
+    return jsonify({"erro": "Tipo de usuário não suportado ainda."}), 400
+
+# --- ROTA DE LOGOUT ---
+@app.route('/api/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"sucesso": True})
 
 
 # --- 5. ROTAS DO MAPA (sem /api/) ---
+# --- ATENÇÃO: Adicionei @login_required nas rotas internas ---
 
 @app.route('/styles/<path:filename>')
 def custom_styles_static(filename):
@@ -903,44 +946,54 @@ def gerar_mapa():
     return m._repr_html_(), tempo_total_min
 
 
-# --- ROTAS DE PÁGINA (sem /api/) ---
+# --- ROTAS DE PÁGINA (Render Templates) ---
+
 @app.route("/")
 def index_page():
     return render_template("index.html")
 
 @app.route("/home")
+@login_required
 def home_page():
     return render_template("home.html")
 
 @app.route("/cadastrar/consulta")
+@login_required
 def cadastrar_consulta():
     return render_template("cadastro_consulta.html")
 
 @app.route("/cadastrar/paciente")
+@login_required
 def cadastrar_paciente():
     return render_template("cadastro_paciente.html")
 
 @app.route("/cadastrar/hospital")
+@login_required
 def cadastrar_hospital():
     return render_template("cadastro_hospital.html")
 
 @app.route("/cadastrar/funcionario")
+@login_required
 def cadastrar_funcionario():
     return render_template("cadastro_funcionarios.html")
 
 @app.route("/cadastrar/motorista")
+@login_required
 def cadastrar_motorista():
     return render_template("cadastro_motorista.html")
 
 @app.route("/cadastrar/veiculo")
+@login_required
 def cadastrar_veiculo():
     return render_template("cadastro_veiculo.html")
 
 @app.route("/agendamentos")
+@login_required
 def consultar_paciente():
     return render_template("consulta_pacientes.html")
 
 @app.route("/atribuir/motorista")
+@login_required
 def atribuir_motorista():
     map_html, tempo_total_min = gerar_mapa()
     if map_html is None:
@@ -953,19 +1006,23 @@ def atribuir_motorista():
     )
 
 @app.route("/visualizar/motorista")
+@login_required
 def consultar_motoristas():
     return render_template("consulta_motorista.html")
 
 @app.route("/visualizar/veiculo")
+@login_required
 def consultar_veiculos():
     return render_template("consulta_veiculos.html")
 
 @app.route("/veiculo/rotas")
+@login_required
 def consultar_veiculos_rotas():
     return render_template("consulta_veiculos.c.rotas.html")
 
 
 @app.route("/rotas")
+@login_required
 def rotas_page():
     map_html, tempo_total_min = gerar_mapa()
     if map_html is None:
@@ -979,5 +1036,5 @@ def rotas_page():
 
 # --- 6. BLOCO DE EXECUÇÃO ÚNICO ---
 if __name__ == '__main__':
-    print("Iniciando servidor Flask (v20 - Unificado)...")
+    print("Iniciando servidor Flask (v21 - LOGIN ATIVADO)...")
     app.run(debug=True, port=5000)

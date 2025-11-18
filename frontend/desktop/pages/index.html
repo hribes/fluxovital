@@ -7,51 +7,131 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/styles/login.css">
-    <title>Fluxo Vital</title>
+    <link rel="stylesheet" href="../styles/login.css">
+    <title>Fluxo Vital - Login</title>
+    <style>
+        .msg-erro {
+            color: #dc3545;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none; /* Escondido por padrão */
+        }
+    </style>
 </head>
 <body>
     
-        <div class="container-fluid vh-100">
-    <div class="row h-100">
-        <!-- Coluna branca -->
-        <div class="col-md-6 col-white d-flex align-items-center justify-content-center">
-        <div class="forms">
+    <div class="container-fluid vh-100">
+        <div class="row h-100">
+            <div class="col-md-6 col-white d-flex align-items-center justify-content-center">
+                <div class="forms">
 
-            <div class="logo">
-            <img src="/assets/logo-preto.png"  alt="Logo">
+                    <div class="logo">
+                        <img src="../assets/logo-preto.png" alt="Logo">
+                    </div>
+                    
+                    <h1>Bem-vindo(a)!</h1>
+                    <h2>Realize sua busca</h2>
+
+                    <select class="form-select select-usuario" id="selectTipoUsuario" aria-label="Default select example">
+                        <option value="1" selected>Atendente</option>
+                        </select>
+
+                    <input class="form-control cpf-usuario" id="inputCPF" type="text" placeholder="CPF (somente números)" required>
+                    
+                    <input class="form-control senha-usuario" id="inputSenha" type="password" placeholder="Senha" required>
+                    
+                    <p id="mensagemErro" class="msg-erro">CPF ou Senha incorretos!</p>
+
+                    <button class="btn btn-entrar" type="button" id="btnEntrar">Entrar</button>
+                </div>
             </div>
-            
-            <h1>Bem-vindo(a)!</h1>
-            <h2>Realize sua busca</h2>
 
-            <select class="form-select select-usuario" aria-label="Default select example">
-            <option value="1" selected>Atendente</option>
-            <option value="2">Paciente</option>
-            <option value="3">Motorista</option>
-            </select>
-
-            <input class="form-control cpf-paciente" type="text" placeholder="CPF" style="display:none;">
-            <input class="form-control email-usuario" type="email" placeholder="Email" style="display:none">
-            <input class="form-control senha-usuario" type="password" placeholder="Senha" style="display:none">
-            <button class="btn btn-entrar" type="button"  onclick="window.location.href='/home'">Entrar</button>
-        </div>
-        </div>
-
-        <!-- Coluna amarela -->
-        <div class="col-md-6 bg-yellow d-flex align-items-center justify-content-center">
-            <div class="img-texto">
-                <h3 class="slogan"><b>Conectando trajetos,</b></h3>
-                <h2 class="slogan2"><b><i>transformando vidas.</i></b></h2>
-                <img src="/assets/img-login.svg" alt="" class="img-login">
+            <div class="col-md-6 bg-yellow d-flex align-items-center justify-content-center">
+                <div class="img-texto">
+                    <h3 class="slogan"><b>Conectando trajetos,</b></h3>
+                    <h2 class="slogan2"><b><i>transformando vidas.</i></b></h2>
+                    <img src="../assets/img-login.svg" alt="" class="img-login">
+                </div>
             </div>
-            
         </div>
     </div>
-    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiUrlBase = 'http://127.0.0.1:5000'; // Endereço do seu backend Python
+            
+            const btnEntrar = document.getElementById('btnEntrar');
+            const inputCPF = document.getElementById('inputCPF');
+            const inputSenha = document.getElementById('inputSenha');
+            const selectTipo = document.getElementById('selectTipoUsuario');
+            const msgErro = document.getElementById('mensagemErro');
 
-    <script src="/services/campos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+            // Função para realizar o login
+            async function fazerLogin() {
+                const cpf = inputCPF.value;
+                const senha = inputSenha.value;
+                const tipo = selectTipo.value;
+
+                // Resetar mensagem de erro
+                msgErro.style.display = 'none';
+
+                // Validação simples no frontend
+                if (!cpf || !senha) {
+                    msgErro.innerText = "Por favor, preencha CPF e Senha.";
+                    msgErro.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    // Chama a rota que criamos no app.py
+                    const response = await fetch(`${apiUrlBase}/api/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tipo: tipo,
+                            cpf: cpf,
+                            senha: senha
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // --- SUCESSO ---
+                        console.log("Login realizado:", data.usuario.NOME_FUNCIONARIO);
+                        
+                        // Redireciona para a rota /home definida no seu app.py
+                        window.location.href = '/home'; 
+                    } else {
+                        // --- ERRO (Senha errada ou usuário não encontrado) ---
+                        msgErro.innerText = data.erro || "Falha no login.";
+                        msgErro.style.display = 'block';
+                    }
+
+                } catch (error) {
+                    console.error("Erro de conexão:", error);
+                    msgErro.innerText = "Erro ao conectar com o servidor.";
+                    msgErro.style.display = 'block';
+                }
+            }
+
+            // Evento de clique no botão
+            btnEntrar.addEventListener('click', fazerLogin);
+
+            // Evento para aceitar a tecla "Enter" nos campos
+            const inputs = [inputCPF, inputSenha];
+            inputs.forEach(input => {
+                input.addEventListener('keydown', (event) => {
+                    if (event.key === "Enter") {
+                        fazerLogin();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

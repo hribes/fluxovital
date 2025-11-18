@@ -13,39 +13,34 @@
     <title>Consulta Pacientes</title>
     <link rel="icon" type="image/png" href="../assets/icone.png">
 </head>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <!-- Botão hamburger do perfil (só em telas pequenas) -->
     <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Logo -->
     <a class="navbar-brand" href="/home">
-      <img src="../assets/logo-branco.png" alt="Logo" class="logo">
+      <img src="/assets/logo-branco.png" alt="Logo" class="logo">
     </a>
 
-    <!-- Links da navbar (visíveis só em telas grandes) -->
     <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <!-- Agendamentos -->
-
+        
         <li class="nav-item"><a class="nav-link" href="/agendamentos"><span class="link-text">Agendamentos</span></a></li>
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Cadastros </span>
+            <span class="link-text">Cadastros</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a></li>
             <li><a class="dropdown-item" href="/cadastrar/funcionario"><span class="link-text">Cadastrar Funcionário</span></a></li>
             <li><a class="dropdown-item" href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a></li>
-             <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar Hospital</span></a></li>
+            <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar Hospital</span></a></li>
           </ul>
         </li>
 
-
-        <!-- Dropdown Veículos -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Veículos</span>
@@ -53,7 +48,7 @@
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="/cadastrar/veiculo"><span class="link-text">Cadastrar Veículo</span></a></li>
             <li><a class="dropdown-item" href="/visualizar/veiculo"><span class="link-text">Visualizar Veículos</span></a></li>
-           <li><a class="dropdown-item" href="/rotas"><span class="link-text">Veículos com Rotas</span></a></li>
+            <li><a class="dropdown-item" href="/veiculo/rotas"><span class="link-text">Veículos com Rotas</span></a></li>
           </ul>
         </li>
 
@@ -64,34 +59,56 @@
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="/cadastrar/motorista"><span class="link-text">Cadastrar Motoristas</span></a></li>
             <li><a class="dropdown-item" href="/atribuir/motorista"><span class="link-text">Atribuir Motoristas</span></a></li>
-              <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar Motoristas</span></a></li>
           </ul>
         </li>
 
-
-        <!-- Links simples -->
-      <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a></li>
       </ul>
     </div>
 
-
-    <!-- Nome do usuário à direita (só em telas grandes) -->
+    <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+        <span id="nomeUsuarioDesktop">Usuário</span>
+        <i class="bi bi-person-circle fs-4"></i>
+        <button id="btnSair" class="btn btn-sm btn-outline-light ms-2" title="Sair" onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'">
+            <i class="bi bi-box-arrow-right"></i>
+        </button>
+    </div>
+    
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
-  <span class="me-2">Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
-
-<!-- Usuário: versão desktop -->
-<div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
-  <span>Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
+        <span class="me-2" id="nomeUsuarioMobile">Usuário</span>
+        <i class="bi bi-person-circle fs-4"></i>
+    </div>
   </div>
-  
 </nav>
+
 <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
   <div class="offcanvas-header justify-content-center">
-    <h5 class="offcanvas-title">Amanda Cristina</h5>
+    <h5 class="offcanvas-title" id="nomeUsuarioOffcanvas">Menu</h5>
+    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column gap-3">
+    <a href="/home"><span class="link-text">Home</span></a>
+    <a href="/agendamentos"><span class="link-text">Agendamentos</span></a>
+    
+    <hr class="text-secondary">
+    <span class="text-muted small">CADASTROS</span>
+    <a href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a>
+    <a href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a>
+    
+    <hr class="text-secondary">
+    <a href="/visualizar/veiculo"><span class="link-text">Veículos</span></a>
+    <a href="/visualizar/motorista"><span class="link-text">Motoristas</span></a>
+    <a href="/rotas"><span class="link-text">Rotas de Transporte</span></a>
+    
+    <hr class="text-light">
+    <a href="#" onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'" class="text-danger"><span class="link-text">Sair</span></a>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
+  <div class="offcanvas-header justify-content-center">
+    <h5 class="offcanvas-title" id="nomeUsuarioOffcanvas">Menu</h5>
     <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body d-flex flex-column gap-3">
@@ -100,13 +117,15 @@
     <a href="../pages/consulta_veiculos.html"><span class="link-text">Veículos</span></a>
     <a href="../pages/cadastro_motorista.html"><span class="link-text">Motoristas</span></a>
     <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
+    
+    <hr class="text-light">
+    <a href="#" id="btnSairMobile" class="text-danger"><span class="link-text">Sair</span></a>
   </div>
 </div>
 
 <body>
 <div class="container mt-4">
     <h2 class="mb-4">Agendamento dos Pacientes</h2>
-    
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="filtroData" class="form-label">Data:</label>
@@ -128,8 +147,7 @@
                 <option value="1" selected>Todos</option>
             </select>
         </div>
-        
-        </div>
+    </div>
 
     <div class="row g-2 mb-3">
         </div>
@@ -142,186 +160,204 @@
 
     
     <script>
-        // ===== SCRIPT DINÂMICO COMPLETO =====
+        document.addEventListener('DOMContentLoaded', () => {
 
-        // 1. Selecionar os elementos principais
-        const cardsContainer = document.querySelector('.row.g-2.mb-3');
-        const filtroData = document.getElementById("filtroData");
-        const filtroStatus = document.getElementById("filtroStatus");
-        const filtroLocal = document.getElementById("filtroLocal");
-        // filtroVeiculo e filtroConsulta removidos
-        
-        const apiUrlBase = 'http://127.0.0.1:5000'; // URL Base da API
+            // 1. Selecionar os elementos principais
+            const cardsContainer = document.querySelector('.row.g-2.mb-3');
+            const filtroData = document.getElementById("filtroData");
+            const filtroStatus = document.getElementById("filtroStatus");
+            const filtroLocal = document.getElementById("filtroLocal");
+            const apiUrlBase = 'http://127.0.0.1:5000';
 
-        // --- PAGINAÇÃO ---
-        let paginaAtual = 1;
-        const btnAnterior = document.getElementById('btnAnterior');
-        const btnProximo = document.getElementById('btnProximo');
-        const spanPaginaAtual = document.getElementById('paginaAtual');
-        const limitePorPagina = 30; 
+            // --- PAGINAÇÃO ---
+            let paginaAtual = 1;
+            const btnAnterior = document.getElementById('btnAnterior');
+            const btnProximo = document.getElementById('btnProximo');
+            const spanPaginaAtual = document.getElementById('paginaAtual');
+            const limitePorPagina = 30; 
 
-        // 2. Função para adicionar o 'clique' de expandir
-        function adicionarListenersAosCards() {
-            document.querySelectorAll(".card-paciente").forEach(card => {
-                card.addEventListener("click", () => {
-                    const info = card.querySelector(".info-expandido");
-                    info.classList.toggle("ativo");
-                });
-            });
-        }
-
-        // 3. Função para formatar dados
-        function formatarData(dataISO) {
-            if (!dataISO) return 'Não informado';
-            const data = new Date(dataISO);
-            return data.toLocaleDateString('pt-BR', { timeZone: 'UTC' }); 
-        }
-
-        function formatarHora(dataISO) {
-            if (!dataISO) return 'Não informado';
-            const data = new Date(dataISO);
-            return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
-        }
-
-        // 4. Função principal para buscar e renderizar os CARDS
-        async function buscarErenderizarAgendamentos() {
+            // --- ⚡ NOVA LÓGICA DE USUÁRIO ⚡ ---
+            // Recupera o nome salvo no Login
+            const nomeUsuario = localStorage.getItem('usuario_nome');
             
-            // --- PARÂMETROS SIMPLIFICADOS ---
-            const params = new URLSearchParams({
-                data: filtroData.value,
-                status: filtroStatus.value,
-                local: filtroLocal.value,
-                pagina: paginaAtual 
-            });
-            
-            const apiUrl = `${apiUrlBase}/api/agendamentos?${params.toString()}`;
-
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status}`);
-                }
+            if (nomeUsuario) {
+                // Atualiza os textos na navbar
+                const spanDesktop = document.getElementById('nomeUsuarioDesktop');
+                const spanMobile = document.getElementById('nomeUsuarioMobile');
+                const spanOffcanvas = document.getElementById('nomeUsuarioOffcanvas');
                 
-                const agendamentos = await response.json();
-                cardsContainer.innerHTML = ''; // Limpa os cards antigos
+                if(spanDesktop) spanDesktop.textContent = nomeUsuario;
+                if(spanMobile) spanMobile.textContent = nomeUsuario;
+                if(spanOffcanvas) spanOffcanvas.textContent = "Olá, " + nomeUsuario;
+            } else {
+                // Se não tiver nome, talvez redirecionar para login?
+                // window.location.href = '../pages/index.html'; // Descomente se quiser forçar login
+            }
 
-                // --- PAGINAÇÃO ---
-                spanPaginaAtual.textContent = paginaAtual;
-                btnAnterior.disabled = (paginaAtual === 1);
-                btnProximo.disabled = (agendamentos.length < limitePorPagina);
+            // Função de Logout
+            function realizarLogout() {
+                localStorage.removeItem('usuario_nome'); // Limpa o nome
+                window.location.href = '/'; // Volta para o login
+            }
 
-                if (agendamentos.length === 0) {
-                    if (paginaAtual === 1) { 
-                        cardsContainer.innerHTML = '<p class="col-12 text-center text-muted">Nenhum agendamento encontrado para os filtros selecionados.</p>';
+            const btnSair = document.getElementById('btnSair');
+            const btnSairMobile = document.getElementById('btnSairMobile');
+            if(btnSair) btnSair.addEventListener('click', realizarLogout);
+            if(btnSairMobile) btnSairMobile.addEventListener('click', realizarLogout);
+            // --- FIM DA LÓGICA DE USUÁRIO ---
+
+
+            // 2. Função para adicionar o 'clique' de expandir
+            function adicionarListenersAosCards() {
+                document.querySelectorAll(".card-paciente").forEach(card => {
+                    card.addEventListener("click", () => {
+                        const info = card.querySelector(".info-expandido");
+                        info.classList.toggle("ativo");
+                    });
+                });
+            }
+
+            // 3. Função para formatar dados
+            function formatarData(dataISO) {
+                if (!dataISO) return 'Não informado';
+                const data = new Date(dataISO);
+                return data.toLocaleDateString('pt-BR', { timeZone: 'UTC' }); 
+            }
+
+            function formatarHora(dataISO) {
+                if (!dataISO) return 'Não informado';
+                const data = new Date(dataISO);
+                return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+            }
+
+            // 4. Função principal para buscar e renderizar os CARDS
+            async function buscarErenderizarAgendamentos() {
+                
+                const params = new URLSearchParams({
+                    data: filtroData.value,
+                    status: filtroStatus.value,
+                    local: filtroLocal.value,
+                    pagina: paginaAtual 
+                });
+                
+                const apiUrl = `${apiUrlBase}/api/agendamentos?${params.toString()}`;
+
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status}`);
                     }
-                    return;
-                }
+                    
+                    const agendamentos = await response.json();
+                    cardsContainer.innerHTML = ''; 
 
-                // Cria o HTML para cada agendamento
-                agendamentos.forEach(ag => {
-                    const dataConsulta = formatarData(ag.DATA_HORA_CONSULTA);
-                    const horaConsulta = formatarHora(ag.DATA_HORA_CONSULTA);
-                    const horaTermino = formatarHora(ag.DATA_HORA_RETORNO);
-                    const temRetorno = ag.DATA_HORA_RETORNO ? 'Ida-Volta' : 'Somente Ida';
-                    const acompanhante = ag.ACOMPANHANTE ? 'Sim' : 'Não';
-                    const veiculoNome = ag.NOME_TIPO_VEICULO || 'Não atribuído';
-                    const infoAdicionais = ag.INFORMAÇÕES_ADICIONAIS || 'Nenhuma';
+                    spanPaginaAtual.textContent = paginaAtual;
+                    btnAnterior.disabled = (paginaAtual === 1);
+                    btnProximo.disabled = (agendamentos.length < limitePorPagina);
 
-                    const cardHtml = `
-                    <div class="col-md-6">
-                        <div class="card-paciente">
-                            <div class="paciente-header">
-                                <span class="paciente-nome">${ag.NOME_PACIENTE}</span>
-                                <span class="text-muted">${ag.NOME_STATUS}</span>
-                            </div>
-                            <div class="text-muted">${ag.CPF_PACIENTE || ''}</div>
-                            <div class="paciente-info">
-                                <p><strong>Consulta:</strong> ${ag.DESCRICO_CONSULTA}</p>
-                                <p><strong>Veículo:</strong> ${veiculoNome}</p>
-                                <p><strong>Data da Consulta:</strong> ${dataConsulta}</p>
-                                <p><strong>Hora:</strong> ${horaConsulta}h</p>
+                    if (agendamentos.length === 0) {
+                        if (paginaAtual === 1) { 
+                            cardsContainer.innerHTML = '<p class="col-12 text-center text-muted">Nenhum agendamento encontrado para os filtros selecionados.</p>';
+                        }
+                        return;
+                    }
 
-                                <div class="info-expandido">
-                                    <div class="linha">
-                                        <p><strong>Horário do Termino:</strong> ${horaTermino}h</p>
-                                        <p><strong>Rota:</strong> ${temRetorno}</p>
+                    agendamentos.forEach(ag => {
+                        const dataConsulta = formatarData(ag.DATA_HORA_CONSULTA);
+                        const horaConsulta = formatarHora(ag.DATA_HORA_CONSULTA);
+                        const horaTermino = formatarHora(ag.DATA_HORA_RETORNO);
+                        const temRetorno = ag.DATA_HORA_RETORNO ? 'Ida-Volta' : 'Somente Ida';
+                        const acompanhante = ag.ACOMPANHANTE ? 'Sim' : 'Não';
+                        const veiculoNome = ag.NOME_TIPO_VEICULO || 'Não atribuído';
+                        const infoAdicionais = ag.INFORMAÇÕES_ADICIONAIS || 'Nenhuma';
+
+                        const cardHtml = `
+                        <div class="col-md-6">
+                            <div class="card-paciente">
+                                <div class="paciente-header">
+                                    <span class="paciente-nome">${ag.NOME_PACIENTE}</span>
+                                    <span class="text-muted">${ag.NOME_STATUS}</span>
+                                </div>
+                                <div class="text-muted">${ag.CPF_PACIENTE || ''}</div>
+                                <div class="paciente-info">
+                                    <p><strong>Consulta:</strong> ${ag.DESCRICO_CONSULTA}</p>
+                                    <p><strong>Veículo:</strong> ${veiculoNome}</p>
+                                    <p><strong>Data da Consulta:</strong> ${dataConsulta}</p>
+                                    <p><strong>Hora:</strong> ${horaConsulta}h</p>
+
+                                    <div class="info-expandido">
+                                        <div class="linha">
+                                            <p><strong>Horário do Termino:</strong> ${horaTermino}h</p>
+                                            <p><strong>Rota:</strong> ${temRetorno}</p>
+                                        </div>
+                                        <p><strong>Local da Consulta:</strong> ${ag.NOME_LOCAL_ATENDIMENTO}, ${ag.ENDERECO_LOCAL}</p>
+                                        <p><strong>Endereço do Paciente:</strong> ${ag.ENDERECO_PACIENTE}</p>
+                                        <p><strong>Acompanhante:</strong> ${acompanhante}</p>
+                                        <p><strong>Informações Adicionais:</strong> ${infoAdicionais}</p>
                                     </div>
-                                    <p><strong>Local da Consulta:</strong> ${ag.NOME_LOCAL_ATENDIMENTO}, ${ag.ENDERECO_LOCAL}</p>
-                                    <p><strong>Endereço do Paciente:</strong> ${ag.ENDERECO_PACIENTE}</p>
-                                    <p><strong>Acompanhante:</strong> ${acompanhante}</p>
-                                    <p><strong>Informações Adicionais:</strong> ${infoAdicionais}</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>`;
-                    
-                    cardsContainer.insertAdjacentHTML('beforeend', cardHtml);
-                });
+                        </div>`;
+                        
+                        cardsContainer.insertAdjacentHTML('beforeend', cardHtml);
+                    });
 
-                adicionarListenersAosCards(); 
+                    adicionarListenersAosCards(); 
 
-            } catch (error) {
-                console.error('Falha ao buscar dados da API:', error);
-                cardsContainer.innerHTML = `
-                    <p class="col-12 text-center text-danger">
-                        <strong>Erro ao carregar agendamentos.</strong>
-                        <br>
-                        <small>Verifique se o servidor backend (python app.py) está rodando.</small>
-                    </p>`;
+                } catch (error) {
+                    console.error('Falha ao buscar dados da API:', error);
+                    cardsContainer.innerHTML = `
+                        <p class="col-12 text-center text-danger">
+                            <strong>Erro ao carregar agendamentos.</strong>
+                            <br>
+                            <small>Verifique se o servidor backend (python app.py) está rodando.</small>
+                        </p>`;
+                }
             }
-        }
 
-        // 5. Função para popular os filtros (SIMPLIFICADA)
-        async function popularFiltros() {
-            
-            const preencherSelect = (selectElement, dados, valorKey, textoKey) => {
-                if (!dados || dados.length === 0) return; 
-                dados.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item[valorKey];
-                    option.textContent = item[textoKey];
-                    selectElement.appendChild(option);
-                });
-            };
+            // 5. Função para popular os filtros
+            async function popularFiltros() {
+                const preencherSelect = (selectElement, dados, valorKey, textoKey) => {
+                    if (!dados || dados.length === 0) return; 
+                    dados.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item[valorKey];
+                        option.textContent = item[textoKey];
+                        selectElement.appendChild(option);
+                    });
+                };
 
-            try {
-                // Busca Locais
-                let resLocais = await fetch(`${apiUrlBase}/api/filtros/locais`);
-                let dadosLocais = await resLocais.json();
-                preencherSelect(filtroLocal, dadosLocais, 'ID_LOCAL_ATENDIMENTO', 'NOME_LOCAL_ATENDIMENTO');
-
-                // Fetches de Veículo e Consulta Removidos
-
-            } catch (error) {
-                console.error("Erro ao popular filtros:", error);
+                try {
+                    let resLocais = await fetch(`${apiUrlBase}/api/filtros/locais`);
+                    let dadosLocais = await resLocais.json();
+                    preencherSelect(filtroLocal, dadosLocais, 'ID_LOCAL_ATENDIMENTO', 'NOME_LOCAL_ATENDIMENTO');
+                } catch (error) {
+                    console.error("Erro ao popular filtros:", error);
+                }
             }
-        }
 
+            // 6. Adicionar os 'escutadores' de eventos
+            const todosOsFiltros = [filtroData, filtroStatus, filtroLocal];
+            todosOsFiltros.forEach(filtro => {
+                filtro.addEventListener('change', () => {
+                    paginaAtual = 1; 
+                    buscarErenderizarAgendamentos();
+                });
+            });
 
-        // 6. Adicionar os 'escutadores' de eventos (SIMPLIFICADO)
-        const todosOsFiltros = [filtroData, filtroStatus, filtroLocal];
-        todosOsFiltros.forEach(filtro => {
-            filtro.addEventListener('change', () => {
-                paginaAtual = 1; 
+            btnAnterior.addEventListener('click', () => {
+                if (paginaAtual > 1) {
+                    paginaAtual--;
+                    buscarErenderizarAgendamentos();
+                }
+            });
+
+            btnProximo.addEventListener('click', () => {
+                paginaAtual++;
                 buscarErenderizarAgendamentos();
             });
-        });
 
-        // --- PAGINAÇÃO ---
-        btnAnterior.addEventListener('click', () => {
-            if (paginaAtual > 1) {
-                paginaAtual--;
-                buscarErenderizarAgendamentos();
-            }
-        });
-
-        btnProximo.addEventListener('click', () => {
-            paginaAtual++;
-            buscarErenderizarAgendamentos();
-        });
-
-        // 7. Busca inicial
-        document.addEventListener('DOMContentLoaded', () => {
+            // 7. Busca inicial
             popularFiltros(); 
             buscarErenderizarAgendamentos();
         });

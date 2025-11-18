@@ -16,37 +16,31 @@
 </head>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <!-- Botão hamburger do perfil (só em telas pequenas) -->
     <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Logo -->
     <a class="navbar-brand" href="/home">
-      <img src="../assets/logo-branco.png" alt="Logo" class="logo">
+      <img src="/assets/logo-branco.png" alt="Logo" class="logo">
     </a>
 
-    <!-- Links da navbar (visíveis só em telas grandes) -->
     <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <!-- Agendamentos -->
-
+        
         <li class="nav-item"><a class="nav-link" href="/agendamentos"><span class="link-text">Agendamentos</span></a></li>
 
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Cadastros </span>
+            <span class="link-text">Cadastros</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a></li>
             <li><a class="dropdown-item" href="/cadastrar/funcionario"><span class="link-text">Cadastrar Funcionário</span></a></li>
             <li><a class="dropdown-item" href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a></li>
-             <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar Hospital</span></a></li>
+            <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar Hospital</span></a></li>
           </ul>
         </li>
 
-
-        <!-- Dropdown Veículos -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <span class="link-text">Veículos</span>
@@ -54,7 +48,7 @@
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="/cadastrar/veiculo"><span class="link-text">Cadastrar Veículo</span></a></li>
             <li><a class="dropdown-item" href="/visualizar/veiculo"><span class="link-text">Visualizar Veículos</span></a></li>
-           <li><a class="dropdown-item" href="/rotas"><span class="link-text">Veículos com Rotas</span></a></li>
+            <li><a class="dropdown-item" href="/veiculo/rotas"><span class="link-text">Veículos com Rotas</span></a></li>
           </ul>
         </li>
 
@@ -65,30 +59,52 @@
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="/cadastrar/motorista"><span class="link-text">Cadastrar Motoristas</span></a></li>
             <li><a class="dropdown-item" href="/atribuir/motorista"><span class="link-text">Atribuir Motoristas</span></a></li>
-              <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar Motoristas</span></a></li>
+            <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar Motoristas</span></a></li>
           </ul>
         </li>
 
-
-        <!-- Links simples -->
-      <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a></li>
       </ul>
     </div>
 
-
-    <!-- Nome do usuário à direita (só em telas grandes) -->
+    <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+        <span id="nomeUsuarioDesktop">Usuário</span>
+        <i class="bi bi-person-circle fs-4"></i>
+        <button id="btnSair" class="btn btn-sm btn-outline-light ms-2" title="Sair" onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'">
+            <i class="bi bi-box-arrow-right"></i>
+        </button>
+    </div>
+    
     <div class="d-flex align-items-center text-light ms-auto d-lg-none">
-  <span class="me-2">Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
-
-<!-- Usuário: versão desktop -->
-<div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
-  <span>Amanda Cristina</span>
-  <i class="bi bi-person-circle fs-4"></i>
-</div>
+        <span class="me-2" id="nomeUsuarioMobile">Usuário</span>
+        <i class="bi bi-person-circle fs-4"></i>
+    </div>
   </div>
-  
+</nav>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
+  <div class="offcanvas-header justify-content-center">
+    <h5 class="offcanvas-title" id="nomeUsuarioOffcanvas">Menu</h5>
+    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column gap-3">
+    <a href="/home"><span class="link-text">Home</span></a>
+    <a href="/agendamentos"><span class="link-text">Agendamentos</span></a>
+    
+    <hr class="text-secondary">
+    <span class="text-muted small">CADASTROS</span>
+    <a href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a>
+    <a href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a>
+    
+    <hr class="text-secondary">
+    <a href="/visualizar/veiculo"><span class="link-text">Veículos</span></a>
+    <a href="/visualizar/motorista"><span class="link-text">Motoristas</span></a>
+    <a href="/rotas"><span class="link-text">Rotas de Transporte</span></a>
+    
+    <hr class="text-light">
+    <a href="#" onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'" class="text-danger"><span class="link-text">Sair</span></a>
+  </div>
+</div>
 </nav>
 
 <!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
