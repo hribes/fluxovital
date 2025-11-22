@@ -61,3 +61,4 @@ SELECT
 FROM solicitacaoconsulta
 LEFT JOIN endereco_solicitacaoconsulta_endereco_base USING (ID_ENDERECO)
 LEFT JOIN endereco_solicitacaoconsulta_endereco_base_localatendimento USING (ID_LOCAL_ATENDIMENTO)
+WHERE DATE(DATA_HORA_CONSULTA) = %s

@@ -15,7 +15,7 @@ ORS_API_KEY = os.getenv("ORS_API_KEY")
 UPA_ENDERECO = "Av. Sampaio Vidal, 200, Marília, SP, 17500-022" # Endereço da Garagem
 DIA_OPERACAO = '2025-10-08' # O dia que você quer otimizar
 
-def executar_fluxo_completo():
+def executar_fluxo_completo(data_para_filtro):
     """
     Executa o fluxo completo:
     1. Busca dados no banco.
@@ -30,7 +30,7 @@ def executar_fluxo_completo():
 
     # --- 1. Buscar Dados ---
     print("--- ETAPA 1: BUSCANDO DADOS DO BANCO ---")
-    df_pacientes, df_veiculos = buscar_dados()
+    df_pacientes, df_veiculos = buscar_dados(data_para_filtro)
 
     if df_pacientes is None or df_veiculos is None:
         print("Falha ao buscar dados do banco. Encerrando.")
@@ -76,4 +76,5 @@ def executar_fluxo_completo():
 
 # --- Ponto de Entrada Principal ---
 if __name__ == "__main__":
-    executar_fluxo_completo()
+    data_para_filtro = '2025-10-08' #ADicionar a Data do filtro
+    executar_fluxo_completo(data_para_filtro)
