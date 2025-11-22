@@ -14,7 +14,9 @@ from mysql.connector import Error
 
 try:
     from conexao_db import criar_conexao, ler_query_de_arquivo, executar_query_escrita
-    from conversao_coordenadas import endereco_para_coordenadas
+    from backend.src.modules.prep_dados.funcoes_preparacao_dados import preparar_dados, endereco_para_coordenadas
+    from backend.src.modules.prep_dados.busca_bd import buscar_dados
+    from backend.src.modules.prep_dados.matriz_distancias import construir_matriz_tempo_distancia
     from mapa_service import get_mapa_vazio, get_mapas_calculados, rota_real_osrm
 
 except ImportError as e:
@@ -25,6 +27,23 @@ except ImportError as e:
 # --- CONFIGURAÇÕES DO APP ---
 API_KEY = os.getenv("GOOGLE_API_KEY")
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "frontend/desktop/pages"))
+
+UPA_ENDERECO = "Av. Sampaio Vidal, 200, Marília, SP, 17500-022"
+ORS_API_KEY = os.getenv("ORS_API_KEY") 
+
+# --- HELPER PARA PEGAR DADOS ---
+def obter_dados_reais_hoje():
+    # Defina a data 
+    data_hoje = '2025-10-08' 
+    
+    df_pacientes, df_veiculos = buscar_dados(data_hoje)
+    if df_pacientes is None or df_veiculos is None: return None
+    
+    dados_prep = preparar_dados(df_veiculos, df_pacientes, data_hoje, UPA_ENDERECO)
+    if not dados_prep: return None
+    
+    dados_completos = construir_matriz_tempo_distancia(dados_prep, ORS_API_KEY)
+    return dados_completos
 
 app.config['SECRET_KEY'] = 'chave_secreta_fluxovital_123'
 bcrypt = Bcrypt(app)
@@ -79,19 +98,26 @@ def rotas_vazias():
 @app.route('/rota1')
 @login_required
 def visualizar_rota_1():
-   #Rota do veiculo 1 - teste
-    mapas = get_mapas_calculados()
+    
+    dados_db = obter_dados_reais_hoje()
+    
+    mapas = get_mapas_calculados(dados_db)
+    
     if not mapas or 'rota1' not in mapas:
-        return "<h1>Não foi possível gerar a rota 1 (solução não encontrada).</h1>"
+        return "<h1>Não foi possível gerar a rota 1 (Sem dados ou rota vazia).</h1>"
+        
     return render_template("visualizacao_rotas.html", map=mapas['rota1'], tempo_total_min=0)
 
 @app.route('/rota2')
 @login_required
 def visualizar_rota_2():
-    #rota do veiculo 2 - teste
-    mapas = get_mapas_calculados()
+    # Mesma lógica para rota 2
+    dados_db = obter_dados_reais_hoje()
+    mapas = get_mapas_calculados(dados_db)
+    
     if not mapas or 'rota2' not in mapas:
-        return "<h1>Não foi possível gerar a rota 2 (solução não encontrada).</h1>"
+        return "<h1>Não foi possível gerar a rota 2 (Sem dados ou rota vazia).</h1>"
+        
     return render_template("visualizacao_rotas.html", map=mapas['rota2'], tempo_total_min=0)
 
 @app.route('/api/rotas/visualizar', methods=['GET'])
