@@ -10,6 +10,8 @@ from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from mysql.connector import Error
+from folium import DivIcon
+import mysql.connector
 
 
 try:
@@ -17,7 +19,7 @@ try:
     from backend.src.modules.prep_dados.funcoes_preparacao_dados import preparar_dados, endereco_para_coordenadas
     from backend.src.modules.prep_dados.busca_bd import buscar_dados
     from backend.src.modules.prep_dados.matriz_distancias import construir_matriz_tempo_distancia
-    from mapa_service import get_mapa_vazio, get_mapas_calculados, rota_real_osrm
+    from mapa_service import get_mapas_calculados, rota_real_osrm
 
 except ImportError as e:
     print(f"ERRO DE IMPORTAÇÃO: {e}")
@@ -34,7 +36,7 @@ ORS_API_KEY = os.getenv("ORS_API_KEY")
 # --- HELPER PARA PEGAR DADOS ---
 def obter_dados_reais_hoje():
     # Defina a data 
-    data_hoje = '2025-10-08' 
+    data_hoje = os.getenv('DATA_SOLVER')
     
     df_pacientes, df_veiculos = buscar_dados(data_hoje)
     if df_pacientes is None or df_veiculos is None: return None
@@ -79,11 +81,217 @@ def executar_query(query, params=None):
         if conexao: conexao.close()
     return resultados
 
+ 
+
+def salvar_resultado_otimizacao(mapas_calculados, data_da_rota):
+    """
+    Itera sobre o resultado do OR-Tools e salva na tabela Parada
+    usando a função executar_query_escrita do seu conexao_db.py
+    """
+    print(">>> Iniciando gravação no banco de dados...")
+    
+    sucesso_total = True
+
+    # 1. Limpar rotas anteriores para essa data (Opcional, evita duplicidade em testes)
+    sql_limpeza = "DELETE FROM Parada WHERE DATA_ROTA = %s"
+    if not executar_query_escrita(sql_limpeza, (data_da_rota,)):
+        print("Aviso: Não foi possível limpar rotas antigas ou não existiam rotas.")
+
+    # Iterar sobre os veículos (Chave: ID ou Indice do Veículo, Valor: Lista de Paradas)
+    # Ajuste 'items()' conforme a estrutura exata do seu objeto 'mapas'
+    for id_veiculo_str, lista_paradas in mapas_calculados.items():
+        
+        # Se a chave for string "rota1", precisamos pegar o ID real do veículo.
+        # Supondo que dentro de cada parada tenha o 'id_veiculo':
+        
+        ordem = 1
+        
+        for parada in lista_paradas:
+            # Recupera os dados do dicionário da parada
+            # IMPORTANTE: O seu get_mapas_calculados() precisa fornecer esses IDs
+            id_veiculo = parada.get('id_veiculo') 
+            id_paciente = parada.get('id_paciente') # Deve ser None se for Base
+            id_endereco = parada.get('id_endereco')
+            tipo_parada = parada.get('tipo') # 'COLETA', 'ENTREGA', etc
+            hora_estimada = parada.get('hora_estimada', '00:00:00') # Padrão se não tiver
+            id_solicitacao = parada.get('id_solicitacao')
+
+            # Tratamento para Base (Se for saída/chegada da garagem)
+            # Se id_paciente for None, o MySQL gravará NULL (se a tabela permitir)
+            
+            sql_insert = """
+                INSERT INTO Parada 
+                (ID_VEICULO, ID_PACIENTE, ID_ENDERECO, TIPO_PARADA, DATA_ROTA, HORA_PARADA, ORDEM)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+            params_insert = (id_veiculo, id_paciente, id_endereco, tipo_parada, data_da_rota, hora_estimada, ordem)
+            
+            # Usa sua função pronta para inserir
+            if executar_query_escrita(sql_insert, params_insert):
+                pass # Sucesso
+            else:
+                print(f"Erro ao inserir parada {ordem} do veículo {id_veiculo}")
+                sucesso_total = False
+
+            # Atualizar Status da Solicitação para "Em Rota" (ID 2 no seu banco)
+            # Apenas se tiver uma solicitação vinculada (Base não tem)
+            if id_solicitacao:
+                sql_update = "UPDATE SolicitacaoConsulta SET ID_STATUS = 2 WHERE ID_SOLICITACAO_CONSULTA = %s"
+                executar_query_escrita(sql_update, (id_solicitacao,))
+            
+            ordem += 1
+
+    return sucesso_total
+
+
+
+
 @login_manager.user_loader
 def load_user(user_id):
     res = executar_query("SELECT ID_FUNCIONARIO, NOME_FUNCIONARIO, ID_NIVEL_ACESSO FROM Funcionario WHERE ID_FUNCIONARIO = %s", (user_id,))
     if res: return Usuario(res[0]['ID_FUNCIONARIO'], res[0]['NOME_FUNCIONARIO'], res[0]['ID_NIVEL_ACESSO'])
     return None
+
+
+def get_mapa_vazio():
+    return folium.Map(location=[-22.213200, -49.944700], zoom_start=13)._repr_html_()
+
+
+def rota_real_osrm_segmento(origem_latlon, destino_latlon):
+    """
+    Recebe (lat, lon) de origem e destino e retorna a lista de coordenadas da rua.
+    """
+    # OSRM espera longitude,latitude
+    coords_str = f"{origem_latlon[1]},{origem_latlon[0]};{destino_latlon[1]},{destino_latlon[0]}"
+    url = f"https://router.project-osrm.org/route/v1/driving/{coords_str}?overview=full&geometries=geojson"
+    
+    try:
+        r = requests.get(url, timeout=2)
+        if r.status_code == 200:
+            data = r.json()
+            # Retorna lista de [lon, lat]. Precisaremos inverter para [lat, lon] depois.
+            return data["routes"][0]["geometry"]["coordinates"]
+    except:
+        pass
+    return [] # Retorna vazio se falhar
+
+
+
+# --- VISUALIZAÇÃO DAS ROTAS POR FILTRO --- 
+@app.route('/visualizar_rotas_salvas')
+@login_required
+def visualizar_rotas_salvas():
+    data_filtro = request.args.get('data')
+    veiculo_id = request.args.get('veiculo')
+    
+    conn = criar_conexao()
+    cursor = conn.cursor(dictionary=True)
+    
+    # --- QUERY (Sem alterações) ---
+    sql = """
+        SELECT 
+            p.ID_VEICULO, v.PLACA, tv.NOME_TIPO_VEICULO,
+            p.ORDEM, p.TIPO_PARADA, p.HORA_PARADA,
+            e.LATITUDE, e.LONGITUDE, e.NUMERO_ENDERECO, r.NOME_RUA,
+            pac.NOME_PACIENTE, la.NOME_LOCAL_ATENDIMENTO
+        FROM Parada p
+        JOIN Veiculo v ON p.ID_VEICULO = v.ID_VEICULO
+        JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO
+        JOIN Endereco e ON p.ID_ENDERECO = e.ID_ENDERECO
+        JOIN Rua r ON e.ID_RUA = r.ID_RUA
+        LEFT JOIN Paciente pac ON p.ID_PACIENTE = pac.ID_PACIENTE
+        LEFT JOIN LocalAtendimento la ON p.ID_ENDERECO = la.ID_ENDERECO
+        WHERE p.DATA_ROTA = %s
+    """
+    params = [data_filtro]
+    if veiculo_id and veiculo_id != "0": 
+        sql += " AND p.ID_VEICULO = %s"
+        params.append(veiculo_id)
+    sql += " ORDER BY p.ID_VEICULO, p.ORDEM ASC"
+    
+    cursor.execute(sql, params)
+    paradas = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    if not paradas: return get_mapa_vazio()
+
+    m = folium.Map(location=[paradas[0]['LATITUDE'], paradas[0]['LONGITUDE']], zoom_start=13)
+
+    rotas_veiculos = {}
+    for p in paradas:
+        vid = p['ID_VEICULO']
+        if vid not in rotas_veiculos:
+            rotas_veiculos[vid] = {'info': f"{p['NOME_TIPO_VEICULO']}", 'pontos': []}
+        rotas_veiculos[vid]['pontos'].append(p)
+
+    cores_linhas = ['blue', 'purple', 'green', 'cadetblue']
+
+    for i, (vid, dados) in enumerate(rotas_veiculos.items()):
+        lista_pontos = dados['pontos']
+        cor_rota = cores_linhas[i % len(cores_linhas)]
+        coords_para_linha = []
+
+        # --- 1. PONTOS TRADICIONAIS (folium.Icon) ---
+        for ponto in lista_pontos:
+            lat, lon = ponto['LATITUDE'], ponto['LONGITUDE']
+            tipo = ponto['TIPO_PARADA']
+            ordem = ponto['ORDEM']
+            
+            # Definição de Cores e Ícones
+            if tipo == 'COLETA':
+                cor_icone = 'blue' 
+                icone_nome = 'user'
+                # A ordem aparece aqui no tooltip
+                texto_tooltip = f"{ordem}. Paciente: {ponto['NOME_PACIENTE']}"
+                texto_popup = f"<b>{ordem}. Coleta</b><br>{ponto['NOME_PACIENTE']}<br>{ponto['HORA_PARADA']}"
+            
+            elif tipo == 'ENTREGA':
+                cor_icone = 'red' # Vermelho
+                icone_nome = 'plus'
+                texto_tooltip = f"{ordem}. Local: {ponto['NOME_LOCAL_ATENDIMENTO']}"
+                texto_popup = f"<b>{ordem}. Entrega</b><br>{ponto['NOME_LOCAL_ATENDIMENTO']}"
+            
+            else: # BASE
+                cor_icone = 'black' # Preto
+                icone_nome = 'home'
+                texto_tooltip = f"{ordem}. Base / Garagem"
+                texto_popup = "Início/Fim"
+
+            folium.Marker(
+                [lat, lon],
+                # Ícone padrão do Folium
+                icon=folium.Icon(color=cor_icone, icon=icone_nome, prefix='glyphicon'),
+                tooltip=texto_tooltip, # Passar o mouse mostra o número e nome
+                popup=folium.Popup(texto_popup, max_width=200)
+            ).add_to(m)
+
+            coords_para_linha.append((lat, lon))
+
+        # --- 2. LINHAS SEGUINDO RUAS (OSRM) ---
+        coords_rota_completa = []
+        for j in range(len(coords_para_linha) - 1):
+            inicio = coords_para_linha[j]
+            fim = coords_para_linha[j+1]
+            shape_lonlat = rota_real_osrm_segmento(inicio, fim)
+            
+            if shape_lonlat:
+                shape_latlon = [[c[1], c[0]] for c in shape_lonlat]
+                coords_rota_completa.extend(shape_latlon)
+            else:
+                coords_rota_completa.extend([inicio, fim])
+
+        folium.PolyLine(
+            coords_rota_completa,
+            color=cor_rota,
+            weight=4,
+            opacity=0.7,
+            tooltip=f"Trajeto: {dados['info']}"
+        ).add_to(m)
+
+    return m._repr_html_()
+
+
 
 
 # --- ROTAS E MAPAS ---
@@ -95,18 +303,46 @@ def rotas_vazias():
     map_html = get_mapa_vazio()
     return render_template("visualizacao_rotas.html", map=map_html, tempo_total_min=0)
 
-@app.route('/rota1')
+@app.route('/calcularRota')
 @login_required
 def visualizar_rota_1():
-    
-    dados_db = obter_dados_reais_hoje()
-    
-    mapas = get_mapas_calculados(dados_db)
-    
-    if not mapas or 'rota1' not in mapas:
-        return "<h1>Não foi possível gerar a rota 1 (Sem dados ou rota vazia).</h1>"
+    try:
+        print(">>> 1. Buscando dados...")
+        dados_db = obter_dados_reais_hoje()
         
-    return render_template("visualizacao_rotas.html", map=mapas['rota1'], tempo_total_min=0)
+        print(">>> 2. Calculando otimização...")
+        mapas = get_mapas_calculados(dados_db)
+        
+        if not mapas or 'rota1' not in mapas:
+            return jsonify({"status": "error", "message": "Não foi possível gerar a rota."}), 400
+            
+        # --- NOVO TRECHO DE CÓDIGO ---
+        print(">>> 3. Salvando no Banco de Dados...")
+        data_hoje = os.getenv("DATA_SOLVER") # Ou a data específica que você está calculando
+        
+        # Passamos o objeto mapas e a data para a função que criamos acima
+        # OBS: Verifique se 'mapas' tem a estrutura que o 'salvar_resultado_otimizacao' espera
+        salvou = salvar_resultado_otimizacao(mapas, data_hoje)
+        # -----------------------------
+
+        if salvou:
+            print(">>> SUCESSO: Ciclo completo finalizado.")
+            return jsonify({"status": "success", "message": "Rotas calculadas e salvas com sucesso!"}), 200
+        else:
+            return jsonify({"status": "warning", "message": "Rotas calculadas, mas houve erro ao salvar algumas paradas."}), 200
+
+    except Exception as e:
+        print(f">>> ERRO CRÍTICO: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+    #Anterior
+    # dados_db = obter_dados_reais_hoje()
+    
+    # mapas = get_mapas_calculados(dados_db)
+    
+    # if not mapas or 'rota1' not in mapas:
+    #     return "<h1>Não foi possível gerar a rota 1 (Sem dados ou rota vazia).</h1>"
+        
+    # return render_template("visualizacao_rotas.html", map=mapas['rota1'], tempo_total_min=0)
 
 @app.route('/rota2')
 @login_required
@@ -119,6 +355,7 @@ def visualizar_rota_2():
         return "<h1>Não foi possível gerar a rota 2 (Sem dados ou rota vazia).</h1>"
         
     return render_template("visualizacao_rotas.html", map=mapas['rota2'], tempo_total_min=0)
+
 
 @app.route('/api/rotas/visualizar', methods=['GET'])
 @login_required
@@ -146,9 +383,9 @@ def visualizar_rota_salva():
     traçado, _ = rota_real_osrm(coords_ordenadas)
     
     if traçado:
-        folium.PolyLine([(c[1], c[0]) for c in traçado], weight=5, color="blue", opacity=0.8).add_to(m)
+        folium.PolyLine([(c[1], c[0]) for c in traçado], weight=5, color="#FFD700", opacity=0.8).add_to(m)
     else:
-        folium.PolyLine(coords_ordenadas, weight=2, color="blue", opacity=0.5, dash_array='5, 10').add_to(m)
+        folium.PolyLine(coords_ordenadas, weight=2, color="#FFD700", opacity=0.5, dash_array='5, 10').add_to(m)
 
     return jsonify({"mapa_html": m._repr_html_()})
 
@@ -508,6 +745,34 @@ def atribuir_motorista():
         "atribuicao_motoristas.html",
         map=map_html
     )
+
+
+
+@app.route('/api/listar_veiculos')
+@login_required
+def listar_veiculos_api():
+    conn = criar_conexao()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Busca ID, Placa e Nome do Tipo (ex: Ambulância)
+    # Ajuste o WHERE conforme seus IDs de Status (supondo que 4 seja inativo)
+    sql = """
+        SELECT v.ID_VEICULO, v.PLACA, tv.NOME_TIPO_VEICULO 
+        FROM Veiculo v
+        JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO
+        ORDER BY v.ID_VEICULO ASC
+    """
+    
+    cursor.execute(sql)
+    veiculos = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+    
+    return jsonify(veiculos)
+
+
+
 
 
 # --- ROTAS DE ESTÁTICOS ---

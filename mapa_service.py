@@ -1,5 +1,6 @@
 import requests
 import folium
+from datetime import datetime, timedelta
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
@@ -91,14 +92,12 @@ def desenhar_mapa_veiculo(rota_indices, dados_db, cor_veiculo, titulo):
 
     return m._repr_html_()
 
-def get_mapa_vazio():
-    return folium.Map(location=[-22.213200, -49.944700], zoom_start=13)._repr_html_()
 
-# --- FUNÇÃO PRINCIPAL (MANTIDA PARA O FRONTEND) ---
+
 def get_mapas_calculados(dados_reais=None):
     """
-    Recebe os dados do banco, calcula a rota, IMPRIME O RELATÓRIO 
-    (igual ao original) e gera os mapas.
+    Retorna um Dicionário de Listas estruturadas para salvar no Banco de Dados.
+    Formato: {'rota1': [{'id_veiculo': 1, 'tipo': 'COLETA'...}, ...]}
     """
     if not dados_reais:
         print("Nenhum dado recebido do banco.")
@@ -111,89 +110,120 @@ def get_mapas_calculados(dados_reais=None):
         print("Solver retornou vazio (nenhuma solução viável encontrada).")
         return None
 
-    # --- REINSERINDO OS PRINTS (RELATÓRIO) ADAPTADOS PARA O BANCO ---
+    # --- PRINTS (RELATÓRIO VISUAL NO TERMINAL) ---
     print("\n" + "="*70)
     print(f"ROTAS OTIMIZADAS (DADOS DO BANCO) - Priorizando Custo/Eficiência")
     print("="*70)
 
-    # Recupera dados para o relatório
+    # Dados auxiliares
     capacidades = dados_reais['capacidade_veiculos']
     demandas = dados_reais['demanda_assentos']
     num_veiculos = dados_reais['num_veiculos']
+    
+    # IMPORTANTE: Lista com dicionários contendo os IDs reais (ID_SOLICITACAO, ID_ENDERECO, ID_PACIENTE)
+    # Se sua função de busca não tem isso, precisamos adicionar.
+    info_nos = dados_reais.get('info_nos', []) 
+    ids_veiculos_reais = dados_reais.get('ids_veiculos_reais', []) # Lista de IDs dos carros [1, 2, 3...]
 
-    # Itera sobre TODOS os veículos possíveis (não só os usados)
+    # Estrutura final para retornar ao controller
+    dados_para_salvar = {}
+
+    rota_counter = 1
+
     for v_id in range(num_veiculos):
         cap_max = capacidades[v_id]
-        nodes = rotas.get(v_id, []) # Pega a rota se existir, senão lista vazia
+        nodes = rotas.get(v_id, [])
         
+        # Se não tem IDs reais de veículos, inventamos sequencial para não quebrar
+        id_veiculo_banco = ids_veiculos_reais[v_id] if v_id < len(ids_veiculos_reais) else (v_id + 1)
+
+        lista_estruturada_rota = [] # A lista que vai pro banco
         nomes_passos = []
         pass_dia = 0    
         ocupacao_atual = 0 
         max_ocupacao = 0
         
-        # Cálculo de tempo
-        tempo_rota_segundos = 0
-        if matriz_tempo and len(nodes) > 1:
-            for i in range(len(nodes) - 1):
-                origem = nodes[i]
-                destino = nodes[i+1]
-                tempo_rota_segundos += matriz_tempo[origem][destino]
+        # Simula horário de saída (ex: 07:00 da manhã de hoje)
+        hora_atual_segundos = 7 * 3600 # Começa as 07:00 em segundos
         
-        tempo_rota_min = int(tempo_rota_segundos / 60)
-
-        # Lógica de Strings (Adaptada para não usar nomes estáticos)
-        for node in nodes:
-            passo_str = ""
+        # Itera sobre os nós da rota
+        for i, node in enumerate(nodes):
             demanda_node = demandas[node]
+            
+            # --- Tenta pegar os dados reais do nó ---
+            # info_nos deve ser uma lista onde o índice bate com o node do solver
+            dados_node_original = info_nos[node] if node < len(info_nos) else {}
+            
+            # Recupera IDs ou usa None/Zeros se não tiver
+            id_paciente = dados_node_original.get('id_paciente') # None se for base
+            id_endereco = dados_node_original.get('id_endereco', 1) # Fallback 1
+            id_solicitacao = dados_node_original.get('id_solicitacao') 
+            
+            # --- Cálculo de Tempo ---
+            # Adiciona o tempo de viagem do nó anterior até este
+            if i > 0:
+                tempo_viagem = matriz_tempo[nodes[i-1]][node]
+                hora_atual_segundos += tempo_viagem
+            
+            # Formata hora para HH:MM:SS
+            hora_formatada = str(timedelta(seconds=hora_atual_segundos))
+
+            # --- Define o Tipo de Parada e Strings do Relatório ---
+            tipo_parada = "OUTROS"
+            passo_str = ""
 
             if node == 0: # Depósito
+                tipo_parada = "BASE" # Ajuste se seu ENUM não tiver BASE
                 passo_str = "[BASE/UPA]"
-            elif demanda_node > 0: # Coleta (Demanda Positiva)
-                passo_str = f"(Pega P{node})" # P{node} é o ID do nó na matriz
+            elif demanda_node > 0: # Coleta
+                tipo_parada = "COLETA"
+                passo_str = f"(Pega {dados_node_original.get('nome_paciente', f'P{node}')})"
                 pass_dia += 1
                 ocupacao_atual += 1 
-            elif demanda_node < 0: # Entrega (Demanda Negativa)
+            elif demanda_node < 0: # Entrega
+                tipo_parada = "ENTREGA"
                 passo_str = f"[HOSPITAL/DESTINO]"
                 ocupacao_atual -= 1 
 
-            if ocupacao_atual > max_ocupacao:
-                max_ocupacao = ocupacao_atual
+            if ocupacao_atual > max_ocupacao: max_ocupacao = ocupacao_atual
 
+            # Adiciona strings para o print
             if passo_str:
-                if "BASE" in passo_str: 
-                    nomes_passos.append(passo_str)
-                else: 
-                    # Mostra a ocupação atual vs capacidade do veículo
-                    nomes_passos.append(f"{passo_str} [{ocupacao_atual}/{cap_max}]")
+                if "BASE" in passo_str: nomes_passos.append(passo_str)
+                else: nomes_passos.append(f"{passo_str} [{ocupacao_atual}/{cap_max}]")
 
-        status = "(PARADO)" if len(nomes_passos) <= 1 else f"(EM ROTA - {tempo_rota_min} min)"
+            # --- MONTA O OBJETO PARA O BANCO DE DADOS ---
+            # Se for BASE e seu banco não aceita ID_PACIENTE nulo, cuidado.
+            # Mas com o ALTER TABLE que passamos, deve aceitar None.
+            parada_struct = {
+                "id_veiculo": id_veiculo_banco,
+                "id_paciente": id_paciente, # Pode ser None
+                "id_endereco": id_endereco,
+                "tipo": tipo_parada,
+                "hora_estimada": hora_formatada,
+                "id_solicitacao": id_solicitacao,
+                "ordem": i + 1
+            }
+            lista_estruturada_rota.append(parada_struct)
+
+        # --- IMPRIME RELATÓRIO DO VEÍCULO ---
+        status = "(PARADO)" if len(nodes) <= 2 else f"(EM ROTA)" # Ajuste simples
         cor_status = "🔴" if "PARADO" in status else "🟢"
+        tipo_veiculo_nome = " ÔNIBUS" if cap_max >= 10 else "CARRO"
         
-        # Define tipo por capacidade (Lógica original mantida)
-        tipo_veiculo = " ÔNIBUS" if cap_max >= 10 else "CARRO"
-        
-        print(f"{cor_status} VEÍCULO {v_id} {status} - {tipo_veiculo} (Assentos: {cap_max})")
+        print(f"{cor_status} VEÍCULO {v_id} (ID DB: {id_veiculo_banco}) {status} - {tipo_veiculo_nome} (Assentos: {cap_max})")
         if len(nodes) > 1:
             print(f"   Passageiros Transportados: {pass_dia}")
             print(f"   Rota: {' -> '.join(nomes_passos)}")
         print("-" * 70)
-    
+
+        # Só adiciona no retorno se tiver rota real
+        if len(nodes) > 2:
+            chave_rota = f"rota{rota_counter}"
+            dados_para_salvar[chave_rota] = lista_estruturada_rota
+            rota_counter += 1
+
     print("="*70 + "\n")
 
-    # --- GERAÇÃO DOS MAPAS (LINK COM O FRONTEND) ---
-    mapas = {}
-    cores = ['blue', 'purple', 'orange', 'darkred', 'green']
-    
-    i = 1 
-    for v_id, caminho in rotas.items():
-        chave_frontend = f"rota{i}" 
-        cor = cores[v_id % len(cores)]
-        
-        titulo = f"Rota Otimizada - Veículo ID {v_id} (Visualizando em {chave_frontend})"
-        
-        html_mapa = desenhar_mapa_veiculo(caminho, dados_reais, cor, titulo)
-        mapas[chave_frontend] = html_mapa
-        
-        i += 1 
-
-    return mapas
+    # Retorna APENAS os dados estruturados (dicionários) para o app.py salvar
+    return dados_para_salvar

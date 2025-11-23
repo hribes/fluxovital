@@ -2,12 +2,12 @@ from datetime import datetime
 from pprint import pprint # Para imprimir o dicionário de forma bonita
 from funcoes_preparacao_dados import preparar_dados
 from busca_bd import buscar_dados
+import os
 
 
-
-API_KEY = 'SUA_CHAVE_API_AQUI' # Substitua pela sua chave do OpenRouteService
+API_KEY = os.getenv('API_KEY') # Substitua pela sua chave do OpenRouteService
 UPA_ENDERECO = "Av. Sampaio Vidal, 200, Marília, SP, 17500-022" # Endereço da Garagem
-DIA_OPERACAO = '2025-10-08' # O dia que você quer otimizar
+DIA_OPERACAO = os.getenv('DATA_SOLVER') # O dia que você quer otimizar
 
 # 2. Simulação dos seus dados (copie e cole seus dados reais aqui)
 # Usei io.StringIO para simular a leitura dos seus dados de texto
