@@ -654,6 +654,26 @@ def get_filtros_tipos_veiculo():
         return jsonify({"erro": "Falha ao buscar tipos de veículo"}), 500
     return jsonify(resultados)
 
+
+@app.route('/api/filtros/tiposconsulta', methods=['GET'])
+@login_required 
+def get_filtros_tipos_consulta():
+    query = "SELECT ID_TIPO_CONSULTA, DESCRICO_CONSULTA FROM TipoConsulta ORDER BY DESCRICO_CONSULTA;"
+    resultados = executar_query(query)
+    if resultados is None:
+        return jsonify({"erro": "Falha ao buscar tipos de consulta"}), 500
+    return jsonify(resultados)
+
+
+@app.route('/api/filtros/locais', methods=['GET'])
+@login_required 
+def get_filtros_locais():
+    query = "SELECT ID_LOCAL_ATENDIMENTO, NOME_LOCAL_ATENDIMENTO FROM LocalAtendimento ORDER BY NOME_LOCAL_ATENDIMENTO;"
+    resultados = executar_query(query)
+    if resultados is None:
+        return jsonify({"erro": "Falha ao buscar locais"}), 500
+    return jsonify(resultados)
+
 # --- LOGIN E LOGOUT ---
 
 @app.route('/api/login', methods=['POST'])
@@ -684,6 +704,47 @@ def realizar_login():
 def logout():
     logout_user()
     return jsonify({"sucesso": True})
+
+
+
+@app.route('/api/consultas', methods=['POST'])
+@login_required 
+def criar_consulta():
+    dados = request.get_json()
+    try:
+        id_paciente = dados.get('id_paciente')
+        id_tipo_consulta = dados.get('id_tipo_consulta')
+        id_local_atendimento = dados.get('id_local_atendimento')
+        id_endereco_paciente = dados.get('id_endereco_paciente')
+        id_status_pendente = 5 
+        data_hora_consulta = dados.get('data_hora_consulta')
+        data_hora_ida = dados.get('data_hora_ida')
+        data_hora_retorno = dados.get('data_hora_retorno') or None 
+        acompanhante = 1 if dados.get('acompanhante') == 'true' else 0
+        maca = 1 if dados.get('maca') == 'true' else 0
+        info_adicionais = dados.get('info_adicionais') or None
+
+        query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'insert_consulta.sql'))
+        if not query:
+             return jsonify({"erro": "Falha interna: Arquivo SQL 'insert_consulta.sql' não encontrado."}), 500
+
+        params = (
+            id_paciente, id_tipo_consulta, id_endereco_paciente, id_local_atendimento,
+            id_status_pendente, data_hora_ida, data_hora_retorno, data_hora_consulta,
+            acompanhante, maca, info_adicionais
+        )
+        
+        sucesso = executar_query_escrita(query, params)
+        
+        if not sucesso:
+            return jsonify({"erro": "Falha ao inserir dados no banco"}), 500
+
+        return jsonify({"sucesso": True, "mensagem": "Consulta cadastrada!"}), 201
+
+    except Exception as e:
+        print(f"Erro no endpoint /api/consultas: {e}")
+        return jsonify({"erro": str(e)}), 500
+
 
 # --- ROTAS DE PÁGINAS (TEMPLATES) ---
 
