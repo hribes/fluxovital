@@ -71,3 +71,29 @@ select.form-select{
     font-weight: 600;
     line-height: 10px;
 }
+
+.btn-criar-rotas {
+    background-color: #FFE432;
+    color: black;
+    box-shadow: none !important;
+    font-weight: 600;
+}
+
+.btn-criar-rotas:hover {
+    background-color: #ffd700;
+    color: black;
+    border-color: #ffd700;
+}
+
+.btn-atualizar-mapa {
+    background-color: #212529;
+    color: #ffffff;
+    box-shadow: none !important;
+    font-weight: 600;
+}
+
+.btn-atualizar-mapa:hover {
+    background-color: #343a40;
+    color: #ffffff;
+    border-color: #343a40;
+}
