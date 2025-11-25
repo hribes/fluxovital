@@ -181,19 +181,21 @@ def rota_real_osrm_segmento(origem_latlon, destino_latlon):
 @app.route('/visualizar_rotas_salvas')
 @login_required
 def visualizar_rotas_salvas():
+    # 1. Pega parâmetros e trata data vazia
     data_filtro = request.args.get('data')
     veiculo_id = request.args.get('veiculo')
     
+    if not data_filtro:
+        data_filtro = os.getenv("DATA_SOLVER", datetime.date.today().strftime('%Y-%m-%d'))
+
+    # 2. Busca dados no banco
     conn = criar_conexao()
-    cursor = conn.cursor(dictionary=True)
+    if not conn: return "Erro de conexão"
     
-    # --- QUERY (Sem alterações) ---
+    cursor = conn.cursor(dictionary=True)
     sql = """
-        SELECT 
-            p.ID_VEICULO, v.PLACA, tv.NOME_TIPO_VEICULO,
-            p.ORDEM, p.TIPO_PARADA, p.HORA_PARADA,
-            e.LATITUDE, e.LONGITUDE, e.NUMERO_ENDERECO, r.NOME_RUA,
-            pac.NOME_PACIENTE, la.NOME_LOCAL_ATENDIMENTO
+        SELECT p.*, e.LATITUDE, e.LONGITUDE, e.NUMERO_ENDERECO, r.NOME_RUA,
+               pac.NOME_PACIENTE, la.NOME_LOCAL_ATENDIMENTO, tv.NOME_TIPO_VEICULO
         FROM Parada p
         JOIN Veiculo v ON p.ID_VEICULO = v.ID_VEICULO
         JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO
@@ -209,85 +211,75 @@ def visualizar_rotas_salvas():
         params.append(veiculo_id)
     sql += " ORDER BY p.ID_VEICULO, p.ORDEM ASC"
     
-    cursor.execute(sql, params)
-    paradas = cursor.fetchall()
-    cursor.close()
-    conn.close()
+    try:
+        cursor.execute(sql, params)
+        paradas = cursor.fetchall()
+    except Exception as e:
+        print(f"Erro SQL: {e}")
+        return get_mapa_vazio()
+    finally:
+        cursor.close(); conn.close()
 
     if not paradas: return get_mapa_vazio()
 
-    m = folium.Map(location=[paradas[0]['LATITUDE'], paradas[0]['LONGITUDE']], zoom_start=13)
+    # 3. Inicia o Mapa
+    try:
+        # Centraliza no primeiro ponto da rota
+        m = folium.Map(location=[float(paradas[0]['LATITUDE']), float(paradas[0]['LONGITUDE'])], zoom_start=14)
+    except:
+        m = folium.Map(location=[-22.2132, -49.9447], zoom_start=13)
 
+    # 4. Agrupa paradas por veículo
     rotas_veiculos = {}
     for p in paradas:
-        vid = p['ID_VEICULO']
-        if vid not in rotas_veiculos:
-            rotas_veiculos[vid] = {'info': f"{p['NOME_TIPO_VEICULO']}", 'pontos': []}
-        rotas_veiculos[vid]['pontos'].append(p)
+        rotas_veiculos.setdefault(p['ID_VEICULO'], []).append(p)
 
-    cores_linhas = ['blue', 'purple', 'green', 'cadetblue']
-
-    for i, (vid, dados) in enumerate(rotas_veiculos.items()):
-        lista_pontos = dados['pontos']
-        cor_rota = cores_linhas[i % len(cores_linhas)]
-        coords_para_linha = []
-
-        # --- 1. PONTOS TRADICIONAIS (folium.Icon) ---
-        for ponto in lista_pontos:
-            lat, lon = ponto['LATITUDE'], ponto['LONGITUDE']
-            tipo = ponto['TIPO_PARADA']
-            ordem = ponto['ORDEM']
+    colors = ['blue', 'green', 'red', 'purple', 'orange', 'darkred', 'cadetblue']
+    
+    # 5. Desenha marcadores e trajetos (AGORA COM OSRM)
+    for i, (vid, lista) in enumerate(rotas_veiculos.items()):
+        cor = colors[i % len(colors)]
+        pontos_para_api = [] # Formato: "lon,lat" para o OSRM
+        coords_marcadores = [] # Formato: [lat, lon] para o Folium
+        
+        for ponto in lista:
+            lat = float(ponto['LATITUDE'])
+            lon = float(ponto['LONGITUDE'])
             
-            # Definição de Cores e Ícones
-            if tipo == 'COLETA':
-                cor_icone = 'blue' 
-                icone_nome = 'user'
-                # A ordem aparece aqui no tooltip
-                texto_tooltip = f"{ordem}. Paciente: {ponto['NOME_PACIENTE']}"
-                texto_popup = f"<b>{ordem}. Coleta</b><br>{ponto['NOME_PACIENTE']}<br>{ponto['HORA_PARADA']}"
+            pontos_para_api.append(f"{lon},{lat}") # OSRM pede Lon,Lat
+            coords_marcadores.append([lat, lon])    # Backup se API falhar
             
-            elif tipo == 'ENTREGA':
-                cor_icone = 'red' # Vermelho
-                icone_nome = 'plus'
-                texto_tooltip = f"{ordem}. Local: {ponto['NOME_LOCAL_ATENDIMENTO']}"
-                texto_popup = f"<b>{ordem}. Entrega</b><br>{ponto['NOME_LOCAL_ATENDIMENTO']}"
+            # Marcadores (Pins)
+            icone = 'home'
+            if ponto['TIPO_PARADA'] == 'COLETA': icone = 'user'
+            elif ponto['TIPO_PARADA'] == 'ENTREGA': icone = 'plus'
             
-            else: # BASE
-                cor_icone = 'black' # Preto
-                icone_nome = 'home'
-                texto_tooltip = f"{ordem}. Base / Garagem"
-                texto_popup = "Início/Fim"
+            texto = f"<b>{ponto['ORDEM']}</b>. {ponto.get('NOME_PACIENTE') or ponto.get('NOME_LOCAL_ATENDIMENTO') or 'Base'}"
+            folium.Marker([lat, lon], icon=folium.Icon(color=cor, icon=icone), tooltip=texto, popup=texto).add_to(m)
 
-            folium.Marker(
-                [lat, lon],
-                # Ícone padrão do Folium
-                icon=folium.Icon(color=cor_icone, icon=icone_nome, prefix='glyphicon'),
-                tooltip=texto_tooltip, # Passar o mouse mostra o número e nome
-                popup=folium.Popup(texto_popup, max_width=200)
-            ).add_to(m)
+        # --- MÁGICA DO OSRM AQUI ---
+        trajeto_desenhado = False
+        if len(pontos_para_api) > 1:
+            try:
+                # Monta URL do OSRM (Serviço Gratuito de Rotas)
+                coords_string = ";".join(pontos_para_api)
+                url = f"https://router.project-osrm.org/route/v1/driving/{coords_string}?overview=full&geometries=geojson"
+                
+                resp = requests.get(url, timeout=4) # Timeout curto para não travar se a API demorar
+                if resp.status_code == 200:
+                    dados_rota = resp.json()
+                    # O OSRM retorna GeoJSON [lon, lat], precisamos inverter para [lat, lon]
+                    geometry = dados_rota['routes'][0]['geometry']['coordinates']
+                    coords_reais = [[coord[1], coord[0]] for coord in geometry]
+                    
+                    folium.PolyLine(coords_reais, color=cor, weight=5, opacity=0.8).add_to(m)
+                    trajeto_desenhado = True
+            except Exception as e:
+                print(f"Erro ao buscar rota no OSRM (usando linha reta): {e}")
 
-            coords_para_linha.append((lat, lon))
-
-        # --- 2. LINHAS SEGUINDO RUAS (OSRM) ---
-        coords_rota_completa = []
-        for j in range(len(coords_para_linha) - 1):
-            inicio = coords_para_linha[j]
-            fim = coords_para_linha[j+1]
-            shape_lonlat = rota_real_osrm_segmento(inicio, fim)
-            
-            if shape_lonlat:
-                shape_latlon = [[c[1], c[0]] for c in shape_lonlat]
-                coords_rota_completa.extend(shape_latlon)
-            else:
-                coords_rota_completa.extend([inicio, fim])
-
-        folium.PolyLine(
-            coords_rota_completa,
-            color=cor_rota,
-            weight=4,
-            opacity=0.7,
-            tooltip=f"Trajeto: {dados['info']}"
-        ).add_to(m)
+        # Se o OSRM falhar (ou demorar), desenha linha reta como backup
+        if not trajeto_desenhado and len(coords_marcadores) > 1:
+             folium.PolyLine(coords_marcadores, color=cor, weight=3, opacity=0.5, dash_array='5, 10').add_to(m)
 
     return m._repr_html_()
 
@@ -570,28 +562,32 @@ def criar_local_atendimento():
 @app.route('/api/veiculos', methods=['GET', 'POST'])
 @login_required
 def handle_veiculos():
+    # --- GET: Listar Veículos ---
     if request.method == 'GET':
-        status_id = request.args.get('status')
-        query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'get_veiculos.sql'))
-        if not query: return jsonify({"erro": "SQL não encontrado."}), 500
-        params = []
-        if status_id and status_id != 'all':
-            query += " WHERE v.ID_STATUS = %s"
-            params.append(status_id)
-        query += " ORDER BY v.ID_VEICULO;"
-        return jsonify(executar_query(query, tuple(params)) or [])
-    elif request.method == 'POST':
-        dados = request.get_json()
-        try:
-            placa_limpa = re.sub(r'[^A-Z0-9]', '', (dados.get('placa') or '').upper())
-            if not placa_limpa: return jsonify({"erro": "Placa obrigatória."}), 400
-            if executar_query("SELECT 1 FROM Veiculo WHERE PLACA = %s", (placa_limpa,)):
-                return jsonify({"erro": "Placa já cadastrada."}), 409
-            query = ler_query_de_arquivo(os.path.join('backend', 'src', 'modules', 'queries', 'insert_veiculo.sql'))
-            params = (dados.get('id_tipo_veiculo'), dados.get('id_status'), dados.get('capacidade'), placa_limpa)
-            if not executar_query_escrita(query, params): return jsonify({"erro": "Falha ao inserir."}), 500
-            return jsonify({"sucesso": True, "mensagem": "Veículo cadastrado!"}), 201
-        except Exception as e: return jsonify({"erro": str(e)}), 500
+        status = request.args.get('status')
+        sql = "SELECT v.*, tv.NOME_TIPO_VEICULO FROM Veiculo v JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO"
+        if status and status != 'all': 
+            sql += f" WHERE v.ID_STATUS = {status}"
+        return jsonify(executar_query(sql) or [])
+    
+    # --- POST: Cadastrar Veículo (Com verificação de duplicidade) ---
+    d = request.get_json()
+    placa_limpa = re.sub(r'[^A-Z0-9]', '', d.get('placa', '').upper())
+
+    # 1. VERIFICAÇÃO (O passo crucial para seu frontend)
+    check = executar_query("SELECT 1 FROM Veiculo WHERE PLACA = %s", (placa_limpa,))
+    if check:
+        # Retorna 409 (Conflict) para o front saber que deve oferecer a atualização
+        return jsonify({"erro": f"A placa {placa_limpa} já existe."}), 409
+
+    # 2. INSERÇÃO
+    sql = "INSERT INTO Veiculo (ID_TIPO_VEICULO, ID_STATUS, CAPACIDADE, PLACA) VALUES (%s, %s, %s, %s)"
+    params = (d.get('id_tipo_veiculo'), d.get('id_status'), d.get('capacidade'), placa_limpa)
+    
+    if executar_query_escrita(sql, params): 
+        return jsonify({"sucesso": True}), 201
+        
+    return jsonify({"erro": "Erro ao inserir no banco"}), 500
 
 @app.route('/api/veiculos/<string:placa>', methods=['GET'])
 @login_required
@@ -673,6 +669,21 @@ def get_filtros_locais():
     if resultados is None:
         return jsonify({"erro": "Falha ao buscar locais"}), 500
     return jsonify(resultados)
+
+
+@app.route('/api/veiculos/todos_dropdown', methods=['GET'])
+@login_required
+def get_todos_veiculos_dropdown():
+    # Busca todos os veículos cadastrados no sistema para preencher o select
+    sql = """
+        SELECT v.ID_VEICULO, v.PLACA, tv.NOME_TIPO_VEICULO 
+        FROM Veiculo v 
+        JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO 
+        ORDER BY tv.NOME_TIPO_VEICULO, v.PLACA
+    """
+    return jsonify(executar_query(sql) or [])
+
+
 
 # --- LOGIN E LOGOUT ---
 
@@ -833,6 +844,95 @@ def listar_veiculos_api():
     return jsonify(veiculos)
 
 
+
+@app.route('/api/rotas/veiculos_ativos', methods=['GET'])
+@login_required
+def get_veiculos_ativos_rota():
+    data = request.args.get('data')
+    
+    # Busca do arquivo
+    path = os.path.join('backend', 'src', 'modules', 'queries', 'get_veiculos_rota_data.sql')
+    sql = ler_query_de_arquivo(path)
+    
+    return jsonify(executar_query(sql, (data,)) or [])
+
+
+
+@app.route('/api/rotas/lista_pacientes', methods=['GET'])
+@login_required
+def get_lista_pacientes_rota():
+    data = request.args.get('data')
+    veiculo_id = request.args.get('veiculo')
+    
+    # SQL Ajustado: Traz qualquer parada que tenha paciente vinculado
+    # e removemos o filtro estrito de 'COLETA' para garantir que a lista carregue
+    sql = """
+        SELECT 
+            CAST(p.HORA_PARADA AS CHAR) as HORA_PARADA, 
+            COALESCE(pac.NOME_PACIENTE, 'Paciente (Sem Nome)') as NOME_PACIENTE,
+            COALESCE(pac.CPF_PACIENTE, '---') as CPF_PACIENTE,
+            tv.NOME_TIPO_VEICULO,
+            v.PLACA,
+            p.TIPO_PARADA,
+            COALESCE(tc.DESCRICO_CONSULTA, 'Transporte') as TIPO_CONSULTA
+        FROM Parada p
+        JOIN Veiculo v ON p.ID_VEICULO = v.ID_VEICULO
+        JOIN TipoVeiculo tv ON v.ID_TIPO_VEICULO = tv.ID_TIPO_VEICULO
+        LEFT JOIN Paciente pac ON p.ID_PACIENTE = pac.ID_PACIENTE
+        LEFT JOIN SolicitacaoConsulta sc ON sc.ID_PACIENTE = pac.ID_PACIENTE 
+             AND DATE(sc.DATA_HORA_IDA) = p.DATA_ROTA
+        LEFT JOIN TipoConsulta tc ON sc.ID_TIPO_CONSULTA = tc.ID_TIPO_CONSULTA
+        WHERE p.DATA_ROTA = %s 
+          AND p.TIPO_PARADA != 'BASE' 
+    """
+    params = [data]
+    
+    if veiculo_id and veiculo_id != "0":
+        sql += " AND p.ID_VEICULO = %s"
+        params.append(veiculo_id)
+        
+    sql += " ORDER BY p.HORA_PARADA ASC"
+    
+    return jsonify(executar_query(sql, tuple(params)) or [])
+
+
+# --- ROTA PARA PREENCHER O SELECT DE MOTORISTAS ---
+@app.route('/api/motoristas/dropdown', methods=['GET'])
+@login_required
+def get_motoristas_dropdown():
+    # Busca apenas ID e Nome para ficar leve
+    sql = "SELECT ID_MOTORISTA, NOME_MOTORISTA FROM Motorista ORDER BY NOME_MOTORISTA"
+    return jsonify(executar_query(sql) or [])
+
+
+
+# --- ROTA PARA SALVAR A ATRIBUIÇÃO (MOTORISTA -> VEÍCULO) ---
+@app.route('/api/atribuir/salvar', methods=['POST'])
+@login_required
+def salvar_atribuicao():
+    dados = request.get_json()
+    
+    id_motorista = dados.get('id_motorista')
+    id_veiculo = dados.get('id_veiculo')
+    data = dados.get('data')
+    hora = dados.get('hora')
+    
+    if not all([id_motorista, id_veiculo, data, hora]):
+        return jsonify({"erro": "Preencha todos os campos"}), 400
+        
+    # Concatena data e hora para o formato DATETIME do MySQL
+    data_hora_emprestimo = f"{data} {hora}:00"
+    
+    sql = """
+        INSERT INTO MotoristaVeiculo (ID_MOTORISTA, ID_VEICULO, DATA_HORA_EMPRESTIMO) 
+        VALUES (%s, %s, %s)
+    """
+    params = (id_motorista, id_veiculo, data_hora_emprestimo)
+    
+    if executar_query_escrita(sql, params):
+        return jsonify({"sucesso": True}), 201
+    
+    return jsonify({"erro": "Erro ao salvar atribuição"}), 500
 
 
 

@@ -1,148 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
   <link rel="stylesheet" href="/styles/visualizacaoRotas.css">
   <link rel="stylesheet" href="/styles/navebar.css">
-  <title>Visualização Rotas</title>
+  
+  <title>Visualização de Rotas | FluxoVital</title>
   <link rel="icon" type="image/png" href="/assets/icone.png">
+  
+  <style>
+    /* Garante altura correta para o mapa */
+    #map {
+        height: 100%;
+        min-height: 500px;
+        width: 100%;
+        border-radius: 8px;
+    }
+  </style>
 </head>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas"
-      data-bs-target="#perfilMenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <a class="navbar-brand" href="/home">
-      <img src="/assets/logo-branco.png" alt="Logo" class="logo">
-    </a>
-
-    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-
-        <li class="nav-item"><a class="nav-link" href="/agendamentos"><span class="link-text">Agendamentos</span></a>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Cadastros</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/cadastrar/consulta"><span class="link-text">Cadastrar
-                  Consulta</span></a></li>
-            <li><a class="dropdown-item" href="/cadastrar/funcionario"><span class="link-text">Cadastrar
-                  Funcionário</span></a></li>
-            <li><a class="dropdown-item" href="/cadastrar/paciente"><span class="link-text">Cadastrar
-                  Paciente</span></a></li>
-            <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar
-                  Hospital</span></a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Veículos</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/cadastrar/veiculo"><span class="link-text">Cadastrar Veículo</span></a>
-            </li>
-            <li><a class="dropdown-item" href="/visualizar/veiculo"><span class="link-text">Visualizar
-                  Veículos</span></a></li>
-            <li><a class="dropdown-item" href="/veiculo/rotas"><span class="link-text">Veículos com Rotas</span></a>
-            </li>
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Motorista</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/cadastrar/motorista"><span class="link-text">Cadastrar
-                  Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="/atribuir/motorista"><span class="link-text">Atribuir
-                  Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar
-                  Motoristas</span></a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
-      <span id="nomeUsuarioDesktop">Usuário</span>
-      <i class="bi bi-person-circle fs-4"></i>
-      <button id="btnSair" class="btn btn-sm btn-outline-light ms-2" title="Sair"
-        onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'">
-        <i class="bi bi-box-arrow-right"></i>
-      </button>
-    </div>
-
-    <div class="d-flex align-items-center text-light ms-auto d-lg-none">
-      <span class="me-2" id="nomeUsuarioMobile">Usuário</span>
-      <i class="bi bi-person-circle fs-4"></i>
-    </div>
-  </div>
-</nav>
-
-<div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
-  <div class="offcanvas-header justify-content-center">
-    <h5 class="offcanvas-title" id="nomeUsuarioOffcanvas">Menu</h5>
-    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2"
-      data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body d-flex flex-column gap-3">
-    <a href="/home"><span class="link-text">Home</span></a>
-    <a href="/agendamentos"><span class="link-text">Agendamentos</span></a>
-
-    <hr class="text-secondary">
-    <span class="text-muted small">CADASTROS</span>
-    <a href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a>
-    <a href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a>
-
-    <hr class="text-secondary">
-    <a href="/visualizar/veiculo"><span class="link-text">Veículos</span></a>
-    <a href="/visualizar/motorista"><span class="link-text">Motoristas</span></a>
-    <a href="/rotas"><span class="link-text">Rotas de Transporte</span></a>
-
-    <hr class="text-light">
-    <a href="#" onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'" class="text-danger"><span
-        class="link-text">Sair</span></a>
-  </div>
-</div>
-</nav>
-
-<!-- Offcanvas do Perfil (menu hamburg em telas pequenas) -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
-  <div class="offcanvas-header justify-content-center">
-    <h5 class="offcanvas-title">Amanda Cristina</h5>
-    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2"
-      data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body d-flex flex-column gap-3">
-    <a href="../pages/home.html"><span class="link-text">Home</span></a>
-    <a href="../pages/cadastro_consulta.html"><span class="link-text">Agendamentos</span></a>
-    <a href="../pages/consulta_veiculos.html"><span class="link-text">Veículos</span></a>
-    <a href="../pages/cadastro_motorista.html"><span class="link-text">Motoristas</span></a>
-    <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
-  </div>
-</div>
-
 
 <body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#perfilMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <a class="navbar-brand" href="/home">
+        <img src="/assets/logo-branco.png" alt="Logo" class="logo" style="max-height: 40px;"> 
+      </a>
+  
+      <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="/agendamentos"><span class="link-text">Agendamentos</span></a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <span class="link-text">Cadastros</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/funcionario"><span class="link-text">Cadastrar Funcionário</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar Hospital</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <span class="link-text">Veículos</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/veiculo"><span class="link-text">Cadastrar Veículo</span></a></li>
+              <li><a class="dropdown-item" href="/visualizar/veiculo"><span class="link-text">Visualizar Veículos</span></a></li>
+              <li><a class="dropdown-item" href="/veiculo/rotas"><span class="link-text">Veículos com Rotas</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <span class="link-text">Motorista</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/motorista"><span class="link-text">Cadastrar Motoristas</span></a></li>
+              <li><a class="dropdown-item" href="/atribuir/motorista"><span class="link-text">Atribuir Motoristas</span></a></li>
+              <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar Motoristas</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a></li>
+        </ul>
+      </div>
+  
+      <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+        <span id="nomeUsuarioDesktop">Usuário</span>
+        <i class="bi bi-person-circle fs-4"></i>
+        <button id="btnSair" class="btn btn-sm btn-outline-light ms-2" title="Sair"
+          onclick="fetch('/api/logout', {method:'POST'}).then(()=>window.location.href='/')">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
+    <div class="offcanvas-header justify-content-center">
+      <h5 class="offcanvas-title">Menu</h5>
+      <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column gap-3">
+      <a href="/home"><span class="link-text">Home</span></a>
+      <a href="/agendamentos"><span class="link-text">Agendamentos</span></a>
+      <hr class="text-secondary">
+      <a href="/visualizar/veiculo"><span class="link-text">Veículos</span></a>
+      <a href="/rotas"><span class="link-text">Rotas de Transporte</span></a>
+      <hr class="text-light">
+      <a href="#" onclick="fetch('/api/logout', {method:'POST'}).then(()=>window.location.href='/')" class="text-danger"><span class="link-text">Sair</span></a>
+    </div>
+  </div>
+
   <div class="container">
     <h2 class="mt-4 mb-4">Rotas de Transporte</h2>
 
@@ -152,17 +114,15 @@
 
           <div class="col-md-3">
             <label for="filtroData" class="form-label">Data da Rota:</label>
-            <input type="date" class="form-control" id="filtroData">
+            <input type="date" class="form-control" id="filtroData" value="{{ data_padrao }}">
           </div>
-
 
           <div class="col-md-3">
             <label for="veiculos" class="form-label">Veículo:</label>
             <select class="form-select" id="veiculos">
-
+              <option value="0" selected>Carregando...</option>
             </select>
           </div>
-
 
           <div class="col-md-3">
             <button id="btn-atualizar-mapa" class="btn btn-outline-primary w-100">
@@ -184,7 +144,7 @@
 
       <div class="col-md-7">
         <div class="card shadow" style="min-height: 500px;">
-          <div class="card-body p-0">
+          <div class="card-body p-0 position-relative">
             <div id="map">
               {{ map | safe }}
             </div>
@@ -195,213 +155,195 @@
       <div class="col-md-5">
         <div class="textos-card mb-3">
           <h3>Pacientes na Rota</h3>
-          <p class="text-muted">Lista baseada no filtro acima</p>
+          <p class="text-muted">Lista filtrada pelo veículo e data selecionados</p>
         </div>
 
-        <div style="max-height: 500px; overflow-y: auto;">
-
-          <div class="card-paciente mb-3 p-3 border rounded">
-            <div class="d-flex justify-content-between">
-              <span class="fw-bold">Maria Josefa da Silva</span>
-              <span class="badge bg-warning text-dark">Pendente</span>
-            </div>
-            <div class="text-muted small mb-2">CPF: 568.458.321-54</div>
-            <div class="paciente-info small">
-              <p class="mb-1"><strong>Consulta:</strong> Preventiva</p>
-              <p class="mb-1"><strong>Veículo:</strong> Ambulância</p>
-              <p class="mb-1"><strong>Data da Consulta:</strong> 23/11/2025</p>
-              <p class="mb-0"><strong>Hora:</strong> 10h30</p>
-            </div>
-          </div>
-
-          <div class="card-paciente mb-3 p-3 border rounded">
-            <div class="d-flex justify-content-between">
-              <span class="fw-bold">José Roberto Santos</span>
-              <span class="badge bg-success">Em Rota</span>
-            </div>
-            <div class="text-muted small mb-2">CPF: 123.456.789-00</div>
-            <div class="paciente-info small">
-              <p class="mb-1"><strong>Consulta:</strong> Retorno</p>
-              <p class="mb-1"><strong>Veículo:</strong> Carro</p>
-              <p class="mb-1"><strong>Data da Consulta:</strong> 23/11/2025</p>
-              <p class="mb-0"><strong>Hora:</strong> 14h00</p>
-            </div>
-          </div>
-
-          <div class="card-paciente mb-3 p-3 border rounded">
-            <div class="d-flex justify-content-between">
-              <span class="fw-bold">Ana Clara</span>
-              <span class="badge bg-secondary">Aguardando</span>
-            </div>
-            <div class="text-muted small mb-2">CPF: 999.888.777-66</div>
-            <div class="paciente-info small">
-              <p class="mb-1"><strong>Consulta:</strong> Exame</p>
-              <p class="mb-1"><strong>Veículo:</strong> Ambulância</p>
-              <p class="mb-1"><strong>Data da Consulta:</strong> 2025-11-20</p>
-              <p class="mb-0"><strong>Hora:</strong> 08h00</p>
-            </div>
-          </div>
-
+        <div id="lista-pacientes-container" style="max-height: 500px; overflow-y: auto;">
+           <div class="text-center text-muted mt-5">Selecione um veículo para ver os pacientes.</div>
         </div>
       </div>
+      
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-
-      function carregarVeiculosSelect() {
-        fetch('/api/listar_veiculos')
-          .then(response => response.json())
-          .then(listaVeiculos => {
-            const select = document.getElementById('veiculos');
-
-            // Mantém apenas a opção "Todos" e limpa o resto (caso recarregue)
-            select.innerHTML = '<option value="0" selected>Todos</option>';
-
-            listaVeiculos.forEach(v => {
-              const option = document.createElement('option');
-              option.value = v.ID_VEICULO;
-              // Exibe: "Ambulância - ABC-1234"
-              option.textContent = `${v.NOME_TIPO_VEICULO} - ${v.PLACA || 'S/ Placa'}`;
-              select.appendChild(option);
-            });
-          })
-          .catch(erro => console.error("Erro ao carregar veículos:", erro));
-      }
-
-
-      // 1. Define data de hoje no input
+      
+      const dataSolverEnv = "{{ data_padrao }}"; 
+      
       const inputData = document.getElementById('filtroData');
       const inputVeiculo = document.getElementById('veiculos');
-      inputData.value = new Date().toISOString().split('T')[0];
+      const containerPacientes = document.getElementById('lista-pacientes-container');
+      const btnCriar = document.getElementById('btn-criar-rotas');
+      const btnFiltrar = document.getElementById('btn-atualizar-mapa');
 
-      // ======================================================
-      // LÓGICA 1: BOTÃO "CRIAR NOVAS ROTAS" (Chama Backend /calcularRota)
-      // ======================================================
-      document.getElementById('btn-criar-rotas').addEventListener('click', function () {
-        const btn = this;
-        const textoOriginal = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Calculando...';
-        btn.disabled = true;
+      // Fallback para data
+      if (!inputData.value && dataSolverEnv) {
+        inputData.value = dataSolverEnv;
+      }
 
-        fetch('/calcularRota') // ATENÇÃO: Verifique se sua rota no Flask chama '/rota1' ou '/calcularRota'
-          .then(response => response.json())
-          .then(data => {
-            console.log('Resposta:', data);
-            if (data.status === 'success') {
-              btn.innerHTML = '<i class="bi bi-check-circle"></i> Sucesso!';
-              btn.classList.remove('btn-primary');
-              btn.classList.add('btn-success');
+      // 1. CARREGAR TODOS OS VEÍCULOS (Dropdown)
+      function carregarTodosVeiculos() {
+        inputVeiculo.innerHTML = '<option value="0">Carregando...</option>';
 
-              // Opcional: Atualizar o mapa automaticamente após calcular
-              document.getElementById('btn-atualizar-mapa').click();
+        fetch(`/api/veiculos/todos_dropdown`)
+          .then(res => res.json())
+          .then(lista => {
+            inputVeiculo.innerHTML = '<option value="0" selected>Todos os Veículos</option>';
+            
+            if(lista.length === 0){
+                inputVeiculo.innerHTML = '<option value="0">Nenhum veículo cadastrado</option>';
             } else {
-              btn.innerText = "Erro: " + data.message;
-              btn.classList.add('btn-danger');
+                lista.forEach(v => {
+                    const option = document.createElement('option');
+                    option.value = v.ID_VEICULO;
+                    option.textContent = `${v.NOME_TIPO_VEICULO} - ${v.PLACA || 'S/ Placa'}`;
+                    inputVeiculo.appendChild(option);
+                });
+            }
+            carregarListaPacientes();
+          })
+          .catch(err => {
+            console.error("Erro ao buscar veículos:", err);
+            inputVeiculo.innerHTML = '<option value="0">Erro ao carregar</option>';
+          });
+      }
+
+      // 2. CRIAR CARD HTML
+      // --- Função Atualizada: Template do Card de Paciente ---
+      function criarCardPaciente(p) {
+        const horaFormatada = p.HORA_PARADA ? p.HORA_PARADA.substring(0, 5) : '--:--';
+        
+        // Define cor e texto baseados no tipo da parada
+        let badgeClass = "bg-primary"; // Azul por padrão
+        let badgeText = "Em Rota";
+        
+        if (p.TIPO_PARADA === 'ENTREGA') {
+            badgeClass = "bg-warning text-dark"; // Laranja
+            badgeText = "Entrega/Destino";
+        } else if (p.TIPO_PARADA === 'COLETA') {
+            badgeClass = "bg-success"; // Verde
+            badgeText = "Coleta/Embarque";
+        }
+
+        return `
+          <div class="card-paciente mb-3 p-3 border rounded shadow-sm">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold text-dark">${p.NOME_PACIENTE}</span>
+              <span class="badge ${badgeClass}">${badgeText}</span>
+            </div>
+            <div class="text-muted small mb-2">CPF: ${p.CPF_PACIENTE}</div>
+            <div class="paciente-info small mt-2">
+              <p class="mb-1"><i class="bi bi-hospital"></i> <strong>Motivo:</strong> ${p.TIPO_CONSULTA}</p>
+              <p class="mb-1"><i class="bi bi-truck"></i> <strong>Veículo:</strong> ${p.NOME_TIPO_VEICULO} (${p.PLACA})</p>
+              <p class="mb-0"><i class="bi bi-clock"></i> <strong>Horário:</strong> ${horaFormatada}h</p>
+            </div>
+          </div>
+        `;
+      }
+
+      
+      // 3. CARREGAR LISTA DE PACIENTES
+      function carregarListaPacientes() {
+        const data = inputData.value;
+        const veiculo = inputVeiculo.value;
+        
+        containerPacientes.innerHTML = '<div class="text-center mt-3"><span class="spinner-border spinner-border-sm text-primary"></span> Buscando rota...</div>';
+
+        fetch(`/api/rotas/lista_pacientes?data=${data}&veiculo=${veiculo}`)
+          .then(res => res.json())
+          .then(pacientes => {
+            containerPacientes.innerHTML = ''; 
+
+            if (pacientes.length === 0) {
+              containerPacientes.innerHTML = `
+                <div class="alert alert-secondary mt-2 text-center" role="alert">
+                   <i class="bi bi-info-circle"></i><br>
+                   Sem rotas para este veículo nesta data.
+                </div>`;
+              return;
             }
 
-            setTimeout(() => {
-              btn.innerHTML = textoOriginal;
-              btn.disabled = false;
-              btn.classList.remove('btn-success', 'btn-danger');
-              btn.classList.add('btn-primary');
-            }, 3000);
+            pacientes.forEach(p => {
+              containerPacientes.innerHTML += criarCardPaciente(p);
+            });
           })
-          .catch(error => {
-            console.error('Erro:', error);
-            btn.innerText = "Erro na Conexão";
-            btn.disabled = false;
+          .catch(err => {
+            console.error(err);
+            containerPacientes.innerHTML = '<div class="alert alert-danger">Erro ao buscar dados.</div>';
           });
-      });
+      }
 
-      // ======================================================
-      // LÓGICA 2: BOTÃO "FILTRAR MAPA" (Chama Backend /visualizar_rotas_salvas)
-      // ======================================================
-      document.getElementById('btn-atualizar-mapa').addEventListener('click', function () {
+      // EVENTOS
+      inputData.addEventListener('change', carregarListaPacientes);
+      inputVeiculo.addEventListener('change', carregarListaPacientes);
+
+      btnFiltrar.addEventListener('click', function () {
         const data = inputData.value;
         const veiculo = inputVeiculo.value;
         const mapDiv = document.getElementById('map');
-
-        mapDiv.style.opacity = '0.5'; // Efeito visual de loading
-
+        
+        mapDiv.style.opacity = '0.4';
+        
         fetch(`/visualizar_rotas_salvas?data=${data}&veiculo=${veiculo}`)
-          .then(response => response.text())
-          .then(htmlNovoMapa => {
-            // Substitui o HTML do mapa
-            mapDiv.innerHTML = htmlNovoMapa;
-
-            // Reexecuta scripts do Folium (necessário ao usar innerHTML)
-            Array.from(mapDiv.querySelectorAll("script")).forEach(oldScript => {
-              const newScript = document.createElement("script");
-              Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-              newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-              oldScript.parentNode.replaceChild(newScript, oldScript);
-            });
-
-            mapDiv.style.opacity = '1';
+          .then(r => r.text())
+          .then(html => {
+             mapDiv.innerHTML = html;
+             Array.from(mapDiv.querySelectorAll("script")).forEach(oldScript => {
+                const newScript = document.createElement("script");
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+              });
+             mapDiv.style.opacity = '1';
           })
           .catch(err => {
-            console.error("Erro mapa:", err);
-            mapDiv.style.opacity = '1';
+              console.error(err);
+              mapDiv.style.opacity = '1';
           });
       });
 
-      // ======================================================
-      // LÓGICA 3: FILTRAR CARDS (Localmente no JS)
-      // ======================================================
-      const cards = document.querySelectorAll(".card-paciente");
+      btnCriar.addEventListener('click', function () {
+        const textoOriginal = btnCriar.innerHTML;
+        btnCriar.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Calculando...';
+        btnCriar.disabled = true;
 
-      function filtrarCards() {
-        const dataSelecionada = inputData.value; // Formato yyyy-mm-dd do input
-        const veiculoSelecionado = inputVeiculo.value;
-        const textoVeiculoSelecionado = inputVeiculo.options[inputVeiculo.selectedIndex].text.toLowerCase();
+        fetch('/calcularRota') 
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'success') {
+              btnCriar.innerHTML = '<i class="bi bi-check-circle"></i> Sucesso!';
+              btnCriar.classList.remove('btn-primary');
+              btnCriar.classList.add('btn-success');
+              
+              carregarListaPacientes();
+              btnFiltrar.click(); 
 
-        cards.forEach(card => {
-          const paragrafos = card.querySelectorAll("p");
-          let veiculoCard = '';
-          let dataCardTexto = '';
-
-          paragrafos.forEach(p => {
-            if (p.textContent.includes("Veículo:")) {
-              veiculoCard = p.textContent.replace('Veículo:', '').trim().toLowerCase();
+            } else {
+              btnCriar.innerText = "Erro: " + data.message;
+              btnCriar.classList.add('btn-danger');
             }
-            if (p.textContent.includes("Data da Consulta:")) {
-              dataCardTexto = p.textContent.replace('Data da Consulta:', '').trim();
-            }
+
+            setTimeout(() => {
+              btnCriar.innerHTML = textoOriginal;
+              btnCriar.disabled = false;
+              btnCriar.classList.remove('btn-success', 'btn-danger');
+              btnCriar.classList.add('btn-primary');
+            }, 3000);
+          })
+          .catch(err => {
+             console.error(err);
+             btnCriar.innerText = "Erro Conexão";
+             btnCriar.disabled = false;
           });
+      });
 
-          // Converte data do card (dd/mm/yyyy ou yyyy-mm-dd) para comparar
-          let dataCardFormatada = dataCardTexto;
-          if (dataCardTexto.includes('/')) {
-            // Se estiver dd/mm/yyyy no texto do card, converte para yyyy-mm-dd
-            const partes = dataCardTexto.split('/');
-            if (partes.length === 3) dataCardFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
-          }
-
-          const filtroVeiculoOk = veiculoSelecionado === "1" || veiculoCard === textoVeiculoSelecionado;
-          // Se o filtro de data estiver vazio, ignora. Se não, compara.
-          const filtroDataOk = !dataSelecionada || dataCardFormatada === dataSelecionada;
-
-          if (filtroVeiculoOk && filtroDataOk) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
-      }
-
-      // Aciona filtro dos cards ao mudar inputs
-      inputData.addEventListener("change", filtrarCards);
-      inputVeiculo.addEventListener("change", filtrarCards);
-
-      // Filtra ao carregar a página também
-      filtrarCards();
+      // Inicializa
+      carregarTodosVeiculos();
     });
   </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
-
 </html>

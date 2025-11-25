@@ -1,27 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="/styles/atribuicaoMotorista.css">
   <link rel="stylesheet" href="/styles/navebar.css">
   <link rel="stylesheet" href="/styles/popup1.css">
@@ -33,204 +23,309 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <a class="navbar-brand" href="/home">
-      <img src="/assets/logo-branco.png" alt="Logo" class="logo">
-    </a>
-
-    <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        
-        <li class="nav-item"><a class="nav-link" href="/agendamentos"><span class="link-text">Agendamentos</span></a></li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Cadastros</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a></li>
-            <li><a class="dropdown-item" href="/cadastrar/funcionario"><span class="link-text">Cadastrar Funcionário</span></a></li>
-            <li><a class="dropdown-item" href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a></li>
-            <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar Hospital</span></a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Veículos</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/cadastrar/veiculo"><span class="link-text">Cadastrar Veículo</span></a></li>
-            <li><a class="dropdown-item" href="/visualizar/veiculo"><span class="link-text">Visualizar Veículos</span></a></li>
-            <li><a class="dropdown-item" href="/veiculo/rotas"><span class="link-text">Veículos com Rotas</span></a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            <span class="link-text">Motorista</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/cadastrar/motorista"><span class="link-text">Cadastrar Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="/atribuir/motorista"><span class="link-text">Atribuir Motoristas</span></a></li>
-            <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar Motoristas</span></a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a></li>
-      </ul>
+    <div class="container-fluid">
+      <button class="btn btn-outline-light me-3 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#perfilMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <a class="navbar-brand" href="/home">
+        <img src="/assets/logo-branco.png" alt="Logo" class="logo">
+      </a>
+  
+      <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="/agendamentos"><span class="link-text">Agendamentos</span></a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="link-text">Cadastros</span></a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/funcionario"><span class="link-text">Cadastrar Funcionário</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a></li>
+              <li><a class="dropdown-item" href="/cadastrar/hospital"><span class="link-text">Cadastrar Hospital</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="link-text">Veículos</span></a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/veiculo"><span class="link-text">Cadastrar Veículo</span></a></li>
+              <li><a class="dropdown-item" href="/visualizar/veiculo"><span class="link-text">Visualizar Veículos</span></a></li>
+              <li><a class="dropdown-item" href="/veiculo/rotas"><span class="link-text">Veículos com Rotas</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><span class="link-text">Motorista</span></a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="/cadastrar/motorista"><span class="link-text">Cadastrar Motoristas</span></a></li>
+              <li><a class="dropdown-item" href="/atribuir/motorista"><span class="link-text">Atribuir Motoristas</span></a></li>
+              <li><a class="dropdown-item" href="/visualizar/motorista"><span class="link-text">Visualizar Motoristas</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/rotas"><span class="link-text">Rotas de Transporte</span></a></li>
+        </ul>
+      </div>
+  
+      <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
+          <span id="nomeUsuarioDesktop">Usuário</span>
+          <i class="bi bi-person-circle fs-4"></i>
+          <button id="btnSair" class="btn btn-sm btn-outline-light ms-2" title="Sair" onclick="fetch('/api/logout', {method:'POST'}).then(()=>window.location.href='/')">
+              <i class="bi bi-box-arrow-right"></i>
+          </button>
+      </div>
     </div>
+  </nav>
 
-    <div class="d-none d-lg-flex align-items-center text-light ms-auto gap-2">
-        <span id="nomeUsuarioDesktop">Usuário</span>
-        <i class="bi bi-person-circle fs-4"></i>
-        <button id="btnSair" class="btn btn-sm btn-outline-light ms-2" title="Sair" onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'">
-            <i class="bi bi-box-arrow-right"></i>
-        </button>
-    </div>
-    
-    <div class="d-flex align-items-center text-light ms-auto d-lg-none">
-        <span class="me-2" id="nomeUsuarioMobile">Usuário</span>
-        <i class="bi bi-person-circle fs-4"></i>
-    </div>
-  </div>
-</nav>
-
-<div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
-  <div class="offcanvas-header justify-content-center">
-    <h5 class="offcanvas-title" id="nomeUsuarioOffcanvas">Menu</h5>
-    <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2" data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body d-flex flex-column gap-3">
-    <a href="/home"><span class="link-text">Home</span></a>
-    <a href="/agendamentos"><span class="link-text">Agendamentos</span></a>
-    
-    <hr class="text-secondary">
-    <span class="text-muted small">CADASTROS</span>
-    <a href="/cadastrar/consulta"><span class="link-text">Cadastrar Consulta</span></a>
-    <a href="/cadastrar/paciente"><span class="link-text">Cadastrar Paciente</span></a>
-    
-    <hr class="text-secondary">
-    <a href="/visualizar/veiculo"><span class="link-text">Veículos</span></a>
-    <a href="/visualizar/motorista"><span class="link-text">Motoristas</span></a>
-    <a href="/rotas"><span class="link-text">Rotas de Transporte</span></a>
-    
-    <hr class="text-light">
-    <a href="#" onclick="localStorage.removeItem('usuario_nome'); window.location.href='/'" class="text-danger"><span class="link-text">Sair</span></a>
-  </div>
-</div>
-
-  <!-- Offcanvas menu -->
   <div class="offcanvas offcanvas-start" tabindex="-1" id="perfilMenu">
     <div class="offcanvas-header justify-content-center">
-      <h5 class="offcanvas-title">Amanda Cristina</h5>
+      <h5 class="offcanvas-title">Menu</h5>
       <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-2"
         data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body d-flex flex-column gap-3">
-      <a href="../pages/home.html"><span class="link-text">Home</span></a>
-      <a href="../pages/cadastro_consulta.html"><span class="link-text">Agendamentos</span></a>
-      <a href="../pages/consulta_veiculos.html"><span class="link-text">Veículos</span></a>
-      <a href="../pages/cadastro_motorista.html"><span class="link-text">Motoristas</span></a>
-      <a href="../pages/visualizacao_rotas.html"><span class="link-text">Rotas de Transporte</span></a>
+      <a href="/home"><span class="link-text">Home</span></a>
+      <a href="/cadastrar/consulta"><span class="link-text">Agendamentos</span></a>
+      <a href="/visualizar/veiculo"><span class="link-text">Veículos</span></a>
+      <a href="/visualizar/motorista"><span class="link-text">Motoristas</span></a>
+      <a href="/rotas"><span class="link-text">Rotas de Transporte</span></a>
     </div>
   </div>
 
-  <!-- Conteúdo principal -->
   <div class="container mt-4">
     <div class="row">
-      <h2 class="titulo">Atribuir Motorista ao Veículo</h2>
+      <h2 class="titulo mb-4">Atribuir Motorista ao Veículo</h2>
 
       <div class="col-md-8">
-        <h5>Rota Planejada</h5>
-        <div id="map" style="height:300px;">
-          {{ map | safe }}
+        <h5 id="tituloMapa">Rota Planejada (Visualização)</h5>
+        <div class="card shadow-sm p-2">
+            <div id="map-container" style="height:400px; width:100%; position: relative;">
+                {{ map | safe }}
+            </div>
         </div>
-        <p><b>Total de Pacientes:</b> 5</p>
       </div>
 
       <div class="col-md-4">
-        <h5>Sobre a rota:</h5>
-        <label for="motorista" class="form-label">Selecione o Motorista:</label>
-        <select class="form-select" id="motorista">
-          <option selected>Nenhuma</option>
-          <option value="1">Jeferson</option>
-          <option value="2">Coisa</option>
-          <option value="3">Aqui</option>
-        </select>
+        <div class="card shadow-sm p-4 bg-light">
+            <h5 class="mb-3">Configurar Saída</h5>
+            
+            <label for="data_saida" class="form-label">Data da Saída:</label>
+            <input type="date" class="form-control mb-3" id="data_saida">
+            
+            <label for="motorista" class="form-label">Selecione o Motorista:</label>
+            <select class="form-select mb-3" id="motorista">
+                <option value="" selected disabled>Carregando...</option>
+            </select>
 
-        <label for="veiculo" class="form-label">Selecione o Veículo:</label>
-        <select class="form-select" id="veiculo">
-          <option selected>Nenhuma</option>
-          <option value="1">Ambulância</option>
-          <option value="2">Coisa</option>
-          <option value="3">Aqui</option>
-        </select>
+            <label for="veiculo" class="form-label">
+                Selecione o Veículo: 
+                <small class="text-muted ms-1" id="statusVeiculoLabel">(Filtrado por Data)</small>
+            </label>
+            <select class="form-select mb-3" id="veiculo">
+                <option value="" selected disabled>Selecione uma data primeiro</option>
+            </select>
 
-        <label for="hora_saida" class="form-label">Horário de Saída (mínimo):</label>
-        <input type="time" class="form-control" id="hora_saida">
+            <label for="hora_saida" class="form-label">Horário de Saída:</label>
+            <input type="time" class="form-control mb-4" id="hora_saida">
 
-        <label for="data_saida" class="form-label">Data da Saída:</label>
-        <input type="date" class="form-control" id="data_saida">
-
-        <div class="formulario-botao mt-3">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal">
-            Agendar Rota com o Motorista
-          </button>
-
-
-          <!-- Modal -->
-          <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="tituloModal">Deseja cadastrar nova Consulta?</h5>
-                </div>
-                <div class="modal-body">
-                  <p>Essa consulta será contabilizada para formação de rota dos veículos.</p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar</button>
-                </div>
-              </div>
+            <div class="d-grid">
+                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#meuModal">
+                    Agendar Motorista
+                </button>
             </div>
-          </div>
-
-          <!-- Modal de Sucesso -->
-          <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-
-                <div class="modal-body d-flex flex-column align-items-center">
-
-                  <dotlottie-wc src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie"
-                    autoplay loop></dotlottie-wc>
-
-                  <h5>Cadastro realizado com sucesso!</h5>
-
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
+
+  <div class="modal fade" id="meuModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloModal">Confirmar Atribuição</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Você tem certeza que deseja vincular este motorista a este veículo para a data selecionada?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" id="btnCadastrar">Confirmar</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-
+  <div class="modal fade" id="modalSucesso" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center p-4">
+        <div class="modal-body">
+          <dotlottie-wc src="https://lottie.host/92bc73e4-bb18-4d1b-ac1d-d82189b6b288/i3lCOxhG3c.lottie" autoplay loop style="height: 150px; width: 150px; margin: 0 auto;"></dotlottie-wc>
+          <h5 class="mt-3 text-success">Atribuição realizada com sucesso!</h5>
+        </div>
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.reload()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
-
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/services/message1.js"></script>
-</body>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const selectMotorista = document.getElementById('motorista');
+        const selectVeiculo = document.getElementById('veiculo');
+        const inputData = document.getElementById('data_saida');
+        const inputHora = document.getElementById('hora_saida');
+        const statusLabel = document.getElementById('statusVeiculoLabel');
+        const mapContainer = document.getElementById('map-container');
+        
+        // Define data de hoje como padrão
+        const hoje = new Date().toISOString().split('T')[0];
+        inputData.value = hoje;
+
+        // 1. CARREGAR MOTORISTAS
+        fetch('/api/motoristas/dropdown')
+            .then(res => res.json())
+            .then(data => {
+                selectMotorista.innerHTML = '<option value="" selected disabled>Selecione...</option>';
+                data.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.ID_MOTORISTA;
+                    opt.textContent = m.NOME_MOTORISTA;
+                    selectMotorista.appendChild(opt);
+                });
+            })
+            .catch(err => console.error("Erro motoristas:", err));
+
+        // 2. NOVA FUNÇÃO: ATUALIZAR MAPA DINAMICAMENTE
+        function atualizarMapaPreview(data, veiculoId = 0) {
+            mapContainer.style.opacity = '0.5'; // Efeito visual de carregamento
+            
+            // Reutiliza a rota de visualizar rotas (genial!)
+            fetch(`/visualizar_rotas_salvas?data=${data}&veiculo=${veiculoId}`)
+                .then(r => r.text())
+                .then(html => {
+                    mapContainer.innerHTML = html;
+                    
+                    // Hack necessário para fazer o Folium rodar quando injetado via AJAX
+                    Array.from(mapContainer.querySelectorAll("script")).forEach(oldScript => {
+                        const newScript = document.createElement("script");
+                        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
+                    
+                    mapContainer.style.opacity = '1';
+                })
+                .catch(err => {
+                    console.error("Erro ao carregar mapa:", err);
+                    mapContainer.style.opacity = '1';
+                });
+        }
+
+        // 3. FUNÇÃO INTELIGENTE DE CARREGAR VEÍCULOS
+        function carregarVeiculosPorData(data) {
+            selectVeiculo.innerHTML = '<option value="" disabled selected>Buscando...</option>';
+            statusLabel.textContent = "(Verificando rotas...)";
+
+            // Atualiza o mapa para mostrar o panorama geral do dia
+            atualizarMapaPreview(data, 0);
+
+            // Busca veículos
+            fetch(`/api/rotas/veiculos_ativos?data=${data}`)
+                .then(res => res.json())
+                .then(veiculosAtivos => {
+                    
+                    selectVeiculo.innerHTML = '<option value="" selected disabled>Selecione...</option>';
+                    
+                    if (veiculosAtivos.length > 0) {
+                        statusLabel.textContent = "(Com rota planejada)";
+                        statusLabel.classList.add('text-success');
+                        statusLabel.classList.remove('text-warning');
+
+                        veiculosAtivos.forEach(v => {
+                            const opt = document.createElement('option');
+                            opt.value = v.ID_VEICULO;
+                            opt.textContent = `${v.NOME_TIPO_VEICULO} - ${v.PLACA} (Em Rota)`;
+                            selectVeiculo.appendChild(opt);
+                        });
+                    } else {
+                        statusLabel.textContent = "(Sem rotas hoje - Exibindo todos)";
+                        statusLabel.classList.add('text-warning');
+                        statusLabel.classList.remove('text-success');
+
+                        fetch('/api/veiculos/todos_dropdown')
+                            .then(res => res.json())
+                            .then(todosVeiculos => {
+                                todosVeiculos.forEach(v => {
+                                    const opt = document.createElement('option');
+                                    opt.value = v.ID_VEICULO;
+                                    opt.textContent = `${v.NOME_TIPO_VEICULO} - ${v.PLACA}`;
+                                    selectVeiculo.appendChild(opt);
+                                });
+                            });
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        // Carrega inicial
+        carregarVeiculosPorData(hoje);
+
+        // EVENTO: Quando mudar a DATA -> Atualiza veículos e Mapa Geral
+        inputData.addEventListener('change', function() {
+            carregarVeiculosPorData(this.value);
+        });
+
+        // EVENTO: Quando escolher VEÍCULO -> Atualiza Mapa Específico
+        selectVeiculo.addEventListener('change', function() {
+            const veiculoId = this.value;
+            const data = inputData.value;
+            atualizarMapaPreview(data, veiculoId);
+        });
+
+        // 4. AÇÃO DE CADASTRAR (NO MODAL)
+        document.getElementById('btnCadastrar').addEventListener('click', function() {
+            const idMotorista = selectMotorista.value;
+            const idVeiculo = selectVeiculo.value;
+            const dataVal = inputData.value;
+            const horaVal = inputHora.value;
+
+            if(!idMotorista || !idVeiculo || !dataVal || !horaVal) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            const dados = {
+                id_motorista: idMotorista,
+                id_veiculo: idVeiculo,
+                data: dataVal,
+                hora: horaVal
+            };
+
+            fetch('/api/atribuir/salvar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            })
+            .then(res => res.json())
+            .then(resposta => {
+                const modalConfirm = bootstrap.Modal.getInstance(document.getElementById('meuModal'));
+                modalConfirm.hide();
+
+                if(resposta.sucesso) {
+                    const modalSucesso = new bootstrap.Modal(document.getElementById('modalSucesso'));
+                    modalSucesso.show();
+                } else {
+                    alert("Erro: " + (resposta.erro || "Falha ao salvar."));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro de conexão com o servidor.");
+            });
+        });
+    });
+  </script>
+</body>
 </html>
