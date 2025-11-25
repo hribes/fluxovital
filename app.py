@@ -181,16 +181,16 @@ def rota_real_osrm_segmento(origem_latlon, destino_latlon):
 @app.route('/visualizar_rotas_salvas')
 @login_required
 def visualizar_rotas_salvas():
-    # 1. Pega parâmetros e trata data vazia
+    # 1. Parâmetros e Data Padrão
     data_filtro = request.args.get('data')
     veiculo_id = request.args.get('veiculo')
     
     if not data_filtro:
         data_filtro = os.getenv("DATA_SOLVER", datetime.date.today().strftime('%Y-%m-%d'))
 
-    # 2. Busca dados no banco
+    # 2. Conexão DB
     conn = criar_conexao()
-    if not conn: return "Erro de conexão"
+    if not conn: return "Erro conexão"
     
     cursor = conn.cursor(dictionary=True)
     sql = """
@@ -209,6 +209,7 @@ def visualizar_rotas_salvas():
     if veiculo_id and veiculo_id != "0": 
         sql += " AND p.ID_VEICULO = %s"
         params.append(veiculo_id)
+    
     sql += " ORDER BY p.ID_VEICULO, p.ORDEM ASC"
     
     try:
@@ -222,67 +223,123 @@ def visualizar_rotas_salvas():
 
     if not paradas: return get_mapa_vazio()
 
-    # 3. Inicia o Mapa
+    # 3. Mapa
     try:
-        # Centraliza no primeiro ponto da rota
         m = folium.Map(location=[float(paradas[0]['LATITUDE']), float(paradas[0]['LONGITUDE'])], zoom_start=14)
     except:
         m = folium.Map(location=[-22.2132, -49.9447], zoom_start=13)
 
-    # 4. Agrupa paradas por veículo
+    # 4. Agrupa por veículo
     rotas_veiculos = {}
     for p in paradas:
         rotas_veiculos.setdefault(p['ID_VEICULO'], []).append(p)
 
     colors = ['blue', 'green', 'red', 'purple', 'orange', 'darkred', 'cadetblue']
     
-    # 5. Desenha marcadores e trajetos (AGORA COM OSRM)
+    # 5. Desenha
     for i, (vid, lista) in enumerate(rotas_veiculos.items()):
         cor = colors[i % len(colors)]
-        pontos_para_api = [] # Formato: "lon,lat" para o OSRM
-        coords_marcadores = [] # Formato: [lat, lon] para o Folium
-        
-        for ponto in lista:
-            lat = float(ponto['LATITUDE'])
-            lon = float(ponto['LONGITUDE'])
-            
-            pontos_para_api.append(f"{lon},{lat}") # OSRM pede Lon,Lat
-            coords_marcadores.append([lat, lon])    # Backup se API falhar
-            
-            # Marcadores (Pins)
-            icone = 'home'
-            if ponto['TIPO_PARADA'] == 'COLETA': icone = 'user'
-            elif ponto['TIPO_PARADA'] == 'ENTREGA': icone = 'plus'
-            
-            texto = f"<b>{ponto['ORDEM']}</b>. {ponto.get('NOME_PACIENTE') or ponto.get('NOME_LOCAL_ATENDIMENTO') or 'Base'}"
-            folium.Marker([lat, lon], icon=folium.Icon(color=cor, icon=icone), tooltip=texto, popup=texto).add_to(m)
+        pontos_para_api = [] 
+        coords_controle = {} 
 
-        # --- MÁGICA DO OSRM AQUI ---
-        trajeto_desenhado = False
+        for ponto in lista:
+            # Coordenadas
+            lat_real = float(ponto['LATITUDE'])
+            lon_real = float(ponto['LONGITUDE'])
+            pontos_para_api.append(f"{lon_real},{lat_real}")
+
+            # Jitter (Anti-sobreposição visual)
+            lat_visual, lon_visual = lat_real, lon_real
+            chave_coord = (lat_real, lon_real)
+            if chave_coord in coords_controle:
+                fator = coords_controle[chave_coord]
+                offset = 0.00025 * fator 
+                lat_visual += offset
+                lon_visual += offset
+                coords_controle[chave_coord] += 1
+            else:
+                coords_controle[chave_coord] = 1
+
+            # --- DADOS PARA O ÍCONE ---
+            tipo = ponto['TIPO_PARADA']
+            ordem = ponto['ORDEM']
+            
+            # Recupera o Nome
+            nome_exibicao = ponto.get('NOME_PACIENTE') or ponto.get('NOME_LOCAL_ATENDIMENTO') or 'Base'
+            if len(nome_exibicao) > 22: nome_exibicao = nome_exibicao[:20] + "..."
+
+            # LÓGICA DOS ÍCONES E CORES
+            if tipo == 'COLETA': 
+                cor_css = "#28a745" # Verde Bootstrap
+                icone_fa = "fa-house" # Ícone de Casa
+            elif tipo == 'ENTREGA': 
+                cor_css = "#dc3545" # Vermelho Bootstrap
+                icone_fa = "fa-hospital" # Ícone de Hospital
+            else: 
+                cor_css = "#212529" # Preto Base
+                icone_fa = "fa-flag" # Ícone de Bandeira
+
+            # --- HTML DO ÍCONE COM SÍMBOLO ---
+            # Aumentei a largura (width) para 45px para caber ícone + número
+            html_icone = f"""
+            <div style="position: relative; width: 220px;">
+                
+                <div style="
+                    background-color: {cor_css}; color: white; border-radius: 30px;
+                    min-width: 45px; height: 30px;
+                    padding: 0 8px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-weight: bold; font-family: Arial;
+                    border: 2px solid white; box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                    position: absolute; left: 0; top: 0; z-index: 2;
+                ">
+                    <i class="fa-solid {icone_fa}" style="font-size: 12px; margin-right: 5px;"></i>
+                    {ordem}
+                </div>
+
+                <div style="
+                    background-color: rgba(255, 255, 255, 0.95);
+                    color: black;
+                    padding: 4px 8px 4px 35px; /* Mais espaço na esquerda para a pílula */
+                    border-radius: 4px;
+                    border: 1px solid {cor_css};
+                    font-size: 11px;
+                    font-weight: bold;
+                    white-space: nowrap;
+                    position: absolute;
+                    left: 10px; 
+                    top: 2px;
+                    z-index: 1;
+                    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+                ">
+                    {nome_exibicao}
+                </div>
+            </div>
+            """
+            
+            texto_popup = f"<b>{ordem}. {tipo}</b><br>{ponto.get('NOME_PACIENTE') or 'Local'}<br>{ponto.get('NOME_RUA')}, {ponto.get('NUMERO_ENDERECO')}"
+
+            folium.Marker(
+                [lat_visual, lon_visual],
+                icon=DivIcon(icon_size=(30, 30), icon_anchor=(15, 15), html=html_icone),
+                popup=texto_popup
+            ).add_to(m)
+
+        # --- Desenha Trajeto ---
         if len(pontos_para_api) > 1:
             try:
-                # Monta URL do OSRM (Serviço Gratuito de Rotas)
-                coords_string = ";".join(pontos_para_api)
-                url = f"https://router.project-osrm.org/route/v1/driving/{coords_string}?overview=full&geometries=geojson"
-                
-                resp = requests.get(url, timeout=4) # Timeout curto para não travar se a API demorar
-                if resp.status_code == 200:
-                    dados_rota = resp.json()
-                    # O OSRM retorna GeoJSON [lon, lat], precisamos inverter para [lat, lon]
-                    geometry = dados_rota['routes'][0]['geometry']['coordinates']
-                    coords_reais = [[coord[1], coord[0]] for coord in geometry]
-                    
-                    folium.PolyLine(coords_reais, color=cor, weight=5, opacity=0.8).add_to(m)
-                    trajeto_desenhado = True
-            except Exception as e:
-                print(f"Erro ao buscar rota no OSRM (usando linha reta): {e}")
-
-        # Se o OSRM falhar (ou demorar), desenha linha reta como backup
-        if not trajeto_desenhado and len(coords_marcadores) > 1:
-             folium.PolyLine(coords_marcadores, color=cor, weight=3, opacity=0.5, dash_array='5, 10').add_to(m)
+                coords_str = ";".join(pontos_para_api)
+                url = f"https://router.project-osrm.org/route/v1/driving/{coords_str}?overview=full&geometries=geojson"
+                r = requests.get(url, timeout=3)
+                if r.status_code == 200:
+                    geo = r.json()['routes'][0]['geometry']['coordinates']
+                    folium.PolyLine([[c[1], c[0]] for c in geo], color=cor, weight=5, opacity=0.7).add_to(m)
+                else:
+                    folium.PolyLine([[float(p['LATITUDE']), float(p['LONGITUDE'])] for p in lista], color=cor, weight=3, dash_array='5,5').add_to(m)
+            except:
+                 folium.PolyLine([[float(p['LATITUDE']), float(p['LONGITUDE'])] for p in lista], color=cor, weight=3, dash_array='5,5').add_to(m)
 
     return m._repr_html_()
-
 
 
 
