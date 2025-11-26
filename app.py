@@ -581,36 +581,84 @@ def criar_funcionario():
 @login_required  
 def criar_local_atendimento():
     dados = request.get_json()
-    conexao = None; cursor = None
+    conexao = None
+    cursor = None
+    
     try:
+        # --- 1. Validações Iniciais ---
         nome_local = dados.get('nome')
-        if not nome_local: return jsonify({"erro": "Nome do hospital é obrigatório."}), 400
+        cep_bruto = dados.get('cep')
+        numero = dados.get('numero')
+        lat, lon = dados.get('latitude'), dados.get('longitude')
+
+        if not nome_local: 
+            return jsonify({"erro": "Nome do hospital é obrigatório."}), 400
+        if not cep_bruto or not numero:
+            return jsonify({"erro": "CEP e Número são obrigatórios para validação."}), 400
+        if lat is None or lon is None: 
+            return jsonify({"erro": "Coordenadas obrigatórias."}), 400
+
+        # Limpeza do CEP
+        cep_limpo = re.sub(r'\D', '', cep_bruto).ljust(8, '0')[:8]
+
+        # --- 2. Verificação de Duplicidade (NOME) ---
         if executar_query("SELECT 1 FROM LocalAtendimento WHERE NOME_LOCAL_ATENDIMENTO = %s", (nome_local,)):
-            return jsonify({"erro": f"Erro: O local '{nome_local}' já cadastrado."}), 409
+            return jsonify({"erro": f"Erro: O local '{nome_local}' já está cadastrado."}), 409
+
+        # --- 3. Verificação de Duplicidade (ENDEREÇO: CEP + NÚMERO) ---
+        # Esta é a lógica que discutimos. Verifica se já existe um local com esse CEP e Número.
+        sql_check_endereco = """
+            SELECT count(*) as total
+            FROM LocalAtendimento la
+            JOIN Endereco e ON la.ID_ENDERECO = e.ID_ENDERECO
+            JOIN Rua r ON e.ID_RUA = r.ID_RUA
+            WHERE r.CEP = %s AND e.NUMERO_ENDERECO = %s
+        """
+        resultado_check = executar_query(sql_check_endereco, (cep_limpo, numero))
+        
+        # Como sua função executar_query retorna lista de dicionários:
+        if resultado_check and resultado_check[0]['total'] > 0:
+            return jsonify({
+                "erro": "Endereço duplicado.",
+                "mensagem": f"Já existe um local de atendimento cadastrado no CEP {cep_limpo}, número {numero}."
+            }), 409
+
+        # --- 4. Inserção no Banco (Lógica original mantida) ---
         conexao = criar_conexao()
         conexao.autocommit = False
         cursor = conexao.cursor()
-        lat, lon = dados.get('latitude'), dados.get('longitude')
-        if lat is None or lon is None: return jsonify({"erro": "Coordenadas obrigatórias."}), 400
         
         estado_uf_limpo = (dados.get('estado') or 'ER').upper()[:2]
-        cep_limpo = re.sub(r'\D', '', dados.get('cep') or '').ljust(8, '0')[:8]
 
+        # Insere/Busca Estado
         cursor.execute("INSERT INTO Estado (NOME_ESTADO) VALUES (%s) ON DUPLICATE KEY UPDATE ID_ESTADO=LAST_INSERT_ID(ID_ESTADO)", (estado_uf_limpo,))
         id_estado = cursor.lastrowid
+        
+        # Insere/Busca Cidade
         cursor.execute("INSERT INTO Cidade (ID_ESTADO, NOME_CIDADE) VALUES (%s, %s) ON DUPLICATE KEY UPDATE ID_CIDADE=LAST_INSERT_ID(ID_CIDADE)", (id_estado, dados.get('cidade')))
         id_cidade = cursor.lastrowid
+        
+        # Insere/Busca Bairro
         cursor.execute("INSERT INTO Bairro (ID_CIDADE, NOME_BAIRRO) VALUES (%s, %s) ON DUPLICATE KEY UPDATE ID_BAIRRO=LAST_INSERT_ID(ID_BAIRRO)", (id_cidade, dados.get('bairro')))
         id_bairro = cursor.lastrowid
+        
+        # Insere/Busca Rua (Usando o CEP limpo)
         cursor.execute("INSERT INTO Rua (ID_BAIRRO, NOME_RUA, CEP) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE ID_RUA=LAST_INSERT_ID(ID_RUA)", (id_bairro, dados.get('rua'), cep_limpo))
         id_rua = cursor.lastrowid
-        cursor.execute("INSERT INTO Endereco (ID_RUA, NUMERO_ENDERECO, LATITUDE, LONGITUDE, COMPLEMENTO) VALUES (%s, %s, %s, %s, %s)", (id_rua, dados.get('numero'), lat, lon, dados.get('complemento')))
+        
+        # Insere Endereço
+        cursor.execute("INSERT INTO Endereco (ID_RUA, NUMERO_ENDERECO, LATITUDE, LONGITUDE, COMPLEMENTO) VALUES (%s, %s, %s, %s, %s)", (id_rua, numero, lat, lon, dados.get('complemento')))
         id_endereco = cursor.lastrowid
+        
+        # Insere Local de Atendimento
         cursor.execute("INSERT INTO LocalAtendimento (ID_ENDERECO, NOME_LOCAL_ATENDIMENTO) VALUES (%s, %s)", (id_endereco, nome_local))
+        
         conexao.commit()
-        return jsonify({"sucesso": True, "mensagem": "Hospital cadastrado!"}), 201
+        return jsonify({"sucesso": True, "mensagem": "Hospital/Local cadastrado com sucesso!"}), 201
+
     except Exception as e:
         if conexao: conexao.rollback()
+        print(f"Erro ao criar local: {e}") # Log no terminal para debug
         return jsonify({"erro": str(e)}), 500
     finally:
         if cursor: cursor.close()
@@ -1004,5 +1052,3 @@ def custom_services_static(filename): return send_from_directory(os.path.join(os
 if __name__ == '__main__':
     print("Iniciando servidor Flask (FluxoVital)...")
     app.run(debug=True, port=5000)
-
-
